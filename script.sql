@@ -7,11 +7,11 @@ CREATE TABLE `userRole` (
     name VARCHAR(20),
     PRIMARY KEY (roleId)
 );
--- INSERT INTO `userRole` (name)
--- VALUES ('guest'), ('customer'), ('staff'), ('manager'), ('admin');
+INSERT INTO `userRole` (name)
+VALUES ('customer'), ('staff'), ('manager'), ('admin');
 
 CREATE TABLE `user` (
-	userId INT AUTO_INCREMENT,
+    userId INT AUTO_INCREMENT,
     name VARCHAR(100),
     fullName NVARCHAR(100),
     avatar VARCHAR(255),
@@ -20,8 +20,8 @@ CREATE TABLE `user` (
     phone VARCHAR(20),
     address VARCHAR(100),
     gender BIT,
-    roleId INT,
-    status VARCHAR(20),
+    roleId INT DEFAULT 1,
+    status ENUM('active', 'inactive', 'blocked'),
     PRIMARY KEY (userId),
     FOREIGN KEY (roleId) REFERENCES userRole(roleId)
 );
