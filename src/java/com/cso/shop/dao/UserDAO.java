@@ -69,7 +69,7 @@ public class UserDAO extends DAO<User> {
       .formatted(sudoLogin.contains("@") ? "email" : "name");
     final User user = run.query(connection, sql, h, sudoLogin);
 
-    if (user.getPassword() == null) {
+    if (user == null || user.getPassword() == null) {
 //      throw new Exception("account does not have password authentication enabled");
       return null;
     }

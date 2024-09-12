@@ -57,8 +57,6 @@ public class Signup extends HttpServlet {
     }
 
     try {
-      //    resp.getWriter().println("oke");
-
       User user = udao.insert(parse(req));
       if (user != null) {
         HttpSession session = req.getSession();
@@ -68,14 +66,15 @@ public class Signup extends HttpServlet {
         throw new SQLException("user = null");
       }
 
+      req.setAttribute("response_ok", "User sign up successfully. redirecting...");
+      resp.setHeader("refresh", "1.5;url=home");
+
     } catch (SQLException e) {
-      req.setAttribute("response", "internal sevre error");
+      req.setAttribute("response", "Internal sevre error");
       log(e.getMessage());
-      doGet(req, resp);
-      return;
     }
 
-    resp.sendRedirect("index.html");
+    doGet(req, resp);
 
   }
 
@@ -91,17 +90,6 @@ public class Signup extends HttpServlet {
     return user;
   }
 
-  private void repopulateUserInput(HttpServletRequest req) {
-    req.setAttribute("name", req.getParameter("name"));
-    req.setAttribute("email", req.getParameter("email"));
-    req.setAttribute("password", req.getParameter("password"));
-    req.setAttribute("passwordCfm", req.getParameter("passwordCfm"));
-    req.setAttribute("fullname", req.getParameter("fullName"));
-    req.setAttribute("gender", req.getParameter("gender"));
-    req.setAttribute("phone", req.getParameter("phone"));
-    req.setAttribute("address", req.getParameter("address"));
-  }
-
   private boolean validateUserInput(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException, Exception {
     String name = req.getParameter("name");
     String email = req.getParameter("email");
@@ -115,6 +103,10 @@ public class Signup extends HttpServlet {
     if (name == null || email == null || password == null
       || passwordCfm == null || fullname == null || gender == null) {
       throw new Exception("user input missing");
+    }
+
+    if (!name.matches("\\w{3,20}")) {
+      throw new Exception("invalid username. can only contain alphanumeric & underscore, between 3 and 20 characters.");
     }
 
     if (udao.selectByName(name) != null) {
@@ -136,4 +128,14 @@ public class Signup extends HttpServlet {
     return true;
   }
 
+  private void repopulateUserInput(HttpServletRequest req) {
+    req.setAttribute("name", req.getParameter("name"));
+    req.setAttribute("email", req.getParameter("email"));
+    req.setAttribute("password", req.getParameter("password"));
+    req.setAttribute("passwordCfm", req.getParameter("passwordCfm"));
+    req.setAttribute("fullname", req.getParameter("fullName"));
+    req.setAttribute("gender", req.getParameter("gender"));
+    req.setAttribute("phone", req.getParameter("phone"));
+    req.setAttribute("address", req.getParameter("address"));
+  }
 }

@@ -34,7 +34,7 @@
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
       <div class="col-12 col-lg-8 col-xxl-7">
-        <a href="#" class="text-decoration-none text-end"><h1> CSO </h1></a>
+        <a href="home" class="text-decoration-none text-end"><h1> CSO </h1></a>
         <h1 class="h3 mb-3 fw-normal text-end">Register your account</h1>
         <form action="signup" method="post" autocomplete="off" class="needs-validation" novalidate>
 
@@ -111,11 +111,14 @@
             </div>
 
           </div>
-          <!-- <div class="form-check-reverse mb-3 user-select-none"> -->
-          <!-- <input class="form-check-input" type="checkbox" value="subscribe" id="subscribe" />
-            <label class="form-check-label" for="subscribe">Subscribe to our newsletter</label> -->
-          <!-- <p class="float-start text-truncate text-danger">Username already existed</p> -->
-          <!-- </div> -->
+          <div class="form-check-reverse mb-3 user-select-none"> 
+            <input class="form-check-input" type="checkbox" value="subscribe" id="subscribe" />
+            <label class="form-check-label" for="subscribe">Subscribe to our newsletter</label> 
+            <p class="float-start text-truncate">
+              <span class="text-danger"> ${requestScope.response} </span>
+              <span class="text-success"> ${requestScope.response_ok} </span>
+            </p>
+          </div> 
 
           <button class="btn btn-success w-100 py-2 mb-3" type="submit">Sign up</button>
 

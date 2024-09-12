@@ -12,6 +12,11 @@
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+
+
     <title>Signin Template · Bootstrap v5.3</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/" />
@@ -34,17 +39,17 @@
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
       <div class="col-12 col-lg-8 col-xxl-7">
-        <form class="has-validation">
-          <a href="#" class="text-decoration-none"><h1>CSO</h1></a>
+        <form action="signin" method="post" class="has-validation needs-validation" novalidate>
+          <a href="home" class="text-decoration-none"><h1> CSO </h1></a>
           <h1 class="h3 mb-3 fw-normal">Sign in</h1>
 
           <div class="form-floating">
-            <input type="text" class="form-control mb-3 has-validation" id="username" placeholder="Username" value="Admin" />
+            <input type="text" class="form-control mb-3 has-validation" id="username" name="sudoLogin" placeholder="Username" value="${requestScope.sudoLogin}" required />
             <label for="username">Username or Email</label>
           </div>
           <div class="input-group mb-3">
             <div class="form-floating">
-              <input type="password" class="form-control" id="password" placeholder="Password" value="12345" />
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
               <label for="password">Password</label>
             </div>
             <button type="button" class="input-group-text" id="showPasswordBtn"><i class="bi bi-eye-slash"></i></button>
@@ -55,7 +60,11 @@
             <label class="form-check-label" for="remember">Remember me</label>
             <a class="float-end text-decoration-none" href="#">Forgot password?</a>
           </div>
-          <!-- <p class="mb-3 text-danger">Server response</p> -->
+          <!--<p class="mb-3 text-danger">Server response</p>-->
+          <p class="float-start text-truncate mb-3">
+            <span class="text-danger"> ${requestScope.response} </span>
+            <span class="text-success"> ${requestScope.response_ok} </span>
+          </p>
           <button class="btn btn-success w-100 py-2 mb-3" type="submit">Sign in</button>
           <p class="mb-3 text-center">or sign in with</p>
           <button class="btn btn-danger w-100 py-2 mb-3" type="submit"><i class="bi bi-google me-2"></i>Google</button>
@@ -82,6 +91,26 @@
             $icon.removeClass("bi-eye").addClass("bi-eye-slash");
           }
         });
+
+        (() => {
+          "use strict";
+          const forms = document.querySelectorAll(".needs-validation");
+
+          Array.from(forms).forEach((form) => {
+            form.addEventListener(
+                    "submit",
+                    (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+                    false
+                    );
+          });
+        })();
       });
     </script>
   </body>
