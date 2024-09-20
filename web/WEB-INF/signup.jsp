@@ -72,26 +72,34 @@
             </div>
           </fieldset>
 
-          <div class="row">
+          <div class="row mb-3">
 
-            <div class="col-md-8 mb-3">
+            <div class="col-6">
               <div class="form-floating">
-                <input type="text" class="form-control" id="username" name="fullName" value="${requestScope.fullName}" placeholder="Fullname" required />
-                <label for="username">Fullname</label>
+                <input type="text" class="form-control" id="familyName" name="familyName" value="${requestScope.familyName}" placeholder="Family Name" required />
+                <label for="familyName">Family Name</label>
               </div>
             </div>
 
-            <div class="col-md-4 mb-3 d-flex align-items-center gap-3">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="gender-male" value="male" required ${requestScope.gender eq 'male' ? 'checked' : ''} />
-                <label class="form-check-label" for="gender-male">Male</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="gender-female" value="female" required ${requestScope.gender eq 'male' ? 'checked' : ''} />
-                <label class="form-check-label" for="gender-female">Female</label>
+            <div class="col-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="givenName" name="givenName" value="${requestScope.givenName}" placeholder="Given Name" required />
+                <label for="givenName">Given Name</label>
               </div>
             </div>
 
+
+          </div>
+
+          <div class="mb-3 d-flex align-items-center gap-3">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="gender-male" value="male" required ${requestScope.gender eq 'male' ? 'checked' : ''} />
+              <label class="form-check-label" for="gender-male">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="gender-female" value="female" required ${requestScope.gender eq 'female' ? 'checked' : ''} />
+              <label class="form-check-label" for="gender-female">Female</label>
+            </div>
           </div>
 
           <div class="row">

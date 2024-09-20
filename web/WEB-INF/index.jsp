@@ -18,7 +18,8 @@
       <h1>Clothing Shop Online (CSO)</h1>
       <h4>Home Page</h4>
       <div class="text-center float-end m-3">
-        <a href="signin" class="btn btn-outline-primary me-3">Sign in</a>
+        <a href="profile" class="btn btn-success me-3">Profile</a>
+        <a href="signin" class="btn btn-outline-primary">Sign in</a>
         <a href="signup" class="btn btn-primary">Sign up</a>
       </div>
     </div>

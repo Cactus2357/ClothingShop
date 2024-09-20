@@ -59,16 +59,17 @@ public class Signin extends HttpServlet {
       String password = req.getParameter("password");
       User user = udao.authorize(sudoLogin, password);
       if (user == null) {
-        req.setAttribute("response", "Email/password is incorrect or your account does not have password authentication enabled");
-      } else {
-        HttpSession session = req.getSession();
-        session.setAttribute("user", user);
-        resp.setHeader("refresh", "1.5;url=home");
-        req.setAttribute("response_ok", "Sign in successfully. Redirecting...");
+//        req.setAttribute("response", "Email/password is incorrect or your account does not have password authentication enabled");
+        throw new Exception("Email/password is incorrect or your account does not have password authentication enabled");
       }
 
+      HttpSession session = req.getSession();
+      session.setAttribute("user", user);
+      resp.setHeader("refresh", "1.5;url=home");
+      req.setAttribute("response_ok", "Sign in successfully. Redirecting...");
+
     } catch (Exception e) {
-      req.setAttribute("response", "Internal server error");
+      req.setAttribute("response", e.getMessage());
     }
 
     doGet(req, resp);
