@@ -15,6 +15,7 @@ import jakarta.mail.internet.MimeMessage;
 import java.util.Date;
 
 /**
+ * tutorial: https://www.youtube.com/watch?v=lVJvbo8Ssqw
  *
  * @author hi
  */
