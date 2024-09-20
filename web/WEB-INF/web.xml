@@ -4,6 +4,17 @@
         <welcome-file>home</welcome-file>
         <welcome-file>/index.html</welcome-file>
     </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>ProductListServlet</servlet-name>
+        <url-pattern>/productList</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+    <servlet>
+        <servlet-name>ProductListServlet</servlet-name>
+        <servlet-class>com.cso.shop.control.page.ProductListServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>ChangePassword</servlet-name>
         <servlet-class>com.cso.shop.control.account.ChangePassword</servlet-class>
@@ -24,9 +35,6 @@
         <servlet-name>Signout</servlet-name>
         <url-pattern>/signout</url-pattern>
     </servlet-mapping>
-    <session-config>
-        <session-timeout>60</session-timeout>
-    </session-config>
     <servlet>
         <servlet-name>Signin</servlet-name>
         <servlet-class>com.cso.shop.control.account.Signin</servlet-class>
