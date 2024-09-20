@@ -61,7 +61,7 @@
             <a class="float-end text-decoration-none" href="#">Forgot password?</a>
           </div>
           <!--<p class="mb-3 text-danger">Server response</p>-->
-          <p class="float-start text-truncate mb-3">
+          <p class="float-start mb-3">
             <span class="text-danger"> ${requestScope.response} </span>
             <span class="text-success"> ${requestScope.response_ok} </span>
           </p>

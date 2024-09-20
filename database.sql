@@ -4,7 +4,7 @@ USE `cso`;
 
 CREATE TABLE Product
 (
-  ProductID INT NOT NULL,
+  ProductID INT NOT NULL AUTO_INCREMENT,
   Name NVARCHAR(255) NOT NULL,
   Description TEXT NOT NULL,
   Quantity INT NOT NULL,
@@ -15,14 +15,14 @@ CREATE TABLE Product
 
 CREATE TABLE Brand
 (
-  BrandID INT NOT NULL,
+  BrandID INT NOT NULL AUTO_INCREMENT,
   Name NVARCHAR(255) NOT NULL,
   PRIMARY KEY (BrandID)
 );
 
 CREATE TABLE Category
 (
-  CategoryID INT NOT NULL,
+  CategoryID INT NOT NULL AUTO_INCREMENT,
   Name NVARCHAR(255) NOT NULL,
   PRIMARY KEY (CategoryID)
 );
@@ -47,26 +47,26 @@ CREATE TABLE ProductCategory
 
 CREATE TABLE User
 (
-  UserID INT NOT NULL,
-  UserName NVARCHAR(255) NOT NULL,
+  UserID INT NOT NULL AUTO_INCREMENT,
+  UserName VARCHAR(255) NOT NULL,
   Password VARCHAR(255),
   Email VARCHAR(255) NOT NULL,
   Phone VARCHAR(20) NOT NULL,
   Role ENUM('customer', 'staff', 'manager', 'admin') NOT NULL,
   Address VARCHAR(255) NOT NULL,
   GivenName NVARCHAR(255) NOT NULL,
-  FamilyName NVARCHAR(255) NOT NULL,
+  FamilyName NVARCHAR(255),
   Status ENUM('active', 'inactive', 'blocked') NOT NULL,
-  Avatar TEXT NOT NULL,
+  Avatar TEXT,
   Gender ENUM('male', 'female') NOT NULL,
-  CreatedAt DATETIME NOT NULL,
+  CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (UserID),
   UNIQUE KEY (Email)
 );
 
 CREATE TABLE Cart
 (
-  CartID INT NOT NULL,
+  CartID INT NOT NULL AUTO_INCREMENT,
   UserID INT NOT NULL,
   Price DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (CartID),
@@ -75,7 +75,7 @@ CREATE TABLE Cart
 
 CREATE TABLE CartDetail
 (
-  CartDetailID INT NOT NULL,
+  CartDetailID INT NOT NULL AUTO_INCREMENT,
   ProductID INT NOT NULL,
   Quantity INT NOT NULL,
   CartID INT NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE CartDetail
 
 CREATE TABLE Review
 (
-  ReviewID INT NOT NULL,
+  ReviewID INT NOT NULL AUTO_INCREMENT,
   Rating FLOAT NOT NULL,
   Comment TEXT NOT NULL,
   ProductID INT NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE Review
 
 CREATE TABLE Blog
 (
-  BlogID INT NOT NULL,
+  BlogID INT NOT NULL AUTO_INCREMENT,
   Image TEXT NOT NULL,
   Brief TEXT NOT NULL,
   Description TEXT NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE Blog
 
 CREATE TABLE Slide
 (
-  SlideID INT NOT NULL,
+  SlideID INT NOT NULL AUTO_INCREMENT,
   Title VARCHAR(255) NOT NULL,
   Image TEXT NOT NULL,
   BackLink TEXT NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE Slide
 
 CREATE TABLE `Order`
 (
-  OrderID INT NOT NULL,
+  OrderID INT NOT NULL AUTO_INCREMENT,
   OrderDate DATETIME NOT NULL,
   Status ENUM('cancelled','completed','pending') NOT NULL,
   Revenues DECIMAL(10,2) NOT NULL,
@@ -134,7 +134,7 @@ CREATE TABLE `Order`
 
 CREATE TABLE OrderDetail
 (
-  OrderDetailID INT NOT NULL,
+  OrderDetailID INT NOT NULL AUTO_INCREMENT,
   Quantity INT NOT NULL,
   OrderID INT NOT NULL,
   ProductID INT NOT NULL,

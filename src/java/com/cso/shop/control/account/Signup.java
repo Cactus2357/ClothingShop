@@ -54,7 +54,8 @@ public class Signup extends HttpServlet {
     }
 
     try {
-      User user = udao.insert(parse(req));
+      User user = parse(req);
+      udao.insert(user);
       if (user != null) {
         HttpSession session = req.getSession();
         session.setAttribute("user", user);
@@ -77,11 +78,12 @@ public class Signup extends HttpServlet {
 
   private User parse(HttpServletRequest req) {
     User user = new User();
-    user.setName(req.getParameter("name"));
+    user.setUserName(req.getParameter("name"));
     user.setEmail(req.getParameter("email"));
     user.setPassword(req.getParameter("password"));
-    user.setFullName(req.getParameter("fullName"));
-    user.setGender(req.getParameter("gender").equals("male"));
+    user.setFamilyName(req.getParameter("familyName"));
+    user.setGivenName(req.getParameter("givenName"));
+    user.setGender(req.getParameter("gender"));
     user.setPhone(req.getParameter("phone"));
     user.setAddress(req.getParameter("address"));
     return user;
@@ -92,13 +94,14 @@ public class Signup extends HttpServlet {
     String email = req.getParameter("email");
     String password = req.getParameter("password");
     String passwordCfm = req.getParameter("passwordCfm");
-    String fullname = req.getParameter("fullName");
+//    String familyName = req.getParameter("familyName");
+    String givenName = req.getParameter("givenName");
     String gender = req.getParameter("gender");
-//    String phone = req.getParameter("phone");
-//    String address = req.getParameter("address");
+    String phone = req.getParameter("phone");
+    String address = req.getParameter("address");
 
     if (name == null || email == null || password == null
-      || passwordCfm == null || fullname == null || gender == null) {
+      || passwordCfm == null || givenName == null || gender == null || phone == null || address == null) {
       throw new Exception("user input missing");
     }
 
@@ -130,7 +133,8 @@ public class Signup extends HttpServlet {
     req.setAttribute("email", req.getParameter("email"));
     req.setAttribute("password", req.getParameter("password"));
     req.setAttribute("passwordCfm", req.getParameter("passwordCfm"));
-    req.setAttribute("fullname", req.getParameter("fullName"));
+    req.setAttribute("familyName", req.getParameter("familyName"));
+    req.setAttribute("givenName", req.getParameter("familyName"));
     req.setAttribute("gender", req.getParameter("gender"));
     req.setAttribute("phone", req.getParameter("phone"));
     req.setAttribute("address", req.getParameter("address"));

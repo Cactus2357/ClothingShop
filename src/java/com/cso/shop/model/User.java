@@ -4,132 +4,154 @@
  */
 package com.cso.shop.model;
 
+import java.util.Date;
+
 /**
  *
  * @author hi
  */
-public class User {
+public class User extends BaseBean {
 
-  private int userId;
-  private String name;
-  private String fullName;
-  private String avatar;
-  private String email;
-  private String password;
-  private String phone;
-  private String address;
-  private boolean gender;
-  private int roleId;
-  private String status;
+  private int UserID;
+  private String UserName;
+  private String Password;
+  private String Email;
+  private String Phone;
+  private String Role = "customer";
+  private String Address;
+  private String GivenName;
+  private String FamilyName;
+  private String Status = "active";
+  private String Avatar;
+  private String Gender;
+  private Date CreatedAt;
 
   public User() {
   }
 
-  public User(int userId, String name, String fullName, String avatar, String email, String password, String phone, String address, boolean gender, int roleId, String status) {
-    this.userId = userId;
-    this.name = name;
-    this.fullName = fullName;
-    this.avatar = avatar;
-    this.email = email;
-    this.password = password;
-    this.phone = phone;
-    this.address = address;
-    this.gender = gender;
-    this.roleId = roleId;
-    this.status = status;
-  }
-
-  public int getUserId() {
-    return userId;
-  }
-
-  public void setUserId(int userId) {
-    this.userId = userId;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
-  }
-
-  public String getAvatar() {
-    return avatar;
-  }
-
-  public void setAvatar(String avatar) {
-    this.avatar = avatar;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public boolean getGender() {
-    return gender;
-  }
-
-  public void setGender(boolean gender) {
-    this.gender = gender;
-  }
-
-  public int getRoleId() {
-    return roleId;
-  }
-
-  public void setRoleId(int roleId) {
-    this.roleId = roleId;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
+  public User(int UserID, String UserName, String Password, String Email, String Phone, String Role, String Address, String GivenName, String FamilyName, String Status, String Avatar, String Gender, Date CreatedAt) {
+    this.UserID = UserID;
+    this.UserName = UserName;
+    this.Password = Password;
+    this.Email = Email;
+    this.Phone = Phone;
+    this.Role = Role;
+    this.Address = Address;
+    this.GivenName = GivenName;
+    this.FamilyName = FamilyName;
+    this.Status = Status;
+    this.Avatar = Avatar;
+    this.Gender = Gender;
+    this.CreatedAt = CreatedAt;
   }
 
   @Override
   public String toString() {
-    return "User{" + "userId=" + userId + ", name=" + name + ", fullName=" + fullName + ", avatar=" + avatar + ", email=" + email + ", password=" + password + ", phone=" + phone + ", address=" + address + ", gender=" + gender + ", roleId=" + roleId + ", status=" + status + '}';
+    return "User{" + "UserID=" + UserID + ", UserName=" + UserName + ", Password=" + Password + ", Email=" + Email + ", Phone=" + Phone + ", Role=" + Role + ", Address=" + Address + ", GivenName=" + GivenName + ", FamilyName=" + FamilyName + ", Status=" + Status + ", Avatar=" + Avatar + ", Gender=" + Gender + ", CreatedAt=" + CreatedAt + '}';
+  }
+
+  public int getUserID() {
+    return UserID;
+  }
+
+  public void setUserID(int UserID) {
+    this.UserID = UserID;
+  }
+
+  public String getUserName() {
+    return UserName;
+  }
+
+  public void setUserName(String UserName) {
+    this.UserName = UserName;
+  }
+
+  public String getPassword() {
+    return Password;
+  }
+
+  public void setPassword(String Password) {
+    this.Password = Password;
+  }
+
+  public String getEmail() {
+    return Email;
+  }
+
+  public void setEmail(String Email) {
+    this.Email = Email;
+  }
+
+  public String getPhone() {
+    return Phone;
+  }
+
+  public void setPhone(String Phone) {
+    this.Phone = Phone;
+  }
+
+  public String getRole() {
+    return Role;
+  }
+
+  public void setRole(String Role) {
+    this.Role = Role;
+  }
+
+  public String getAddress() {
+    return Address;
+  }
+
+  public void setAddress(String Address) {
+    this.Address = Address;
+  }
+
+  public String getGivenName() {
+    return GivenName;
+  }
+
+  public void setGivenName(String GivenName) {
+    this.GivenName = GivenName;
+  }
+
+  public String getFamilyName() {
+    return FamilyName;
+  }
+
+  public void setFamilyName(String FamilyName) {
+    this.FamilyName = FamilyName;
+  }
+
+  public String getStatus() {
+    return Status;
+  }
+
+  public void setStatus(String Status) {
+    this.Status = Status;
+  }
+
+  public String getAvatar() {
+    return Avatar;
+  }
+
+  public void setAvatar(String Avatar) {
+    this.Avatar = Avatar;
+  }
+
+  public String getGender() {
+    return Gender;
+  }
+
+  public void setGender(String Gender) {
+    this.Gender = Gender;
+  }
+
+  public Date getCreatedAt() {
+    return CreatedAt;
+  }
+
+  public void setCreatedAt(Date CreatedAt) {
+    this.CreatedAt = CreatedAt;
   }
 
 }
