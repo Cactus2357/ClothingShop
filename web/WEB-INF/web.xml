@@ -39,6 +39,10 @@
         <session-timeout>60</session-timeout>
     </session-config>
     <servlet>
+        <servlet-name>Signin</servlet-name>
+        <servlet-class>com.cso.shop.control.account.Signin</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Signup</servlet-name>
         <servlet-class>com.cso.shop.control.account.Signup</servlet-class>
     </servlet>
@@ -50,6 +54,10 @@
         <servlet-name>Profile</servlet-name>
         <servlet-class>com.cso.shop.control.account.Profile</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>Signin</servlet-name>
+        <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Signup</servlet-name>
         <url-pattern>/signup</url-pattern>
