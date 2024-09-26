@@ -2,143 +2,119 @@ DROP DATABASE IF EXISTS `cso`;
 CREATE DATABASE IF NOT EXISTS `cso`;
 USE `cso`;
 
-CREATE TABLE Product
-(
-  ProductID INT NOT NULL AUTO_INCREMENT,
-  Name NVARCHAR(255) NOT NULL,
-  Description TEXT NOT NULL,
-  Quantity INT NOT NULL,
-  ImportPrice DECIMAL(10,2) NOT NULL,
-  SellingPrice DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (ProductID)
+CREATE TABLE product (
+  productId INT AUTO_INCREMENT PRIMARY KEY,
+  name NVARCHAR(255) NOT NULL,
+  image TEXT NOT NULL,
+  description TEXT NOT NULL,
+  quantity INT NOT NULL CHECK (quantity >= 0),
+  unitPrice DECIMAL(10,2) NOT NULL CHECK (unitPrice >= 0.00),
+  importDate DATETIME NOT NULL,
+  status ENUM('active', 'inactive', 'out of stock', 'discontinued') DEFAULT 'active'
 );
 
-CREATE TABLE Brand
-(
-  BrandID INT NOT NULL AUTO_INCREMENT,
-  Name NVARCHAR(255) NOT NULL,
-  PRIMARY KEY (BrandID)
+CREATE TABLE category (
+  categoryId INT AUTO_INCREMENT PRIMARY KEY,
+  name NVARCHAR(255) NOT NULL
 );
 
-CREATE TABLE Category
-(
-  CategoryID INT NOT NULL AUTO_INCREMENT,
-  Name NVARCHAR(255) NOT NULL,
-  PRIMARY KEY (CategoryID)
+CREATE TABLE productCategory (
+  productId INT,
+  categoryId INT,
+  FOREIGN KEY (productId) REFERENCES product(productId),
+  FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 );
 
-CREATE TABLE ProductBrand
-(
-  ProductID INT NOT NULL,
-  BrandID INT NOT NULL,
-  PRIMARY KEY (ProductID, BrandID),
-  FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
-  FOREIGN KEY (BrandID) REFERENCES Brand(BrandID)
+CREATE TABLE user (
+  userId INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) UNIQUE,  
+  email VARCHAR(255) UNIQUE,
+  password VARCHAR(255),
+  familyName NVARCHAR(100),
+  givenName NVARCHAR(100),
+  phone VARCHAR(20),
+  address VARCHAR(255),
+  avatar TEXT,
+  role ENUM('customer', 'staff', 'manager', 'admin') DEFAULT 'customer',
+  status ENUM('active', 'inactive', 'blocked') DEFAULT 'active',
+  gender ENUM('male', 'female') NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  note TEXT
 );
 
-CREATE TABLE ProductCategory
-(
-  ProductID INT NOT NULL,
-  CategoryID INT NOT NULL,
-  PRIMARY KEY (ProductID, CategoryID),
-  FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
-  FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID)
+CREATE TABLE cart (
+  cartId INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT,
+  status ENUM('active', 'inactive', 'pending') DEFAULT 'pending',
+  FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
 );
 
-CREATE TABLE User
-(
-  UserID INT NOT NULL AUTO_INCREMENT,
-  UserName VARCHAR(255) NOT NULL,
-  Password VARCHAR(255),
-  Email VARCHAR(255) NOT NULL,
-  Phone VARCHAR(20) NOT NULL,
-  Role ENUM('customer', 'staff', 'manager', 'admin') NOT NULL,
-  Address VARCHAR(255) NOT NULL,
-  GivenName NVARCHAR(255) NOT NULL,
-  FamilyName NVARCHAR(255),
-  Status ENUM('active', 'inactive', 'blocked') NOT NULL,
-  Avatar TEXT,
-  Gender ENUM('male', 'female') NOT NULL,
-  CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (UserID),
-  UNIQUE KEY (Email)
+CREATE TABLE cartItem (
+  cartItemId INT AUTO_INCREMENT PRIMARY KEY,
+  cartId INT,
+  productId INT,
+  quantity INT,
+  status ENUM('active', 'inactive', 'removed') DEFAULT 'active',
+  FOREIGN KEY (cartId) REFERENCES cart(cartId),
+  FOREIGN KEY (productId) REFERENCES product(productId)
 );
 
-CREATE TABLE Cart
-(
-  CartID INT NOT NULL AUTO_INCREMENT,
-  UserID INT NOT NULL,
-  Price DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (CartID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID)
+CREATE TABLE review (
+  reviewId INT AUTO_INCREMENT PRIMARY KEY,
+  rating FLOAT NOT NULL,
+  comment TEXT,
+  productId INT,
+  userId INT,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  status ENUM('active', 'inactive', 'deleted'),
+  FOREIGN KEY (productId) REFERENCES product(productId),
+  FOREIGN KEY (userId) REFERENCES user(userId)
 );
 
-CREATE TABLE CartDetail
-(
-  CartDetailID INT NOT NULL AUTO_INCREMENT,
-  ProductID INT NOT NULL,
-  Quantity INT NOT NULL,
-  CartID INT NOT NULL,
-  PRIMARY KEY (CartDetailID),
-  FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
-  FOREIGN KEY (CartID) REFERENCES Cart(CartID)
+CREATE TABLE post (
+  postId INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT,
+  brief VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  image TEXT NOT NULL,
+  featuring ENUM('on', 'off') DEFAULT 'off',
+  status ENUM('active', 'inactive') DEFAULT 'active',
+  FOREIGN KEY (userId) REFERENCES user(userId)
 );
 
-CREATE TABLE Review
-(
-  ReviewID INT NOT NULL AUTO_INCREMENT,
-  Rating FLOAT NOT NULL,
-  Comment TEXT NOT NULL,
-  ProductID INT NOT NULL,
-  UserID INT NOT NULL,
-  PRIMARY KEY (ReviewID),
-  FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID)
+CREATE TABLE slider (
+  sliderId INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  image TEXT NOT NULL,
+  backLink TEXT NOT NULL,
+  status ENUM('active', 'inactive') DEFAULT 'active',
+  userId INT,
+  FOREIGN KEY (userId) REFERENCES user(userId)
 );
 
-CREATE TABLE Blog
-(
-  BlogID INT NOT NULL AUTO_INCREMENT,
-  Image TEXT NOT NULL,
-  Brief TEXT NOT NULL,
-  Description TEXT NOT NULL,
-  Status ENUM('active','inactive') NOT NULL,
-  UpdateAt DATETIME NOT NULL,
-  UserID INT NOT NULL,
-  PRIMARY KEY (BlogID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID)
+CREATE TABLE `order` (
+  orderId INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT,
+  orderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('pending', 'processing', 'shipped', 'delivered', 'canceled') DEFAULT 'pending',
+  FOREIGN KEY (userId) REFERENCES user(userId) ON DELETE CASCADE
 );
 
-CREATE TABLE Slide
-(
-  SlideID INT NOT NULL AUTO_INCREMENT,
-  Title VARCHAR(255) NOT NULL,
-  Image TEXT NOT NULL,
-  BackLink TEXT NOT NULL,
-  Status ENUM('active','inactive') NOT NULL,
-  UserID INT NOT NULL,
-  PRIMARY KEY (SlideID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID)
+CREATE TABLE orderItem (
+  orderItemId INT AUTO_INCREMENT PRIMARY KEY,
+  quantity INT NOT NULL,
+  orderId INT,
+  productId INT,
+  FOREIGN KEY (orderId) REFERENCES `order`(orderId),
+  FOREIGN KEY (productId) REFERENCES product(productId)
 );
 
-CREATE TABLE `Order`
-(
-  OrderID INT NOT NULL AUTO_INCREMENT,
-  OrderDate DATETIME NOT NULL,
-  Status ENUM('cancelled','completed','pending') NOT NULL,
-  Revenues DECIMAL(10,2) NOT NULL,
-  UserID INT NOT NULL,
-  PRIMARY KEY (OrderID),
-  FOREIGN KEY (UserID) REFERENCES User(UserID)
-);
-
-CREATE TABLE OrderDetail
-(
-  OrderDetailID INT NOT NULL AUTO_INCREMENT,
-  Quantity INT NOT NULL,
-  OrderID INT NOT NULL,
-  ProductID INT NOT NULL,
-  PRIMARY KEY (OrderDetailID),
-  FOREIGN KEY (OrderID) REFERENCES `Order`(OrderID),
-  FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+CREATE TABLE setting ( 
+  settingId INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  value VARCHAR(255) NOT NULL,
+  type VARCHAR(100) NOT NULL,
+  description TEXT,
+  status ENUM('active', 'inactive') DEFAULT 'active'
 );
