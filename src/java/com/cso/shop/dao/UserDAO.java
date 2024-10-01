@@ -126,7 +126,6 @@ public class UserDAO extends BaseDAO<User> {
         }
       }
     }
-
   }
 
   /**

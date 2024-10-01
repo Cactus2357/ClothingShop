@@ -26,8 +26,9 @@ public abstract class BaseDAO<T> extends DBContext {
 
   public final String TABLE;
 
-//  protected PreparedStatement ps;
-//  protected ResultSet rs;
+  protected PreparedStatement ps;
+  protected ResultSet rs;
+
   protected BaseDAO(String table) {
     this.TABLE = table;
   }

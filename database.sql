@@ -9,8 +9,10 @@ CREATE TABLE product (
   description TEXT NOT NULL,
   quantity INT NOT NULL CHECK (quantity >= 0),
   unitPrice DECIMAL(10,2) NOT NULL CHECK (unitPrice >= 0.00),
-  importDate DATETIME NOT NULL,
-  status ENUM('active', 'inactive', 'out of stock', 'discontinued') DEFAULT 'active'
+  salePrice DECIMAL(10,2) NOT NULL CHECK (salePrice >= 0.00),
+  importDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updateDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  status ENUM('active', 'inactive', 'restocked', 'out of stock', 'discontinued') DEFAULT 'active'
 );
 
 CREATE TABLE category (
