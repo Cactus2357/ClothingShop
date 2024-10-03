@@ -1,10 +1,12 @@
 <%-- 
-    Document   : product-control
-    Created on : Oct 1, 2024, 6:24:15 AM
+    Document   : product-detail
+    Created on : Oct 1, 2024, 10:06:44 PM
     Author     : hi
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
   <head>
@@ -24,9 +26,16 @@
         padding-top: 4.5rem;
       }
 
-      .dragging {
-        border: 2px dashed rgba(var(--bs-primary-rgb), 1);
-        background-color: #f8f9fa;
+      .product-item:hover {
+        --bs-border-opacity: 1;
+        border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+        box-shadow: var(--bs-box-shadow) !important;
+      }
+
+      .ratings {
+        display: flex !important;
+        gap: 0.25rem !important;
+        align-items: center !important;
       }
     </style>
   </head>
@@ -82,104 +91,84 @@
     </ul>
   </div>
 
-  <jsp:include page="part/navbar.jsp" />
-  <jsp:include page="part/notification.jsp"/>
+  <jsp:include page="part/navbar.jsp"/>
 
   <main class="container-fluid p-3">
-    <form action="product" method="post" id="product-form" enctype="multipart/form-data">
-      <div class="row">
-        <div class="container mb-3">
-          <h2 class="float-start">Add a Product</h2>
-          <div class="d-flex float-end gap-2">
-            <button class="btn btn-success" type="submit">Confirm</button>
-            <button class="btn btn-secondary" type="reset">Discard</button>
-          </div>
-        </div>
-        <div class="col-lg-7 mb-lg-0 mb-3">
-          <div class="card">
-            <div class="card-body container">
-              <label class="form-label" for="title">Product Title</label>
-              <input type="text" class="form-control mb-3" name="title" id="title" placeholder="Write title here..." required=""/>
-
-              <div class="row mb-3">
-                <div class="col-sm-6">
-                  <label class="form-label" for="original-price">Original Price</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" name="original-price" id="original-price" required="" />
-                  </div>
-                </div>
-
-                <div class="col-sm-6">
-                  <label class="form-label" for="selling-price">Selling Price</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control" name="selling-price" id="selling-price" required="" />
-                  </div>
-                </div>
-              </div>
-
-              <label for="quantity" class="form-label">Quantity</label>
-              <input type="number" class="form-control mb-3" name="quantity" id="quantity" aria-describedby="helpId" required="" />
-
-              <label class="form-label" for="description">Description</label>
-              <textarea name="description" class="form-control" id="description" rows="5" placeholder="Write a description here..." required=""></textarea>
+    <div class="row row-cols-1 row-cols-lg-2 g-3 mb-3">
+      <div class="col col-lg-4">
+        <img src="${requestScope.product.image}" class="img-fluid border rounded w-100" alt="..." />
+      </div>
+      <div class="col col-lg-8">
+        <div class="d-flex flex-column bg-body-secondary rounded p-4 h-100">
+          <h2 class="container d-flex flex-wrap align-items-center gap-2 mb-4">
+            <span class="me-3 mb-2"> ${requestScope.product.name} </span>
+            <span class="badge text-bg-primary mb-2">Category</span>
+            <span class="badge text-bg-primary mb-2">Category</span>
+            <span class="badge text-bg-primary mb-2">Category</span>
+          </h2>
+          <div class="container mb-4">
+            <h4>Pricing</h4>
+            <div class="d-flex ps-3 gap-3">
+              <span class="card-text fs-4 text-truncate text-secondary text-decoration-line-through"> Original: <strong> $${requestScope.product.unitPrice} </strong> </span>
+              <span class="card-text fs-4 text-truncate text-success">Selling: <strong>$${requestScope.product.salePrice}</strong></span>
             </div>
           </div>
-        </div>
-        <div class="col-lg-5 mb-3">
-          <div class="card">
-            <div class="card-header">
-              <label for="image"> Product Image </label>
-            </div>
-            <div class="card-body p-0">
-              <label class="w-100" for="image">
-                <img class="card-img rounded-top-0" id="image-preview" src="asset/img/placeholder.jpg" alt="preview" />
-              </label>
-              <input type="file" accept="image/*" name="image" id="image" onchange="previewImage(this)" hidden />
-            </div>
+          <div class="container mb-4">
+            <h4>Import date</h4>
+            <span class="fs-5 ms-3">
+              <fmt:formatDate type = "both" dateStyle = "long" timeStyle = "short" value = "${requestScope.product.importDate}" />
+            </span>
+          </div>
+          <div class="container">
+            <h4>Description</h4>
+            <p class="px-3" style="text-align: justify; text-justify: inter-word">${requestScope.product.description}</p>
           </div>
         </div>
       </div>
-    </form>
+    </div>
+    <div class="container-fluid bg-body-secondary p-5 rounded">
+      <h2>Latest Reviews</h2>
+      <span class="ratings" value="4.3" max="5.0">
+        <span class="ms-2">4.3/5.0</span>
+        <span class="ms-2">(7)</span>
+      </span>
+
+      <div class="container"></div>
+    </div>
   </main>
+  <div class="container">
+    <footer class="py-3 my-4">
+      <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+      </ul>
+      <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+    </footer>
+  </div>
 
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
   <script>
-                const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-                const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+    $(() => {
+      $(".ratings").each(function () {
+        let rating = parseFloat($(this).attr("value"));
+        let maxRating = parseFloat($(this).attr("max")) || 5;
+        let fullStars = Math.floor(rating);
+        let halfStar = rating % 1 >= 0.5 ? 1 : 0;
+        let emptyStars = maxRating - fullStars - halfStar;
+        let starsHtml =
+                '<i class="bi bi-star-fill text-warning"></i>'.repeat(fullStars) +
+                (halfStar ? '<i class="bi bi-star-half text-warning"></i>' : "") +
+                '<i class="bi bi-star text-warning"></i>'.repeat(emptyStars);
 
-                const $imagePreview = $("#image-preview");
-                const imageSrc = $imagePreview.attr("src");
-
-                function previewImage(input) {
-                  if (input.files && input.files[0]) {
-                    let reader = new FileReader();
-                    reader.onload = (e) => $imagePreview.attr("src", e.target.result);
-                    reader.readAsDataURL(input.files[0]);
-                  }
-                }
-
-//                $("label[for='image']")
-//                        .on("dragover", function () {
-//                          $(this).addClass("dragging");
-//                          event.preventDefault();
-//                        })
-//                        .on("dragleave drop", function () {
-//                          $(this).removeClass("dragging");
-//                        })
-//                        .on("drop", function () {
-//                          event.preventDefault();
-//                          const files = event.dataTransfer.files;
-//                          if (files && files[0]) {
-//                            previewImage({files: files});
-//                          }
-//                        });
-
-                $("#product-form").on("reset", () => {
-                  $imagePreview.attr("src", imageSrc);
-                });
+        $(this).prepend(starsHtml);
+      });
+    });
   </script>
 </body>
 </html>

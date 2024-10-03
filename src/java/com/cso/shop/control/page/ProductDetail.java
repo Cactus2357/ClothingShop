@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,45 +20,41 @@ import java.util.logging.Logger;
  *
  * @author hi
  */
-public class ProductList extends HttpServlet {
+public class ProductDetail extends HttpServlet {
 
-  private ProductDAO pdao = new ProductDAO();
+  ProductDAO pdao = new ProductDAO();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    String query = req.getParameter("q");
-    String sortBy = req.getParameter("s");
-    String size = req.getParameter("n");
-    String page = req.getParameter("p");
-
-    req.setAttribute("query", query);
-
-    List<Product> productList = null;
-
     try {
-      Integer sortByInteger = sortBy == null ? null : Integer.parseInt(sortBy);
-      req.setAttribute("sortBy", sortByInteger);
-      Integer sizeInteger = size == null ? null : Integer.parseInt(size);
-      req.setAttribute("size", sizeInteger);
-      Integer pageInteger = page == null ? null : Integer.parseInt(page);
-      req.setAttribute("page", pageInteger);
+      String productIdString = req.getParameter("id");
+      int productId = Integer.parseInt(productIdString);
 
-      productList = pdao.selectAll(query, sortByInteger, sizeInteger, pageInteger);
-    } catch (Exception e) {
-      System.err.println(e);
+      Product p = new Product();
+      p.setId(productId);
+      p = pdao.select(p);
+      if (p == null) {
+        throw new Exception("no product found");
+      }
+
+      req.setAttribute("product", p);
+    } catch (SQLException e) {
       log(e.getMessage());
+    } catch (Exception e) {
+      log(e.getMessage());
+      resp.sendRedirect("product-list");
+      return;
+    } finally {
+      req.getRequestDispatcher("WEB-INF/product-detail.jsp").forward(req, resp);
     }
-
-    req.setAttribute("productList", productList);
-    req.getRequestDispatcher("WEB-INF/product-list.jsp").forward(req, resp);
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    processRequest(req, resp);
+    resp.sendError(404);
   }
 
   @Override
@@ -71,7 +66,7 @@ public class ProductList extends HttpServlet {
     throws ServletException, IOException {
     resp.setContentType("text/html;charset=UTF-8");
     try (PrintWriter out = resp.getWriter()) {
-      out.println("ProductList at " + req.getContextPath());
+      out.println("ProductDetail at " + req.getContextPath());
     }
   }
 

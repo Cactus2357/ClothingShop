@@ -70,26 +70,29 @@ public class ProductControl extends HttpServlet {
       int quantityInt = Integer.parseInt(quantity);
       String image = createImage(imagePart, webImagePath);
 
-      log(imagePart.getContentType());
-      log(imagePart.getName());
-      log(imagePart.getSubmittedFileName());
+      Product p = new Product();
+      p.setName(name);
+      p.setUnitPrice(unitPrice);
+      p.setSalePrice(salePrice);
+      p.setQuantity(quantityInt);
+      p.setDescription(description);
+      p.setImage(image);
 
-//      Product p = new Product();
-//      p.setName(name);
-//      p.setUnitPrice(unitPrice);
-//      p.setSalePrice(salePrice);
-//      p.setQuantity(quantityInt);
-//      p.setDescription(description);
-//      p.setImage(image);
-//
-//      pdao.insert(p);
-      resp.sendRedirect(req.getRequestURI());
+      pdao.insert(p);
+//      resp.sendRedirect(req.getRequestURI());
+
+      req.setAttribute("response", "Product added successfully");
+      req.setAttribute("response_type", true);
 
     } catch (Exception e) {
       log(e.getMessage());
+      req.setAttribute("response", e.getMessage());
+      req.setAttribute("response_type", false);
       resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
-      return;
+
     }
+
+    doGet(req, resp);
 
   }
 
@@ -98,18 +101,20 @@ public class ProductControl extends HttpServlet {
    * @param image Image part
    * @param webImageDir directory on web server (ends with '/')
    * @return A relative URL string to image on server
-   *
    */
   private String createImage(Part image, String webImageDir) throws IOException {
     if (image == null || webImageDir == null) {
       return null;
     }
     String name = image.getSubmittedFileName();
-    String contentType = image.getContentType();
-    String extension = contentType.substring(contentType.lastIndexOf('/') + 1);
+    int dotIndex = name.lastIndexOf('.');
+    String extension = (dotIndex > 0) ? name.substring(dotIndex) : "";
+    if (extension.isBlank()) {
+      return null;
+    }
 
     String timestamp = LocalDateTime.now()
-      .format(DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss"));
+      .format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
     String new_name = Utils.hash(timestamp + name) + extension;
 
     String img_dir = getServletContext().getRealPath(webImageDir);

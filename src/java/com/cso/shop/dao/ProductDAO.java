@@ -9,12 +9,34 @@ import java.sql.SQLException;
 import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author hi
  */
 public class ProductDAO extends BaseDAO<Product> {
+
+  public static void main(String[] args) {
+    ProductDAO pdao = new ProductDAO();
+    try {
+      pdao.selectAll(null, null, null, null).forEach(p
+        -> System.out.println(p)
+      );
+      Integer n = 13;
+      System.out.println(n);
+      something(n);
+      System.out.println(n);
+
+    } catch (SQLException ex) {
+      Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }
+
+  private static void something(Integer n) {
+    n = 41;
+  }
 
   public ProductDAO() {
     super("product");
@@ -23,6 +45,25 @@ public class ProductDAO extends BaseDAO<Product> {
   @Override
   public List<Product> selectAll() throws SQLException {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  }
+
+  public int countSelectAll(String name) {
+    String sql = "SELECT COUNT(productId) AS count FROM " + TABLE + " WHERE name LIKE ?";
+    try {
+      ps = connection.prepareStatement(sql);
+      ps.setString(1, '%' + name.trim() + '%');
+      rs = ps.executeQuery();
+
+      if (!rs.next()) {
+        throw new SQLException("COUNT() not return row set");
+      }
+
+      return rs.getInt("count");
+
+    } catch (SQLException ex) {
+      Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+      return 0;
+    }
   }
 
   public List<Product> selectAll(String name, Integer sortBy, Integer limit, Integer offset) throws SQLException {
@@ -49,6 +90,8 @@ public class ProductDAO extends BaseDAO<Product> {
           sql.append(" ORDER BY salePrice DESC");
           break;
       }
+    } else {
+      sql.append(" ORDER BY importDate DESC");
     }
     if (limitCondition) {
       sql.append(" LIMIT ").append(limit);

@@ -84,45 +84,7 @@
     </ul>
   </div>
 
-  <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar">Enable both scrolling & backdrop</button> -->
-
-  <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="sidebar-label">Backdrop with scrolling</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-    </div>
-    <div class="offcanvas-body">
-      <p>Try scrolling the rest of the page to see this option in action.</p>
-      <hr />
-      <div class=""></div>
-    </div>
-  </div>
-
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark border-bottom">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebar">Side bar</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled">Disabled</a>
-          </li>
-        </ul>
-        <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </nav>
+  <jsp:include page="part/navbar.jsp" />
 
   <main class="container-fluid p-5">
     <div class="row">
@@ -204,7 +166,7 @@
             <div class="row">
               <div class="col-xl-6 mb-3">
                 <div class="input-group input-group-sm">
-                  <input type="search" list="searchList" name="q" class="form-control" placeholder="Search" />
+                  <input type="search" list="searchList" name="q" class="form-control" placeholder="Search" value="${requestScope.query}" />
                   <button type="submit" class="btn btn-secondary"><i class="bi bi-search"></i></button>
                 </div>
                 <datalist id="searchList">
@@ -217,19 +179,19 @@
               </div>
               <div class="col-auto col-xl-6 mb-3">
                 <div class="d-flex flex-wrap float-end gap-2">
-                  <input type="radio" class="btn-check" name="s" value="0" id="radio1" autocomplete="off" checked />
+                  <input type="radio" class="btn-check" name="s" value="0" id="radio1" autocomplete="off" ${(sortBy ne null and sortBy ne 0) ? '' : 'checked'} />
                   <label class="btn btn-sm btn-outline-primary" for="radio1">New</label>
 
-                  <input type="radio" class="btn-check" name="s" value="1" id="radio2" autocomplete="off" />
+                  <input type="radio" class="btn-check" name="s" value="1" id="radio2" autocomplete="off" ${sortBy eq 1 ? 'checked' : ''} />
                   <label class="btn btn-sm btn-outline-primary" for="radio2">Price ascending</label>
 
-                  <input type="radio" class="btn-check" name="s" value="2" id="radio3" autocomplete="off" />
+                  <input type="radio" class="btn-check" name="s" value="2" id="radio3" autocomplete="off" ${sortBy eq 2 ? 'checked' : ''} />
                   <label class="btn btn-sm btn-outline-primary" for="radio3">Price descending</label>
 
-                  <input type="radio" class="btn-check" name="s" value="3" id="radio4" autocomplete="off" />
+                  <input type="radio" class="btn-check" name="s" value="3" id="radio4" autocomplete="off" ${sortBy eq 3 ? 'checked' : ''} />
                   <label class="btn btn-sm btn-outline-primary disabled" for="radio4">Rating</label>
 
-                  <input type="number" name="n" min="5" max="20" value="9" class="form-control form-control-sm w-auto" data-bs-toggle="tooltip" data-bs-title="Products per page" />
+                  <input type="number" name="n" min="5" max="20" value="${requestScope.size ne null ? size : 9}" class="form-control form-control-sm w-auto" data-bs-toggle="tooltip" data-bs-title="Products per page" />
                 </div>
               </div>
             </div>
@@ -238,29 +200,32 @@
         </div>
         <div class="container mb-3">
           <c:choose>
-            <c:when test="${requestScope.productList eq null or empty requestScope.productList}">
+            <c:when test="${requestScope.productList eq null}">
+              <h3>Server error</h3>
+            </c:when>
+            <c:when test="${empty requestScope.productList}">
               <h3>No products found</h3>
             </c:when>
             <c:otherwise>
-              <h3>Products found (${requestScope.productList.size})</h3>
+              <h3>Products found (${requestScope.productList.size()})</h3>
             </c:otherwise>
           </c:choose>
         </div>
         <div class="container mb-3">
           <!-- !!! -->
-          <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-3">
+          <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-3" data-masonry='{"percentPosition": true }'>
             <c:forEach var="product" items="${requestScope.productList}">
 
               <div class="col">
                 <div class="card bg-body-tertiary h-100 product-item">
-                  <a href="product?id=${product.id}"><img src="${product.image}" class="card-img-top" alt="..." /></a>
+                  <a href="product-detail?id=${product.id}"><img src="${product.image}" class="card-img-top" alt="..." /></a>
                   <div class="card-body">
                     <h5 class="card-title">${product.name}</h5>
                     <p class="card-text text-truncate">${product.description}</p>
                     <div class="d-flex justify-content-between align-items-center">
-                      <span class="card-text fs-4">${product.salePrice}</span>
+                      <span class="card-text fs-4">$${product.salePrice}</span>
                       <span class="float-end">
-                        <a href="product?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
+                        <a href="product-detail?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
                       </span>
                     </div>
                   </div>
@@ -276,10 +241,10 @@
                   <li class="page-item disabled">
                     <a class="page-link" href="#"><span>&laquo;</span></a>
                   </li>
-                  <li class="page-item"><a class="page-link active" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link active" href="product-list?q=${query}&s=${sortBy}&n=${size}">1</a></li>
+                  <li class="page-item"><a class="page-link" href="product-list?q=${query}&s=${sortBy}&n=${size}&p=2">2</a></li>
                   <li class="page-item"><a class="page-link" href="#">...</a></li>
-                  <li class="page-item"><a class="page-link" href="#">27</a></li>
+                  <li class="page-item"><a class="page-link" href="product-list?q=${query}&s=${sortBy}&n=${size}&p=27">27</a></li>
                   <li class="page-item">
                     <a class="page-link" href="#"><span>&raquo;</span></a>
                   </li>
@@ -305,6 +270,7 @@
   </div>
 
   <script src="js/bootstrap.bundle.min.js"></script>
+  <script async src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
   <script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
