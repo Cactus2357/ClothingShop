@@ -133,10 +133,10 @@
               <label for="image"> Product Image </label>
             </div>
             <div class="card-body p-0">
-              <label class="w-100" for="image">
+              <label class="w-100 has-validation" for="image">
                 <img class="card-img rounded-top-0" id="image-preview" src="asset/img/placeholder.jpg" alt="preview" />
               </label>
-              <input type="file" accept="image/*" name="image" id="image" onchange="previewImage(this)" hidden />
+              <input type="file" accept="image/*" name="image" id="image" onchange="previewImage(this)" hidden required="" />
             </div>
           </div>
         </div>
