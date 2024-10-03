@@ -1,17 +1,10 @@
-<%-- 
-    Document   : profile
-    Created on : Sep 19, 2024, 9:45:06 PM
-    Author     : hi
---%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%-- Document : profile Created on : Sep 19, 2024, 9:45:06 PM Author : hi --%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@page contentType="text/html"
+pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="asset/script/color-modes.js"></script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -50,72 +43,35 @@
       }
     </style>
     <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
-
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Fixed navbar</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarCollapse"
-          aria-controls="navbarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-          >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
-          </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
-        </div>
-      </div>
-    </nav>
-
-    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
-      <div id="notification" class="toast bg-${requestScope.response_type ? 'success' : 'danger'}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
-        <div class="d-flex">
-          <div class="toast-body">
-            ${requestScope.response}
-          </div>
-          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-      </div>
-    </div>
+    <jsp:include page="part/navbar.jsp" />
+    <jsp:include page="part/notification.jsp" />
     <script>
       $(() => {
-        const notifi = $('#notification')
-        const notification = bootstrap.Toast.getOrCreateInstance($('#notification'));
-      <c:if test="${requestScope.response ne null}">
-        notification.show();
-      </c:if>
-      })
+        const notifi = $("#notification");
+        const notification = bootstrap.Toast.getOrCreateInstance($("#notification"));
+        <c:if test="${requestScope.response ne null}">notification.show();</c:if>;
+      });
     </script>
 
     <main>
       <div class="py-4 container-xl clearfix">
         <header class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
           <div class="d-flex align-items-center mb-2 mb-md-0">
-            <img src="${sessionScope.user.avatar ne null ? sessionScope.user.avatar  : 'asset/img/default_picture.png'}" alt="@${sessionScope.user.userName}" class="rounded-circle me-3" height="48" width="48" />
+            <img
+              src="${sessionScope.user.avatar ne null ? sessionScope.user.avatar  : 'asset/img/default_picture.png'}"
+              alt="@${sessionScope.user.userName}"
+              class="rounded-circle me-3"
+              height="48"
+              width="48"
+            />
             <div class="flex-auto">
               <h1 class="h3 lh-1 mb-0">
-                <a href="#" class="text-reset text-decoration-none"> ${sessionScope.user.familyName} ${sessionScope.user.givenName} <span class="text-muted">(@${sessionScope.user.userName})</span> </a>
+                <a href="#" class="text-reset text-decoration-none">
+                  ${sessionScope.user.familyName} ${sessionScope.user.givenName} <span class="text-muted">(@${sessionScope.user.userName})</span>
+                </a>
               </h1>
               <div class="d-flex align-items-center flex-wrap color-brand-teal">
                 <p class="text-muted mb-0 me-1">Your personal account</p>
@@ -223,15 +179,16 @@
                         </dd>
                       </dl>
                       <p class="note mb-2">
-                        Many of the fields on this page are optional and can be deleted at any time, and by filling them out, you're giving us consent
-                        to share this data wherever your user profile appears. Please see our
+                        Many of the fields on this page are optional and can be deleted at any time, and by filling them out, you're giving us consent to share this data wherever your user
+                        profile appears. Please see our
                         <a class="text-decoration-none" href="#">privacy statement</a> to learn more about how we use this information.
                       </p>
                       <p>
                         <button
-                          type="submit" onsubmit="return alert('Are you sure you want to update your info?')"
+                          type="submit"
+                          onsubmit="return alert('Are you sure you want to update your info?')"
                           class="btn btn-success d-inline-flex align-items-center flex-row justify-content-between position-relative text-center user-select-none"
-                          >
+                        >
                           <span class="d-grid flex-grow-1 flex-shrink-0 flex-auto align-content-center justify-content-center">
                             <span>Update profile</span>
                           </span>
@@ -251,25 +208,23 @@
                         </form>
                         <div class="container-fluid">
                           <a href="#">
-                            <img src="${sessionScope.user.avatar ne null ? sessionScope.user.avatar  : 'asset/img/default_picture.png'}" id="avatar" class="rounded-circle shadow" width="200" alt="Avatar" />
+                            <img
+                              src="${sessionScope.user.avatar ne null ? sessionScope.user.avatar  : 'asset/img/default_picture.png'}"
+                              id="avatar"
+                              class="rounded-circle shadow"
+                              width="200"
+                              alt="Avatar"
+                            />
                           </a>
                           <div class="dropdown position-absolute rounded-2 p-2 start-0 bottom-0 ms-2">
-                            <button
-                              class="btn btn-sm btn-dark rounded-3"
-                              type="button"
-                              id="editAvatarButton"
-                              data-bs-toggle="dropdown"
-                              aria-expanded="false"
-                              >
+                            <button class="btn btn-sm btn-dark rounded-3" type="button" id="editAvatarButton" data-bs-toggle="dropdown" aria-expanded="false">
                               <i class="bi bi-pencil me-1"></i>
                               <span>Edit</span>
                             </button>
                             <ul class="dropdown-menu py-0" aria-labelledby="editAvatarButton">
                               <li><label for="avatar_upload" class="dropdown-item" style="cursor: pointer" tabindex="0">Upload a photo...</label></li>
                               <li>
-                                <a class="dropdown-item" onclick="return alert('Are you sure you want to reset your profile picture?');">
-                                  Remove photo
-                                </a>
+                                <a class="dropdown-item" onclick="return alert('Are you sure you want to reset your profile picture?');"> Remove photo </a>
                               </li>
                             </ul>
                           </div>
@@ -319,26 +274,13 @@
                     <dl>
                       <dt><label for="user_new_password">New Password</label></dt>
                       <dd>
-                        <input
-                          type="password"
-                          name="newPassword"
-                          id="user_new_password"
-                          required="required"
-                          spellcheck="false"
-                          class="form-control"
-                          />
+                        <input type="password" name="newPassword" id="user_new_password" required="required" spellcheck="false" class="form-control" />
                       </dd>
                     </dl>
                     <dl>
                       <dt><label for="user_confirm_new_password">Confirm New Password</label></dt>
                       <dd>
-                        <input
-                          type="password"
-                          name="newPassword2"
-                          id="user_confirm_new_password"
-                          required="required"
-                          class="form-control"
-                          />
+                        <input type="password" name="newPassword2" id="user_confirm_new_password" required="required" class="form-control" />
                       </dd>
                     </dl>
                   </fieldset>
@@ -353,9 +295,7 @@
             <div class="tab-pane fade" id="nav-delete-account" role="tabpanel" aria-labelledby="nav-delete-account-tab" tabindex="0">
               <div class="d-inline">
                 <p class="mb-2">Once you delete your account, there is no going back. Please be certain.</p>
-                <button type="submit" class="btn-outline-danger btn me-2" data-bs-toggle="modal" data-bs-target="#delete-account-modal">
-                  Delete your account
-                </button>
+                <button type="submit" class="btn-outline-danger btn me-2" data-bs-toggle="modal" data-bs-target="#delete-account-modal">Delete your account</button>
                 <div class="modal fade" id="delete-account-modal" tabindex="-1">
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -376,38 +316,17 @@
                           <dl>
                             <dt><label for="sudo_login"> Your username or email </label></dt>
                             <dd>
-                              <input
-                                type="text"
-                                name="sudo_login"
-                                id="sudo_login"
-                                required="required"
-                                autocomplete="off"
-                                class="form-control form-control"
-                                />
+                              <input type="text" name="sudo_login" id="sudo_login" required="required" autocomplete="off" class="form-control form-control" />
                             </dd>
                             <dt>
                               <label for="verify_text"> Type <i class="fw-normal user-select-none">delete my account </i>below to verify </label>
                             </dt>
                             <dd>
-                              <input
-                                type="text"
-                                name="verify_text"
-                                id="verify_text"
-                                required="required"
-                                autocomplete="off"
-                                class="form-control form-control"
-                                />
+                              <input type="text" name="verify_text" id="verify_text" required="required" autocomplete="off" class="form-control form-control" />
                             </dd>
                             <dt><label for="confirm_password"> Confirm your password </label></dt>
                             <dd>
-                              <input
-                                type="password"
-                                name="confirm_password"
-                                id="confirm_password"
-                                required="required"
-                                autocomplete="off"
-                                class="form-control form-control"
-                                />
+                              <input type="password" name="confirm_password" id="confirm_password" required="required" autocomplete="off" class="form-control form-control" />
                             </dd>
                           </dl>
                         </div>
@@ -445,58 +364,60 @@
       </div>
     </main>
 
-    <footer class="footer mt-auto py-4 bg-body-tertiary">
-      <div class="container">
-        <div class="row m-0">
-          <div class="col-12 col-md">
-            <img class="mb-2" src="favicon.ico" alt="" width="19" height="19" />
-            <small class="d-block mb-3 text-muted">&copy; 2017–2021</small>
-          </div>
-          <div class="col-6 col-md">
-            <h5>Features</h5>
-            <ul class="list-unstyled text-small">
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md">
-            <h5>Resources</h5>
-            <ul class="list-unstyled text-small">
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md">
-            <h5>About</h5>
-            <ul class="list-unstyled text-small">
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
-              <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <style>
-        body {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
-          margin: 0;
-        }
+    <jsp:include page="part/footer.jsp" />
 
-        main {
-          flex: 1;
-          padding: 0;
-        }
-      </style>
-    </footer>
+    <!--    <footer class="footer mt-auto pt-4">
+          <div class="container">
+            <div class="row m-0">
+              <div class="col-12 col-md">
+                <img class="mb-2" src="favicon.ico" alt="" width="19" height="19" />
+                <small class="d-block mb-3 text-muted">&copy; 2017–2021</small>
+              </div>
+              <div class="col-6 col-md">
+                <h5>Features</h5>
+                <ul class="list-unstyled text-small">
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
+                </ul>
+              </div>
+              <div class="col-6 col-md">
+                <h5>Resources</h5>
+                <ul class="list-unstyled text-small">
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
+                </ul>
+              </div>
+              <div class="col-6 col-md">
+                <h5>About</h5>
+                <ul class="list-unstyled text-small">
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
+                  <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <style>
+            body {
+              display: flex;
+              flex-direction: column;
+              min-height: 100vh;
+              margin: 0;
+            }
+    
+            main {
+              flex: 1;
+              padding: 0;
+            }
+          </style>
+        </footer>-->
     <!--</div>-->
     <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
     <!-- <script
@@ -513,27 +434,27 @@
       referrerpolicy="no-referrer"
     ></script> -->
     <script>
-                  $(() => {
-//                    const toastLiveExample = document.getElementById("notification");
-//                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-//                    // document.addEventListener("DOMContentLoaded", function () {
-//                    toastBootstrap.show();
-                    // });
+      $(() => {
+        //                    const toastLiveExample = document.getElementById("notification");
+        //                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+        //                    // document.addEventListener("DOMContentLoaded", function () {
+        //                    toastBootstrap.show();
+        // });
 
-                    const myModal = document.getElementById("myModal");
-                    const myInput = document.getElementById("myInput");
+        const myModal = document.getElementById("myModal");
+        const myInput = document.getElementById("myInput");
 
-                    myModal.addEventListener("shown.bs.modal", () => {
-                      myInput.focus();
-                    });
+        myModal.addEventListener("shown.bs.modal", () => {
+          myInput.focus();
+        });
 
-                    let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-                    let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                      return new bootstrap.Popover(popoverTriggerEl);
-                    });
+        let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+          return new bootstrap.Popover(popoverTriggerEl);
+        });
 
-                    $('[data-toggle="tooltip"]').tooltip();
-                  });
+        $('[data-toggle="tooltip"]').tooltip();
+      });
     </script>
   </body>
 </html>
