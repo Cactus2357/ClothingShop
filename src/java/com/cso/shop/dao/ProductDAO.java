@@ -21,7 +21,7 @@ public class ProductDAO extends BaseDAO<Product> {
   public static void main(String[] args) {
     ProductDAO pdao = new ProductDAO();
     try {
-      pdao.selectAll(null, null, null, null).forEach(p
+      pdao.selectAll(null, 0, 5, 2).forEach(p
         -> System.out.println(p)
       );
       Integer n = 13;
@@ -48,10 +48,15 @@ public class ProductDAO extends BaseDAO<Product> {
   }
 
   public int countSelectAll(String name) {
-    String sql = "SELECT COUNT(productId) AS count FROM " + TABLE + " WHERE name LIKE ?";
+    String sql = "SELECT COUNT(productId) AS count FROM " + TABLE;
+    if (name != null && !name.isBlank()) {
+      sql += " WHERE name LIKE ?";
+    }
     try {
       ps = connection.prepareStatement(sql);
-      ps.setString(1, '%' + name.trim() + '%');
+      if (name != null && !name.isBlank()) {
+        ps.setString(1, '%' + name.trim() + '%');
+      }
       rs = ps.executeQuery();
 
       if (!rs.next()) {
@@ -66,15 +71,15 @@ public class ProductDAO extends BaseDAO<Product> {
     }
   }
 
-  public List<Product> selectAll(String name, Integer sortBy, Integer limit, Integer offset) throws SQLException {
+  public List<Product> selectAll(String name, int sortBy, int limit, int offset) throws SQLException {
     StringBuilder sql = new StringBuilder(
       "SELECT productId, name, image, description, quantity, unitPrice, salePrice, importDate, updateDate, status FROM "
       + TABLE
     );
     boolean nameCondition = (name != null && !name.isBlank());
-    boolean sortByCondition = (sortBy != null && sortBy >= 0 && sortBy <= 3);
-    boolean limitCondition = (limit != null && limit >= 5 && limit <= 20);
-    boolean offsetCondition = (offset != null && limitCondition && offset >= 2);
+    boolean sortByCondition = sortBy >= 0 && sortBy <= 3;
+    boolean limitCondition = limit >= 1 && limit <= 20;
+    boolean offsetCondition = limitCondition && offset >= 2;
     if (nameCondition) {
       sql.append(" WHERE name LIKE ?");
     }

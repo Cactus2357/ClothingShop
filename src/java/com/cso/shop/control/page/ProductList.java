@@ -12,10 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -29,29 +26,45 @@ public class ProductList extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    String query = req.getParameter("q");
-    String sortBy = req.getParameter("s");
-    String size = req.getParameter("n");
-    String page = req.getParameter("p");
-
-    req.setAttribute("query", query);
-
     List<Product> productList = null;
 
-    try {
-      Integer sortByInteger = sortBy == null ? null : Integer.parseInt(sortBy);
-      req.setAttribute("sortBy", sortByInteger);
-      Integer sizeInteger = size == null ? null : Integer.parseInt(size);
-      req.setAttribute("size", sizeInteger);
-      Integer pageInteger = page == null ? null : Integer.parseInt(page);
-      req.setAttribute("page", pageInteger);
+    String query = req.getParameter("query");
+//    String sortByString = req.getParameter("s");
+//    String sizeString = req.getParameter("n");
+//    String pageString = req.getParameter("p");
+    int order = tryParseInt(req.getParameter("order"), 0);
+    int size = tryParseInt(req.getParameter("size"), 9);
+    if (size <= 4) {
+      size = 5;
+    } else if (size >= 21) {
+      size = 20;
+    }
+    int page = tryParseInt(req.getParameter("page"), 1);
 
-      productList = pdao.selectAll(query, sortByInteger, sizeInteger, pageInteger);
+    if (query != null && !query.isBlank()) {
+      req.setAttribute("query", query);
+    }
+//    if (order != 0) {
+    req.setAttribute("order", order);
+//    }
+//    if (size != 9) {
+    req.setAttribute("size", size);
+//    }
+//    if (page != 1) {
+    req.setAttribute("page", page);
+//    }
+
+    try {
+
+      productList = pdao.selectAll(query, order, size, page);
     } catch (Exception e) {
       System.err.println(e);
       log(e.getMessage());
     }
 
+    int totalItems = pdao.countSelectAll(query);
+    req.setAttribute("totalItems", totalItems);
+    req.setAttribute("totalPages", (int) Math.ceil((double) totalItems / (double) size));
     req.setAttribute("productList", productList);
     req.getRequestDispatcher("WEB-INF/product-list.jsp").forward(req, resp);
   }
@@ -72,6 +85,14 @@ public class ProductList extends HttpServlet {
     resp.setContentType("text/html;charset=UTF-8");
     try (PrintWriter out = resp.getWriter()) {
       out.println("ProductList at " + req.getContextPath());
+    }
+  }
+
+  private int tryParseInt(String value, int defaultVal) {
+    try {
+      return Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+      return defaultVal;
     }
   }
 
