@@ -40,15 +40,15 @@ public class ProductDetail extends HttpServlet {
       }
 
       req.setAttribute("product", p);
+      req.getRequestDispatcher("WEB-INF/product-detail.jsp").forward(req, resp);
+      return;
     } catch (SQLException e) {
       log(e.getMessage());
     } catch (Exception e) {
       log(e.getMessage());
-      resp.sendRedirect("product-list");
-      return;
-    } finally {
-      req.getRequestDispatcher("WEB-INF/product-detail.jsp").forward(req, resp);
     }
+
+    resp.sendRedirect("product-list");
   }
 
   @Override
