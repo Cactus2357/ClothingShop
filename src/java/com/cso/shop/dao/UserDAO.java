@@ -18,17 +18,17 @@ import java.util.List;
 public class UserDAO extends BaseDAO<User> {
 
   private String SQL_INSERT = "INSERT INTO " + TABLE
-    + " (UserName, Password, Email, Phone, Role, Address, GivenName, FamilyName, Status, Avatar, Gender)"
+    + " (name, password, email, phone, role, address, givenName, familyName, status, avatar, gender)"
     + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
   private String SQL_SELECT = "SELECT * FROM " + TABLE + " WHERE UserID=?";
 
   private String SQL_UPDATE = "UPDATE " + TABLE
-    + " SET UserName=?, Phone=?, Address=?, GivenName=?, FamilyName=?, Gender=?"
-    + " WHERE UserID=?";
+    + " SET name=?, phone=?, aAddress=?, givenName=?, familyName=?, gender=?"
+    + " WHERE userID=?";
 
   private String SQL_DELETE = "DELETE FROM " + TABLE
-    + " WHERE UserID=?";
+    + " WHERE userID=?";
 
   public UserDAO() {
     super("User");
@@ -63,19 +63,19 @@ public class UserDAO extends BaseDAO<User> {
   private User parse(ResultSet rs) {
     try {
       return new User(
-        rs.getInt("UserID"),
-        rs.getString("UserName"),
-        rs.getString("Password"),
-        rs.getString("Email"),
-        rs.getString("Phone"),
-        rs.getString("Role"),
-        rs.getString("Address"),
-        rs.getNString("GivenName"),
-        rs.getNString("FamilyName"),
-        rs.getString("Status"),
-        rs.getString("Avatar"),
-        rs.getString("Gender"),
-        rs.getDate("CreatedAt")
+        rs.getInt("userID"),
+        rs.getString("name"),
+        rs.getString("password"),
+        rs.getString("email"),
+        rs.getString("phone"),
+        rs.getString("role"),
+        rs.getString("address"),
+        rs.getNString("givenName"),
+        rs.getNString("familyName"),
+        rs.getString("status"),
+        rs.getString("avatar"),
+        rs.getString("gender"),
+        rs.getDate("createdAt")
       );
     } catch (Exception e) {
       return null;
@@ -137,7 +137,7 @@ public class UserDAO extends BaseDAO<User> {
    */
   public User authorize(final String sudoLogin, final String password) throws SQLException {
     String sql = "SELECT * FROM " + TABLE + " WHERE %s=?"
-      .formatted(sudoLogin.contains("@") ? "Email" : "UserName");
+      .formatted(sudoLogin.contains("@") ? "email" : "name");
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
       ps.setString(1, sudoLogin);
       ResultSet rs = ps.executeQuery();
@@ -170,7 +170,7 @@ public class UserDAO extends BaseDAO<User> {
   }
 
   public User selectByName(String name) throws SQLException {
-    String sql = "SELECT * FROM " + TABLE + " WHERE UserName=?";
+    String sql = "SELECT * FROM " + TABLE + " WHERE name=?";
     try (PreparedStatement ps = connection.prepareStatement(sql);) {
       ps.setString(1, name);
       ResultSet rs = ps.executeQuery();
@@ -180,8 +180,8 @@ public class UserDAO extends BaseDAO<User> {
 
   public void updatePassword(User t) throws SQLException {
     String sql = "UPDATE " + TABLE
-      + " SET Password=?"
-      + " WHERE UserID=?";
+      + " SET password=?"
+      + " WHERE userID=?";
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
       String hashedPassword = Utils.hash(t.getPassword());
       ps.setString(1, hashedPassword);
