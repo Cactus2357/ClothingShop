@@ -4,16 +4,20 @@
  */
 package com.cso.shop.control.page;
 
+import com.cso.shop.dao.CategoryDAO;
 import com.cso.shop.dao.ProductDAO;
+import com.cso.shop.model.Category;
 import com.cso.shop.model.Product;
 import com.cso.shop.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -22,23 +26,27 @@ import java.util.List;
 public class ProductList extends HttpServlet {
 
   private ProductDAO pdao = new ProductDAO();
+  private CategoryDAO cdao = new CategoryDAO();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
     List<Product> productList = null;
+    List<Category> categoryList = null;
 
     String query = req.getParameter("query");
     int order = Utils.tryParseInt(req.getParameter("order"), 0);
     int size = Utils.tryParseInt(req.getParameter("size"), 9);
+    int page = Utils.tryParseInt(req.getParameter("page"), 1);
+    int categoryId = Utils.tryParseInt(req.getParameter("category-id"), -1);
+    int display = Utils.tryParseInt(req.getParameter("display"), 2);
+
     if (size <= 4) {
       size = 5;
     } else if (size >= 21) {
       size = 20;
     }
-    int page = Utils.tryParseInt(req.getParameter("page"), 1);
-
     if (query != null && !query.isBlank()) {
       req.setAttribute("query", query);
     }
@@ -46,18 +54,32 @@ public class ProductList extends HttpServlet {
     req.setAttribute("size", size);
     req.setAttribute("page", page);
 
-    try {
+    if (display >= 1 && display <= 3) {
+//      resp.addCookie(new Cookie("display", String.valueOf(display)));
+      req.setAttribute("display", display);
+    }
 
-      productList = pdao.selectAll(query, order, size, page);
+    try {
+      productList = pdao.selectAll(query, categoryId, order, size, (page - 1) * size);
+
+      int[] productIds = new int[productList.size()];
+      for (int i = 0; i < productIds.length; i++) {
+        productIds[i] = productList.get(i).getId();
+      }
+      Map<Integer, List<Category>> productCategoryMap = cdao.selectBatch(productIds);
+      req.setAttribute("productCategoryMap", productCategoryMap);
+
+      categoryList = cdao.selectAll();
     } catch (Exception e) {
       System.err.println(e);
       log(e.getMessage());
     }
 
-    int totalItems = pdao.countSelectAll(query);
+    int totalItems = pdao.countSelectAll(query, categoryId);
     req.setAttribute("totalItems", totalItems);
     req.setAttribute("totalPages", (int) Math.ceil((double) totalItems / (double) size));
     req.setAttribute("productList", productList);
+    req.setAttribute("categoryList", categoryList);
     req.getRequestDispatcher("WEB-INF/product-list.jsp").forward(req, resp);
   }
 
