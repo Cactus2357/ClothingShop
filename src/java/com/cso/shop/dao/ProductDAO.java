@@ -21,7 +21,7 @@ public class ProductDAO extends BaseDAO<Product> {
   public static void main(String[] args) {
     ProductDAO pdao = new ProductDAO();
     try {
-      pdao.selectAll(null, 0, 5, 2).forEach(p
+      pdao.selectAll(null, 6, 0, 5, 2).forEach(p
         -> System.out.println(p)
       );
       Integer n = 13;
@@ -47,74 +47,124 @@ public class ProductDAO extends BaseDAO<Product> {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
-  public int countSelectAll(String name) {
-    String sql = "SELECT COUNT(productId) AS count FROM " + TABLE;
-    if (name != null && !name.isBlank()) {
-      sql += " WHERE name LIKE ?";
+  public int countSelectAll(String name, int categoryId) {
+    StringBuilder sql = new StringBuilder(
+      "SELECT COUNT(p.productId) AS count FROM " + TABLE + " p"
+    );
+    boolean categoryIdCondition = categoryId > 0;
+    boolean nameCondition = (name != null && !name.isBlank());
+
+    if (categoryIdCondition) {
+      sql.append(" RIGHT JOIN productCategory pc ON pc.productId = p.productId");
     }
-    try {
-      ps = connection.prepareStatement(sql);
-      if (name != null && !name.isBlank()) {
-        ps.setString(1, '%' + name.trim() + '%');
-      }
-      rs = ps.executeQuery();
 
-      if (!rs.next()) {
-        throw new SQLException("COUNT() not return row set");
+    if (nameCondition || categoryIdCondition) {
+      sql.append(" WHERE");
+    }
+
+    if (nameCondition) {
+      sql.append(" p.name LIKE ?");
+    }
+
+    if (categoryIdCondition) {
+      if (nameCondition) {
+        sql.append(" AND");
+      }
+      sql.append(" pc.categoryId = ?");
+    }
+
+    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+      int paramIndex = 1;
+
+      if (nameCondition) {
+        ps.setString(paramIndex++, '%' + name.trim() + '%');
       }
 
-      return rs.getInt("count");
+      if (categoryIdCondition) {
+        ps.setInt(paramIndex, categoryId);
+      }
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return rs.getInt("count");
+        }
+      }
 
     } catch (SQLException ex) {
       Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-      return 0;
     }
+    return 0;
   }
 
-  public List<Product> selectAll(String name, int sortBy, int limit, int offset) throws SQLException {
+  public List<Product> selectAll(String name, int categoryId, int sortBy, int limit, int offset) throws SQLException {
     StringBuilder sql = new StringBuilder(
-      "SELECT productId, name, image, description, quantity, unitPrice, salePrice, importDate, updateDate, status FROM "
-      + TABLE
+      "SELECT p.productId, p.name, p.image, p.description, p.quantity, p.unitPrice,"
+      + " p.salePrice, p.importDate, p.updateDate, p.status"
+      + " FROM " + TABLE + " p"
     );
-    boolean nameCondition = (name != null && !name.isBlank());
+
+    boolean categoryIdCondition = categoryId >= 1;
+    boolean nameCondition = name != null && !name.isBlank();
     boolean sortByCondition = sortBy >= 0 && sortBy <= 3;
     boolean limitCondition = limit >= 1 && limit <= 20;
-    boolean offsetCondition = limitCondition && offset >= 2;
-    if (nameCondition) {
-      sql.append(" WHERE name LIKE ?");
+    boolean offsetCondition = offset >= 0;
+
+    if (categoryIdCondition) {
+      sql.append(" RIGHT JOIN productCategory pc ON pc.productId = p.productId");
     }
+
+    if (nameCondition || categoryIdCondition) {
+      sql.append(" WHERE");
+    }
+
+    if (nameCondition) {
+      sql.append(" p.name LIKE ?");
+    }
+
+    if (categoryIdCondition) {
+      if (nameCondition) {
+        sql.append(" AND");
+      }
+      sql.append(" pc.categoryId = ?");
+    }
+
     if (sortByCondition) {
       switch (sortBy) {
-        case 0:
-          sql.append(" ORDER BY importDate DESC");
-          break;
-        case 1:
-          sql.append(" ORDER BY salePrice ASC");
-          break;
-        case 2:
-          sql.append(" ORDER BY salePrice DESC");
-          break;
+        case 1 ->
+          sql.append(" ORDER BY p.salePrice ASC");
+        case 2 ->
+          sql.append(" ORDER BY p.salePrice DESC");
+        default ->
+          sql.append(" ORDER BY p.importDate DESC");
       }
     } else {
-      sql.append(" ORDER BY importDate DESC");
+      sql.append(" ORDER BY p.importDate DESC");
     }
-    if (limitCondition) {
-      sql.append(" LIMIT ").append(limit);
-    } else {
-      sql.append(" LIMIT 9");
-    }
+
+    sql.append(" LIMIT ").append(limitCondition ? limit : 9);
+
     if (offsetCondition) {
-      sql.append(" OFFSET ").append((offset - 1) * (limitCondition ? limit : 9));
+      sql.append(" OFFSET ").append(offset);
     }
 
     List<Product> list = new ArrayList<>();
-    ps = connection.prepareStatement(sql.toString());
-    if (nameCondition) {
-      ps.setString(1, '%' + name.trim() + '%');
-    }
-    rs = ps.executeQuery();
-    while (rs.next()) {
-      list.add(construct(rs));
+    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+      int paramIndex = 1;
+
+      if (nameCondition) {
+        ps.setString(paramIndex++, '%' + name.trim() + '%');
+      }
+
+      if (categoryIdCondition) {
+        ps.setInt(paramIndex++, categoryId);
+      }
+
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          list.add(construct(rs));
+        }
+      }
+
     }
     return list;
   }
@@ -155,7 +205,6 @@ public class ProductDAO extends BaseDAO<Product> {
       + " VALUES (?,?,?,?,?,?);";
 
     try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-//    ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
       ps.setString(1, t.getName());
       ps.setString(2, t.getImage());
       ps.setString(3, t.getDescription());

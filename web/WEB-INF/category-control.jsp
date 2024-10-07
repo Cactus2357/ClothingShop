@@ -21,7 +21,7 @@
 
     <style>
       body {
-        min-height: 75rem;
+        /*min-height: 75rem;*/
         padding-top: 4.5rem;
       }
     </style>
@@ -55,7 +55,7 @@
           </div>
           <div class="mb-3">
             <div class="card">
-              <div class="card-body container">
+              <div class="card-body container overflow-y-auto" style="height: 600px">
                 <table class="table table-sm table-hover table-striped category-table caption-top">
                   <caption>
                     List of categories
@@ -91,8 +91,10 @@
           const categoryName = $(this).find("td").text().trim();
 
           $("#category-id").val(categoryId);
-          $("#category-name").val(categoryName);
+          $("#category-name").val(categoryName).focus();
         });
+
+        $('#category-name').focus();
       });
     </script>
   </body>

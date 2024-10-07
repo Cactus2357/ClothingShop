@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +27,12 @@ public class CategoryDAO extends BaseDAO<Category> {
       cdao.selectAll(6).forEach(c
         -> System.out.println(c)
       );
+
+      cdao.selectBatch(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).forEach((i, l) -> {
+        System.out.print("#" + i + " : ");
+        l.forEach(c -> System.out.print(c + " "));
+        System.out.println("");
+      });
     } catch (SQLException ex) {
       Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -57,6 +66,35 @@ public class CategoryDAO extends BaseDAO<Category> {
       list.add(construct(rs));
     }
     return list;
+  }
+
+  public Map<Integer, List<Category>> selectBatch(int... pids) throws SQLException {
+    String sql = "SELECT pc.productId, c.* FROM " + TABLE + " c "
+      + "LEFT JOIN productCategory pc ON c.categoryId = pc.categoryId "
+      + "WHERE pc.productId IN ("
+      + String.join(",", Collections.nCopies(pids.length, "?")) + ")";
+
+    Map<Integer, List<Category>> resultMap = new HashMap<>();
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      // Set each productId parameter in the PreparedStatement
+      for (int i = 0; i < pids.length; i++) {
+        ps.setInt(i + 1, pids[i]);
+      }
+
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          Category category = construct(rs); // construct method to create a Category object from ResultSet
+          int productId = rs.getInt("productId");
+
+          // Add the category to the list associated with the productId
+          resultMap
+            .computeIfAbsent(productId, k -> new ArrayList<>())
+            .add(category);
+        }
+      }
+    }
+
+    return resultMap;
   }
 
   private Category construct(ResultSet rs) throws SQLException {

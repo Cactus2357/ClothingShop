@@ -4,6 +4,7 @@
  */
 package com.cso.shop.control.page;
 
+import com.cso.shop.dao.CategoryDAO;
 import com.cso.shop.dao.ProductDAO;
 import com.cso.shop.model.Product;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +24,8 @@ import java.util.logging.Logger;
  */
 public class ProductDetail extends HttpServlet {
 
-  ProductDAO pdao = new ProductDAO();
+  private ProductDAO pdao = new ProductDAO();
+  private CategoryDAO cdao = new CategoryDAO();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override
@@ -39,6 +42,8 @@ public class ProductDetail extends HttpServlet {
         throw new Exception("no product found");
       }
 
+      List list = cdao.selectAll(productId);
+      req.setAttribute("categoryList", list);
       req.setAttribute("product", p);
       req.getRequestDispatcher("WEB-INF/product-detail.jsp").forward(req, resp);
       return;
