@@ -70,7 +70,7 @@
           <a class="nav-link active" href="home">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/Cactus2357/ClothingShop">Repository</a>
+          <a class="nav-link" href="https://github.com/Cactus2357/ClothingShop" target="_blank">Repository</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="product-list">Products</a>

@@ -47,4 +47,20 @@ public class Utils {
       return string;
     }
   }
+
+  public static int tryParseInt(String value, int defaultVal) {
+    try {
+      return Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+      return defaultVal;
+    }
+  }
+
+  public static double tryParseDouble(String value, double defaultVal) {
+    try {
+      return Double.parseDouble(value);
+    } catch (NumberFormatException e) {
+      return defaultVal;
+    }
+  }
 }

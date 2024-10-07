@@ -12,6 +12,10 @@
         <servlet-name>ProductDetail</servlet-name>
         <servlet-class>com.cso.shop.control.page.ProductDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CategoryControl</servlet-name>
+        <servlet-class>com.cso.shop.control.admin.CategoryControl</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ProductList</servlet-name>
         <url-pattern>/product-list</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>ProductDetail</servlet-name>
         <url-pattern>/product-detail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryControl</servlet-name>
+        <url-pattern>/category</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>60</session-timeout>
@@ -37,7 +45,7 @@
     </servlet>
     <servlet>
         <servlet-name>ProductControl</servlet-name>
-        <servlet-class>com.cso.shop.control.page.ProductControl</servlet-class>
+        <servlet-class>com.cso.shop.control.admin.ProductControl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Profile</servlet-name>

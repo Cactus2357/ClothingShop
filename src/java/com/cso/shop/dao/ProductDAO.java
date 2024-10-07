@@ -153,23 +153,58 @@ public class ProductDAO extends BaseDAO<Product> {
     String sql = "INSERT INTO " + TABLE
       + " (name, image, description, quantity, unitPrice, salePrice)"
       + " VALUES (?,?,?,?,?,?);";
-    ps = connection.prepareStatement(sql);
-    ps.setString(1, t.getName());
-    ps.setString(2, t.getImage());
-    ps.setString(3, t.getDescription());
-    ps.setInt(4, t.getQuantity());
-    ps.setDouble(5, t.getUnitPrice());
-    ps.setDouble(6, t.getSalePrice());
-    int affectedRows = ps.executeUpdate();
 
-    if (affectedRows == 0) {
-      throw new SQLException("Creating product failed, no rows affected");
+    try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+//    ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+      ps.setString(1, t.getName());
+      ps.setString(2, t.getImage());
+      ps.setString(3, t.getDescription());
+      ps.setInt(4, t.getQuantity());
+      ps.setDouble(5, t.getUnitPrice());
+      ps.setDouble(6, t.getSalePrice());
+      int affectedRows = ps.executeUpdate();
+      if (affectedRows == 0) {
+        throw new SQLException("Creating product failed, no rows affected");
+      }
+
+      try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+        if (generatedKeys.next()) {
+          t.setId(generatedKeys.getInt(1));
+        } else {
+          throw new SQLException("Creating product failed, no ID obtained");
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
     }
+
   }
 
   @Override
   public void update(Product t) throws SQLException {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    StringBuilder sql = new StringBuilder("UPDATE " + TABLE);
+    sql.append(" SET name = ?, description = ?, quantity = ?, unitPrice = ?, salePrice = ?, image = ?")
+      .append(" WHERE productId = ?;");
+
+    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+      ps.setString(1, t.getName());
+      ps.setString(2, t.getDescription());
+      ps.setInt(3, t.getQuantity());
+      ps.setDouble(4, t.getUnitPrice());
+      ps.setDouble(5, t.getSalePrice());
+      ps.setString(6, t.getImage());
+      ps.setInt(7, t.getId());
+
+      int affectedRows = ps.executeUpdate();
+
+      if (affectedRows == 0) {
+        throw new SQLException("Updating product failed, no rows affected.");
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
+    }
   }
 
   @Override

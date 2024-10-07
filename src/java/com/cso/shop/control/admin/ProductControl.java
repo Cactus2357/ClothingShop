@@ -2,13 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package com.cso.shop.control.page;
+package com.cso.shop.control.admin;
 
+import com.cso.shop.dao.CategoryDAO;
 import com.cso.shop.dao.ProductDAO;
+import com.cso.shop.model.Category;
 import com.cso.shop.model.Product;
 import com.cso.shop.util.Utils;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -16,8 +17,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,11 +40,29 @@ public class ProductControl extends HttpServlet {
 
   private static String webImagePath = "asset/img/";
   private ProductDAO pdao = new ProductDAO();
+  private CategoryDAO cdao = new CategoryDAO();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
+    try {
+      req.setAttribute("categoryList", cdao.selectAll());
+
+      int productId = Utils.tryParseInt(req.getParameter("id"), -1);
+      if (productId != -1) {
+        List<Category> productCategory = cdao.selectAll(productId);
+        Map<Integer, Boolean> map = new HashMap<>();
+        productCategory.forEach(c -> map.put(c.getId(), true));
+        Product p = new Product();
+        p.setId(productId);
+
+        req.setAttribute("productCategory", map);
+        req.setAttribute("product", pdao.select(p));
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(ProductControl.class.getName()).log(Level.SEVERE, null, ex);
+    }
     req.getRequestDispatcher("WEB-INF/product-control.jsp").forward(req, resp);
   }
 
@@ -54,46 +79,83 @@ public class ProductControl extends HttpServlet {
 
   protected void processRequest(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
+
+    int productId = Utils.tryParseInt(req.getParameter("id"), -1);
     String name = req.getParameter("title");
-    String originalPrice = req.getParameter("original-price");
-    String sellingPrice = req.getParameter("selling-price");
-    String quantity = req.getParameter("quantity");
+    double unitPrice = Utils.tryParseDouble(req.getParameter("original-price"), -1.0);
+    double salePrice = Utils.tryParseDouble(req.getParameter("selling-price"), -1.0);
+    int quantity = Utils.tryParseInt(req.getParameter("quantity"), -1);
+    String[] categoryIdStrings = req.getParameterValues("category");
+    int[] categoryIds = new int[0];
+
+    if (categoryIdStrings != null && categoryIdStrings.length != 0) {
+      categoryIds = new int[categoryIdStrings.length];
+      for (int i = 0; i < categoryIds.length; i++) {
+        categoryIds[i] = Utils.tryParseInt(categoryIdStrings[i], -1);
+      }
+    }
+
     String description = req.getParameter("description");
+    String imagePath = req.getParameter("image-path");
     Part imagePart = req.getPart("image");
 
     try {
       if (name == null || name.isBlank()) {
-        throw new Exception("Invalid name");
+        throw new Exception("Invalid product name");
       }
-      double unitPrice = Double.parseDouble(originalPrice);
-      double salePrice = Double.parseDouble(sellingPrice);
-      int quantityInt = Integer.parseInt(quantity);
+      if (unitPrice < 0.0) {
+        throw new Exception("Invalid product unit price");
+      }
+
+      if (salePrice < 0.0) {
+        throw new Exception("Invalid product sale price");
+      }
+
+      if (quantity < 0) {
+        throw new Exception("Invalid product product quantity");
+      }
+
       String image = createImage(imagePart, webImagePath);
 
       Product p = new Product();
       p.setName(name);
       p.setUnitPrice(unitPrice);
       p.setSalePrice(salePrice);
-      p.setQuantity(quantityInt);
+      p.setQuantity(quantity);
       p.setDescription(description);
-      p.setImage(image);
+      if (image != null) {
+        p.setImage(image);
+      } else if (imagePath != null && !imagePath.isBlank()) {
+        p.setImage(imagePath);
+      }
+      String out = "";
+      if (categoryIdStrings != null) {
+        for (String s : categoryIdStrings) {
+          out += s + " ";
+        }
+      }
+      req.setAttribute("response", out);
 
-      pdao.insert(p);
-//      resp.sendRedirect(req.getRequestURI());
-
-      req.setAttribute("response", "Product added successfully");
+      if (productId > 0) {
+        p.setId(productId);
+        pdao.update(p);
+        cdao.insertProductCategories(productId, categoryIds);
+        req.setAttribute("response", "Product updated successfully");
+      }
+//else {
+//        pdao.insert(p);
+//        cdao.insertProductCategories(p.getId(), categoryIds);
+//        req.setAttribute("response", "Product added successfully");
+//      }
       req.setAttribute("response_type", true);
-
+      req.setAttribute("id", p.getId());
     } catch (Exception e) {
       log(e.getMessage());
       req.setAttribute("response", e.getMessage());
       req.setAttribute("response_type", false);
-      resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request");
-
     }
 
     doGet(req, resp);
-
   }
 
   /**
