@@ -45,7 +45,7 @@
             <h2 class="container d-flex flex-wrap align-items-center gap-2 mb-4">
               <span class="me-3 mb-2"> ${requestScope.product.name} </span>
               <c:forEach items="${categoryList}" var="category" >
-                <a class="badge text-bg-primary nav-link mb-2" href="product-list?id=${category.id}">${category.name}</a>
+                <a class="badge text-bg-primary nav-link mb-2" href="product-list?category-id=${category.id}">${category.name}</a>
               </c:forEach>
             </h2>
             <div class="container mb-4">

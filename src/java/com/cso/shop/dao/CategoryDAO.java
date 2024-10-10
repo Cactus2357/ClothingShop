@@ -68,6 +68,28 @@ public class CategoryDAO extends BaseDAO<Category> {
     return list;
   }
 
+  public List<Category> selectBatch(String... names) throws SQLException {
+    String sql = "SELECT categoryId, name FROM " + TABLE
+      + " WHERE name IN ("
+      + String.join(",", Collections.nCopies(names.length, "?")) + ")";
+
+    List<Category> list = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      for (int i = 0; i < names.length; i++) {
+        ps.setString(i + 1, names[i]);
+      }
+
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          Category category = construct(rs);
+          list.add(category);
+        }
+      }
+    }
+
+    return list;
+  }
+
   public Map<Integer, List<Category>> selectBatch(int... pids) throws SQLException {
     String sql = "SELECT pc.productId, c.* FROM " + TABLE + " c "
       + "LEFT JOIN productCategory pc ON c.categoryId = pc.categoryId "
@@ -110,6 +132,19 @@ public class CategoryDAO extends BaseDAO<Category> {
       + " FROM " + TABLE + " WHERE categoryId=?";
     ps = connection.prepareStatement(sql);
     ps.setInt(1, t.getId());
+    Category p = null;
+    rs = ps.executeQuery();
+    if (rs.next()) {
+      p = construct(rs);
+    }
+    return p;
+  }
+
+  public Category select(String name) throws SQLException {
+    String sql = "SELECT categoryId, name"
+      + " FROM " + TABLE + " WHERE name=?";
+    ps = connection.prepareStatement(sql);
+    ps.setString(1, name);
     Category p = null;
     rs = ps.executeQuery();
     if (rs.next()) {

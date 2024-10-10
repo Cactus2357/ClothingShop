@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -39,14 +40,16 @@ public class ProductList extends HttpServlet {
     int order = Utils.tryParseInt(req.getParameter("order"), 0);
     int size = Utils.tryParseInt(req.getParameter("size"), 9);
     int page = Utils.tryParseInt(req.getParameter("page"), 1);
-    int categoryId = Utils.tryParseInt(req.getParameter("category-id"), -1);
     int display = Utils.tryParseInt(req.getParameter("display"), 2);
+
+    int categoryId = Utils.tryParseInt(req.getParameter("category-id"), -1);
 
     if (size <= 4) {
       size = 5;
     } else if (size >= 21) {
       size = 20;
     }
+
     if (query != null && !query.isBlank()) {
       req.setAttribute("query", query);
     }
@@ -55,7 +58,6 @@ public class ProductList extends HttpServlet {
     req.setAttribute("page", page);
 
     if (display >= 1 && display <= 3) {
-//      resp.addCookie(new Cookie("display", String.valueOf(display)));
       req.setAttribute("display", display);
     }
 
@@ -66,10 +68,13 @@ public class ProductList extends HttpServlet {
       for (int i = 0; i < productIds.length; i++) {
         productIds[i] = productList.get(i).getId();
       }
+
+//      List<Integer> pidList = productList.stream().map(Product::getId).collect(Collectors.toList());
       Map<Integer, List<Category>> productCategoryMap = cdao.selectBatch(productIds);
       req.setAttribute("productCategoryMap", productCategoryMap);
 
       categoryList = cdao.selectAll();
+      req.setAttribute("suggestions", cdao.selectBatch("Men's Clothing", "Women's Clothing", "Accessories"));
     } catch (Exception e) {
       System.err.println(e);
       log(e.getMessage());
