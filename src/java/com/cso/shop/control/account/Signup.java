@@ -64,8 +64,9 @@ public class Signup extends HttpServlet {
         throw new SQLException("user = null");
       }
 
-      req.setAttribute("response_ok", "User sign up successfully. redirecting...");
       resp.setHeader("refresh", "1.5;url=home");
+      req.setAttribute("response", "User sign up successfully. redirecting...");
+      req.setAttribute("responseType", true);
 
     } catch (SQLException e) {
       req.setAttribute("response", "Internal sevre error");

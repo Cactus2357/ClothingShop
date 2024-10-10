@@ -69,7 +69,6 @@ public class ProductList extends HttpServlet {
         productIds[i] = productList.get(i).getId();
       }
 
-//      List<Integer> pidList = productList.stream().map(Product::getId).collect(Collectors.toList());
       Map<Integer, List<Category>> productCategoryMap = cdao.selectBatch(productIds);
       req.setAttribute("productCategoryMap", productCategoryMap);
 

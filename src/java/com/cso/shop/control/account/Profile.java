@@ -52,15 +52,6 @@ public class Profile extends HttpServlet {
       return;
     }
 
-//    try (PrintWriter out = resp.getWriter();) {
-//      out.println(req.getParameter("username"));
-//      out.println(req.getParameter("email"));
-//      out.println(req.getParameter("familyName"));
-//      out.println(req.getParameter("givenName"));
-//      out.println(req.getParameter("gender"));
-//      out.println(req.getParameter("phone"));
-//      out.println(req.getParameter("address"));
-//    }
     try {
       validateUserInput(req, resp);
 
@@ -74,12 +65,11 @@ public class Profile extends HttpServlet {
 
       udao.update(user);
       session.setAttribute("user", user);
+      req.setAttribute("response", "Update successfully");
+      req.setAttribute("responseType", true);
     } catch (Exception e) {
-      req.setAttribute("response_type", false);
       req.setAttribute("response", e.getMessage());
     }
-    req.setAttribute("response_type", true);
-    req.setAttribute("response", "Update successfully");
 
     doGet(req, resp);
 
@@ -103,13 +93,12 @@ public class Profile extends HttpServlet {
       temp.setUserID(u.getUserID());
       temp.setPassword(req.getParameter("newPassword"));
       udao.updatePassword(temp);
+      req.setAttribute("response", "Password updated successfully");
+      req.setAttribute("responseType", true);
 
     } catch (Exception e) {
-      req.setAttribute("response_type", false);
       req.setAttribute("response", e.getMessage());
     }
-    req.setAttribute("response_type", true);
-    req.setAttribute("response", "Password updated successfully");
 
     doGet(req, resp);
   }

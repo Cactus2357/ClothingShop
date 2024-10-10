@@ -26,7 +26,11 @@ public class Signin extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    req.getRequestDispatcher("WEB-INF/signin.jsp").forward(req, resp);
+    if (req.getSession().getAttribute("user") != null) {
+      resp.sendRedirect("profile");
+    } else {
+      req.getRequestDispatcher("WEB-INF/signin.jsp").forward(req, resp);
+    }
   }
 
   @Override
@@ -57,23 +61,27 @@ public class Signin extends HttpServlet {
     try {
       String sudoLogin = req.getParameter("sudoLogin");
       String password = req.getParameter("password");
+      String redirectURL = req.getParameter("redirect");
+      if (redirectURL == null) {
+        redirectURL = "home";
+      }
+
       User user = udao.authorize(sudoLogin, password);
       if (user == null) {
-//        req.setAttribute("response", "Email/password is incorrect or your account does not have password authentication enabled");
         throw new Exception("Email/password is incorrect or your account does not have password authentication enabled");
       }
 
       HttpSession session = req.getSession();
       session.setAttribute("user", user);
-      resp.setHeader("refresh", "1.5;url=home");
-      req.setAttribute("response_ok", "Sign in successfully. Redirecting...");
+      resp.setHeader("refresh", "1.5;url=" + redirectURL);
+      req.setAttribute("response", "Sign in successfully. Redirecting...");
+      req.setAttribute("responseType", true);
 
     } catch (Exception e) {
       req.setAttribute("response", e.getMessage());
     }
 
-    doGet(req, resp);
-
+    req.getRequestDispatcher("WEB-INF/signin.jsp").forward(req, resp);
   }
 
   private boolean validateUserInput(HttpServletRequest req) throws Exception {

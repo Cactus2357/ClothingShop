@@ -147,12 +147,12 @@ public class ProductControl extends HttpServlet {
 //        cdao.insertProductCategories(p.getId(), categoryIds);
 //        req.setAttribute("response", "Product added successfully");
 //      }
-      req.setAttribute("response_type", true);
+      req.setAttribute("responseType", true);
       req.setAttribute("id", p.getId());
     } catch (Exception e) {
       log(e.getMessage());
       req.setAttribute("response", e.getMessage());
-      req.setAttribute("response_type", false);
+      req.setAttribute("responseType", false);
     }
 
     doGet(req, resp);

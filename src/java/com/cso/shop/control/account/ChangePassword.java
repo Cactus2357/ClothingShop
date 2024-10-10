@@ -44,12 +44,11 @@ public class ChangePassword extends HttpServlet {
       clone.setPassword(req.getParameter("newPassword"));
       udao.updatePassword(clone);
 
+      req.setAttribute("response", "Password updated successfully");
+      req.setAttribute("responseType", true);
     } catch (Exception e) {
-      req.setAttribute("response_type", false);
       req.setAttribute("response", e.getMessage());
     }
-    req.setAttribute("response_type", true);
-    req.setAttribute("response", "Password updated successfully");
 
     req.getRequestDispatcher("profile").forward(req, resp);
 
