@@ -1,5 +1,5 @@
 <%-- Document : profile Created on : Sep 19, 2024, 9:45:06 PM Author : hi --%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@page contentType="text/html"
-pageEncoding="UTF-8"%>
+                                                                                                                                                        pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
   <head>
@@ -47,15 +47,10 @@ pageEncoding="UTF-8"%>
 
   <body>
     <jsp:include page="part/navbar.jsp" />
-    <jsp:include page="part/notification.jsp" />
-    <script>
-      $(() => {
-        const notifi = $("#notification");
-        const notification = bootstrap.Toast.getOrCreateInstance($("#notification"));
-        <c:if test="${requestScope.response ne null}">notification.show();</c:if>;
-      });
-    </script>
-
+    <jsp:include page="part/notification.jsp">
+      <jsp:param name="response" value="${response}" />
+      <jsp:param name="responseType" value="${responseType}" />
+    </jsp:include>
     <main>
       <div class="py-4 container-xl clearfix">
         <header class="d-md-flex align-items-center justify-content-between mt-1 mb-4">
@@ -66,7 +61,7 @@ pageEncoding="UTF-8"%>
               class="rounded-circle me-3"
               height="48"
               width="48"
-            />
+              />
             <div class="flex-auto">
               <h1 class="h3 lh-1 mb-0">
                 <a href="#" class="text-reset text-decoration-none">
@@ -188,7 +183,7 @@ pageEncoding="UTF-8"%>
                           type="submit"
                           onsubmit="return alert('Are you sure you want to update your info?')"
                           class="btn btn-success d-inline-flex align-items-center flex-row justify-content-between position-relative text-center user-select-none"
-                        >
+                          >
                           <span class="d-grid flex-grow-1 flex-shrink-0 flex-auto align-content-center justify-content-center">
                             <span>Update profile</span>
                           </span>
@@ -214,7 +209,7 @@ pageEncoding="UTF-8"%>
                               class="rounded-circle shadow"
                               width="200"
                               alt="Avatar"
-                            />
+                              />
                           </a>
                           <div class="dropdown position-absolute rounded-2 p-2 start-0 bottom-0 ms-2">
                             <button class="btn btn-sm btn-dark rounded-3" type="button" id="editAvatarButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -434,27 +429,27 @@ pageEncoding="UTF-8"%>
       referrerpolicy="no-referrer"
     ></script> -->
     <script>
-      $(() => {
-        //                    const toastLiveExample = document.getElementById("notification");
-        //                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-        //                    // document.addEventListener("DOMContentLoaded", function () {
-        //                    toastBootstrap.show();
-        // });
+                  $(() => {
+                    //                    const toastLiveExample = document.getElementById("notification");
+                    //                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                    //                    // document.addEventListener("DOMContentLoaded", function () {
+                    //                    toastBootstrap.show();
+                    // });
 
-        const myModal = document.getElementById("myModal");
-        const myInput = document.getElementById("myInput");
+                    const myModal = document.getElementById("myModal");
+                    const myInput = document.getElementById("myInput");
 
-        myModal.addEventListener("shown.bs.modal", () => {
-          myInput.focus();
-        });
+                    myModal.addEventListener("shown.bs.modal", () => {
+                      myInput.focus();
+                    });
 
-        let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-        let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-          return new bootstrap.Popover(popoverTriggerEl);
-        });
+                    let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+                    let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+                      return new bootstrap.Popover(popoverTriggerEl);
+                    });
 
-        $('[data-toggle="tooltip"]').tooltip();
-      });
+                    $('[data-toggle="tooltip"]').tooltip();
+                  });
     </script>
   </body>
 </html>

@@ -32,6 +32,10 @@
   </head>
 
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
+    <jsp:include page="part/notification.jsp">
+      <jsp:param name="response" value="${response}" />
+      <jsp:param name="responseType" value="${responseType}" />
+    </jsp:include>
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
       <div class="col-12 col-lg-8 col-xxl-7">
         <a href="home" class="text-decoration-none text-end"><h1> CSO </h1></a>
@@ -122,10 +126,10 @@
           <div class="form-check-reverse mb-3 user-select-none"> 
             <input class="form-check-input" type="checkbox" value="subscribe" id="subscribe" />
             <label class="form-check-label" for="subscribe">Subscribe to our newsletter</label> 
-            <p class="float-start text-truncate">
-              <span class="text-danger"> ${requestScope.response} </span>
-              <span class="text-success"> ${requestScope.response_ok} </span>
-            </p>
+            <!--            <p class="float-start text-truncate">
+                          <span class="text-danger"> ${requestScope.response} </span>
+                          <span class="text-success"> ${requestScope.response_ok} </span>
+                        </p>-->
           </div> 
 
           <button class="btn btn-success w-100 py-2 mb-3" type="submit">Sign up</button>
@@ -172,18 +176,14 @@
           const forms = document.querySelectorAll(".needs-validation");
 
           Array.from(forms).forEach((form) => {
-            form.addEventListener(
-                    "submit",
-                    (event) => {
+            form.addEventListener("submit", (event) => {
               if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
               }
 
               form.classList.add("was-validated");
-            },
-                    false
-                    );
+            }, false);
           });
         })();
       });

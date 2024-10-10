@@ -4,6 +4,8 @@
     Author     : hi
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -37,9 +39,21 @@
   </head>
 
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
+
+    <jsp:include page="part/notification.jsp">
+      <jsp:param name="response" value="${response}" />
+      <jsp:param name="responseType" value="${responseType}" />
+    </jsp:include>
+
+    <c:url var="url" value="signin">
+      <c:if test="${redirect ne null}"><c:param name="redirect" value="${redirect}" /></c:if>
+    </c:url>
+    <%--<c:param name="redirect" value="${fn:escapeXml(redirect)}" />--%>
+
+
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
       <div class="col-12 col-lg-8 col-xxl-7">
-        <form action="signin" method="post" class="has-validation needs-validation" novalidate>
+        <form action="${url}" method="post" class="has-validation needs-validation" novalidate>
           <a href="home" class="text-decoration-none"><h1> CSO </h1></a>
           <h1 class="h3 mb-3 fw-normal">Sign in</h1>
 
@@ -47,12 +61,9 @@
             <input type="text" class="form-control mb-3 has-validation" id="username" name="sudoLogin" placeholder="Username" value="${requestScope.sudoLogin}" required />
             <label for="username">Username or Email</label>
           </div>
-          <div class="input-group mb-3">
-            <div class="form-floating">
-              <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
-              <label for="password">Password</label>
-            </div>
-            <button type="button" class="input-group-text" id="showPasswordBtn"><i class="bi bi-eye-slash"></i></button>
+          <div class="form-floating">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required />
+            <label for="password">Password</label>
           </div>
 
           <div class="form-check my-3">
@@ -61,10 +72,10 @@
             <a class="float-end text-decoration-none" href="#">Forgot password?</a>
           </div>
           <!--<p class="mb-3 text-danger">Server response</p>-->
-          <p class="float-start mb-3">
+          <%--<p class="float-start mb-3">
             <span class="text-danger"> ${requestScope.response} </span>
             <span class="text-success"> ${requestScope.response_ok} </span>
-          </p>
+          </p>--%>
           <button class="btn btn-success w-100 py-2 mb-3" type="submit">Sign in</button>
           <p class="mb-3 text-center">or sign in with</p>
           <button class="btn btn-danger w-100 py-2 mb-3" type="submit"><i class="bi bi-google me-2"></i>Google</button>
@@ -79,36 +90,19 @@
     <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.js"></script>
     <script>
       $(() => {
-        $("#showPasswordBtn").on("click", function () {
-          const $input = $("#password");
-          const $icon = $(this).find("i");
-
-          if ($input.attr("type") === "password") {
-            $input.attr("type", "text");
-            $icon.removeClass("bi-eye-slash").addClass("bi-eye");
-          } else {
-            $input.attr("type", "password");
-            $icon.removeClass("bi-eye").addClass("bi-eye-slash");
-          }
-        });
-
         (() => {
           "use strict";
           const forms = document.querySelectorAll(".needs-validation");
 
           Array.from(forms).forEach((form) => {
-            form.addEventListener(
-                    "submit",
-                    (event) => {
+            form.addEventListener("submit", (event) => {
               if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
               }
 
               form.classList.add("was-validated");
-            },
-                    false
-                    );
+            }, false);
           });
         })();
       });

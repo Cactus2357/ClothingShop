@@ -29,7 +29,10 @@
   <body>
 
     <jsp:include page="part/navbar.jsp" />
-    <jsp:include page="part/notification.jsp" />
+    <jsp:include page="part/notification.jsp">
+      <jsp:param name="response" value="${response}" />
+      <jsp:param name="responseType" value="${responseType}" />
+    </jsp:include>
 
 
     <main class="container-fluid p-3">

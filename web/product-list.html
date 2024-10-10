@@ -127,6 +127,15 @@
       </div>
     </nav>
 
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+      <div id="notification" class="toast show bg-danger text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+        <div class="d-flex">
+          <div class="toast-body">${param.response}</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
+
     <main class="container-fluid p-5 px-3">
       <div class="row">
         <div class="container-fluid col-md-4 col-xl-3">
@@ -266,22 +275,19 @@
                     <span class="badge text-bg-success">Success</span>
                   </div>
                   <div class="card-body product-info">
-                    <h5 class="card-title product-name">
-                      Card title
-                      <span class="float-end text-muted fs-6 fw-normal product-import-date">October 4, 2024, 12:00 AM</span>
-                    </h5>
+                    <small class="float-end text-muted product-import-date">October 4, 2024, 12:00 AM</small>
+                    <h5 class="card-title product-name">Card title</h5>
                     <p class="card-text text-truncate product-description">
                       Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum enim sunt nemo tenetur ea fuga, voluptates explicabo ullam soluta ipsam! Reprehenderit harum, itaque
                       consequuntur minus praesentium quibusdam esse earum eum!
                     </p>
-                    <div>
-                      <span class="card-text text-success fs-4 product-sale-price">
-                        $29.99 <span class="text-secondary text-decoration-line-through ms-2 product-unit-price">$40.00</span>
-                      </span>
-                      <span class="float-end">
-                        <a href="#?id=" class="btn btn-primary me-1">More info</a><a href="#cart?id=" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
-                      </span>
-                    </div>
+                    <!-- <div> -->
+                    <span class="text-success fs-4 product-sale-price"> $29.99 </span>
+                    <small class="text-secondary text-decoration-line-through product-unit-price"> $40.00 </small>
+                    <span class="float-end">
+                      <a href="#?id=" class="btn btn-primary me-1">More info</a><a href="#cart?id=" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
+                    </span>
+                    <!-- </div> -->
                   </div>
                 </div>
               </div>

@@ -33,6 +33,11 @@
   </head>
   <body>
     <jsp:include page="part/navbar.jsp" />
+    <jsp:include page="part/notification.jsp">
+      <jsp:param name="response" value="${response}" />
+      <jsp:param name="responseType" value="${responseType}" />
+    </jsp:include>
+
 
     <main class="container-fluid p-5 pt-0">
       <form action="#" method="get">
@@ -175,45 +180,45 @@
             <div class="container mb-3">
               <!-- !!! -->
               <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-3" id="product-list" data-masonry='{"percentPosition": true }'>
-                <c:forEach var="product" items="${productList}">
-
-                  <%--<div class="col">
-                    <div class="card bg-body-tertiary h-100 product-item">
-                      <a href="product-detail?id=${product.id}"><img src="${product.image}" height="400px" class="card-img-top object-fit-cover" alt="..." /></a>
-                      <div class="position-absolute p-2 d-flex gap-1">
-                        <c:if test="${sessionScope.user.role eq 'admin'}">
-                          <a class="badge text-bg-success nav-link" href="product?id=${product.id}">Edit</a>
+                <%--<div class="col">
+                  <div class="card bg-body-tertiary h-100 product-item">
+                    <a href="product-detail?id=${product.id}"><img src="${product.image}" height="400px" class="card-img-top object-fit-cover" alt="..." /></a>
+                    <div class="position-absolute p-2 d-flex gap-1">
+                      <c:if test="${sessionScope.user.role eq 'admin'}">
+                        <a class="badge text-bg-success nav-link" href="product?id=${product.id}">Edit</a>
+                      </c:if>
+                      <c:forEach items="${productCategoryMap.get(product.id)}" var="category">
+                        <a class="badge text-bg-primary nav-link" href="product-list?id=${category.id}">${category.name}</a>
+                      </c:forEach>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        ${product.name}
+                        <c:if test="${display == 3}">
+                          <span class="float-end text-muted fw-normal">
+                            <fmt:formatDate type="date" value="${product.importDate}" />
+                          </span>
                         </c:if>
-                        <c:forEach items="${productCategoryMap.get(product.id)}" var="category">
-                          <a class="badge text-bg-primary nav-link" href="product-list?id=${category.id}">${category.name}</a>
-                        </c:forEach>
-                      </div>
-                      <div class="card-body">
-                        <h5 class="card-title">
-                          ${product.name}
+                      </h5>
+                      <c:if test="${display >= 2}">
+                        <p class="card-text ${display == 2 ? 'text-truncate' : ''}">${product.description}</p>
+                      </c:if>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="card-text text-success fs-4">
+                          $${product.salePrice}
                           <c:if test="${display == 3}">
-                            <span class="float-end text-muted fw-normal">
-                              <fmt:formatDate type="date" value="${product.importDate}" />
-                            </span>
+                            <span class="text-secondary text-decoration-line-through ms-2">$${product.unitPrice}</span>
                           </c:if>
-                        </h5>
-                        <c:if test="${display >= 2}">
-                          <p class="card-text ${display == 2 ? 'text-truncate' : ''}">${product.description}</p>
-                        </c:if>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <span class="card-text text-success fs-4">
-                            $${product.salePrice}
-                            <c:if test="${display == 3}">
-                              <span class="text-secondary text-decoration-line-through ms-2">$${product.unitPrice}</span>
-                            </c:if>
-                          </span>
-                          <span class="float-end">
-                            <a href="product-detail?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
-                          </span>
-                        </div>
+                        </span>
+                        <span class="float-end">
+                          <a href="product-detail?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
+                        </span>
                       </div>
                     </div>
-                  </div>--%>
+                  </div>
+                </div>--%>
+                <c:forEach var="product" items="${productList}">
+
 
                   <div class="col">
                     <div class="card bg-body-tertiary h-100 product-item">
@@ -229,23 +234,16 @@
                         </c:forEach>
                       </div>
                       <div class="card-body product-info">
-                        <h5 class="card-title product-name">
-                          ${product.name}
-                          <span class="float-end text-muted fs-6 fw-normal product-import-date">
-                            <fmt:formatDate type="date" value="${product.importDate}" />
-                          </span>
-                        </h5>
-                        <p class="card-text text-truncate product-description">
-                          ${product.description}
-                        </p>
-                        <div> 
-                          <span class="card-text text-success fs-4 product-sale-price">
-                            $${product.salePrice} <span class="text-secondary text-decoration-line-through ms-2 product-unit-price">$${product.unitPrice}</span>
-                          </span>
-                          <span class="float-end">
-                            <a href="product-detail?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
-                          </span>
-                        </div> 
+                        <small class="float-end text-muted product-import-date"><fmt:formatDate type="date" value="${product.importDate}" /></small>
+                        <h5 class="card-title product-name">${product.name}</h5>
+                        <p class="card-text text-truncate product-description">${product.description}</p>
+                        <!--<div>-->
+                        <span class="text-success fs-4 product-sale-price"> $${product.salePrice} </span>
+                        <small class="text-secondary text-decoration-line-through product-unit-price"> $${product.unitPrice} </small>
+                        <span class="float-end">
+                          <a href="product-detail?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
+                        </span>
+                        <!--</div>--> 
                       </div>
                     </div>
                   </div>
@@ -314,8 +312,8 @@
             // ".product-image",
             ".product-category",
             [".product-name", ".product-info"],
-            ".product-import-date",
             ".product-sale-price",
+            ".product-import-date",
             ".product-description",
             ".product-unit-price",
           ];
