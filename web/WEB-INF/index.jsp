@@ -25,9 +25,10 @@
 
     <!-- Custom styles for this template -->
     <link href="asset/style/index.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
   </head>
   <body>
-    <header data-bs-theme="dark">
+    <header>
 
       <jsp:include page="part/navbar.jsp" />
 
