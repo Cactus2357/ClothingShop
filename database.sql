@@ -10,10 +10,12 @@ CREATE TABLE product (
   quantity INT NOT NULL CHECK (quantity >= 0),
   unitPrice DECIMAL(10,2) NOT NULL CHECK (unitPrice >= 0.00),
   salePrice DECIMAL(10,2) NOT NULL CHECK (salePrice >= 0.00),
-  importDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updateDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+  importDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updateDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   status ENUM('active', 'inactive', 'restocked', 'out of stock', 'discontinued') DEFAULT 'active'
 );
+
+DESCRIBE product;
 
 CREATE TABLE category (
   categoryId INT AUTO_INCREMENT PRIMARY KEY,
@@ -120,3 +122,14 @@ CREATE TABLE setting (
   description TEXT,
   status ENUM('active', 'inactive') DEFAULT 'active'
 );
+
+CREATE TABLE authToken (
+  authTokenId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  hashedToken CHAR(64) NOT NULL,
+  userId INT NOT NULL,
+  expiry DATETIME NOT NULL,
+  status ENUM('active', 'expired', 'revoked') DEFAULT 'active',
+  FOREIGN KEY (userId) REFERENCES user(userId)
+);
+
+

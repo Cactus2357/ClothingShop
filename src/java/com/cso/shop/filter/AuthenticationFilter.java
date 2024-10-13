@@ -4,6 +4,8 @@
  */
 package com.cso.shop.filter;
 
+import com.cso.shop.dao.UserDAO;
+import com.cso.shop.model.User;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -14,17 +16,20 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author hi
  */
-public class UserFilter implements Filter {
+public class AuthenticationFilter implements Filter {
 
+  private static final String AUTH_COOKIE_NAME = "rememberme";
   private static final boolean debug = false;
 
   // The filter configuration object we are associated with.  If
@@ -32,13 +37,13 @@ public class UserFilter implements Filter {
   // configured. 
   private FilterConfig filterConfig = null;
 
-  public UserFilter() {
+  public AuthenticationFilter() {
   }
 
   private void doBeforeProcessing(ServletRequest req, ServletResponse resp)
     throws IOException, ServletException {
     if (debug) {
-      log("UserFilter:DoBeforeProcessing");
+      log("AuthenticationFilter:DoBeforeProcessing");
     }
 
     // Write code here to process the req and/or resp before
@@ -66,7 +71,7 @@ public class UserFilter implements Filter {
   private void doAfterProcessing(ServletRequest req, ServletResponse resp)
     throws IOException, ServletException {
     if (debug) {
-      log("UserFilter:DoAfterProcessing");
+      log("AuthenticationFilter:DoAfterProcessing");
     }
 
     // Write code here to process the req and/or resp after
@@ -97,52 +102,55 @@ public class UserFilter implements Filter {
    * @exception IOException if an input/output error occurs
    * @exception ServletException if a servlet error occurs
    */
-  public void doFilter(ServletRequest req, ServletResponse resp,
-    FilterChain chain)
+  public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
     throws IOException, ServletException {
 
-    if (debug) {
-      log("UserFilter:doFilter()");
-    }
+    HttpServletRequest httpRequest = (HttpServletRequest) req;
+    HttpServletResponse httpResponse = (HttpServletResponse) resp;
+    HttpSession httpSession = httpRequest.getSession(false);
 
-    doBeforeProcessing(req, resp);
-
-    Throwable problem = null;
-    try {
-      HttpServletRequest httpRequest = (HttpServletRequest) req;
-      HttpServletResponse httpResponse = (HttpServletResponse) resp;
-      HttpSession httpSession = httpRequest.getSession();
-
-      if (httpSession.getAttribute("user") == null) {
-        String originalURL = URLEncoder.encode(httpRequest.getRequestURI(), "UTF-8");
-//          httpRequest.getRequestURI();
-        String redirectURL = httpRequest.getContextPath() + "/signin?redirect=" + originalURL;
-        httpResponse.sendRedirect(redirectURL);
-
-        return;
-      }
-
+    if (httpSession != null && httpSession.getAttribute("user") != null) {
       chain.doFilter(req, resp);
-    } catch (Throwable t) {
-      // If an exception is thrown somewhere down the filter chain,
-      // we still want to execute our after processing, and then
-      // rethrow the problem after that.
-      problem = t;
-      t.printStackTrace();
+      return;
     }
 
-    doAfterProcessing(req, resp);
+    Cookie[] cookies = httpRequest.getCookies();
+    if (cookies == null) {
+      chain.doFilter(req, resp);
+      return;
+    }
 
-    // If there was a problem, we want to rethrow it if it is
-    // a known type, otherwise log it.
-    if (problem != null) {
-      if (problem instanceof ServletException) {
-        throw (ServletException) problem;
+    for (Cookie cookie : cookies) {
+      if (AUTH_COOKIE_NAME.equals(cookie.getName())) {
+        String authToken = cookie.getValue();
+
+        User user = validateAuthToken(authToken);
+
+        if (user == null) {
+          cookie.setMaxAge(0);
+          httpResponse.addCookie(cookie);
+
+        } else {
+          httpSession = httpRequest.getSession(true);
+          httpSession.setAttribute("user", user);
+          httpSession.setAttribute("authToken", authToken);
+
+        }
+
+        break;
       }
-      if (problem instanceof IOException) {
-        throw (IOException) problem;
-      }
-      sendProcessingError(problem, resp);
+    }
+
+    chain.doFilter(req, resp);
+
+  }
+
+  private User validateAuthToken(String authToken) {
+    UserDAO udao = UserDAO.getInstance();
+    try {
+      return udao.fetchUserByToken(authToken);
+    } catch (Exception ex) {
+      return null;
     }
   }
 
@@ -175,7 +183,7 @@ public class UserFilter implements Filter {
     this.filterConfig = filterConfig;
     if (filterConfig != null) {
       if (debug) {
-        log("UserFilter:Initializing filter");
+        log("AuthenticationFilter:Initializing filter");
       }
     }
   }
@@ -186,9 +194,9 @@ public class UserFilter implements Filter {
   @Override
   public String toString() {
     if (filterConfig == null) {
-      return ("UserFilter()");
+      return ("AuthenticationFilter()");
     }
-    StringBuffer sb = new StringBuffer("UserFilter(");
+    StringBuffer sb = new StringBuffer("AuthenticationFilter(");
     sb.append(filterConfig);
     sb.append(")");
     return (sb.toString());

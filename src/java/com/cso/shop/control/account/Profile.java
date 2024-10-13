@@ -22,7 +22,7 @@ import java.sql.SQLException;
  */
 public class Profile extends HttpServlet {
 
-  private UserDAO udao = new UserDAO();
+  private UserDAO udao = UserDAO.getInstance();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)

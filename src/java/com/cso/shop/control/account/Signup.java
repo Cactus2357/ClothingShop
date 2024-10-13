@@ -20,7 +20,7 @@ import java.sql.SQLException;
  */
 public class Signup extends HttpServlet {
 
-  private UserDAO udao = new UserDAO();
+  private UserDAO udao = UserDAO.getInstance();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override

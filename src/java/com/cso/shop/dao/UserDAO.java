@@ -5,9 +5,11 @@
 package com.cso.shop.dao;
 
 import com.cso.shop.model.User;
+import com.cso.shop.util.RandomString;
 import com.cso.shop.util.Utils;
 import java.sql.SQLException;
 import java.sql.*;
+import java.util.Calendar;
 
 import java.util.List;
 
@@ -17,22 +19,36 @@ import java.util.List;
  */
 public class UserDAO extends BaseDAO<User> {
 
-  private String SQL_INSERT = "INSERT INTO " + TABLE
-    + " (name, password, email, phone, role, address, givenName, familyName, status, avatar, gender)"
-    + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-  private String SQL_SELECT = "SELECT * FROM " + TABLE + " WHERE UserID=?";
-
-  private String SQL_UPDATE = "UPDATE " + TABLE
-    + " SET name=?, phone=?, aAddress=?, givenName=?, familyName=?, gender=?"
-    + " WHERE userID=?";
-
-  private String SQL_DELETE = "DELETE FROM " + TABLE
-    + " WHERE userID=?";
-
-  public UserDAO() {
+  private UserDAO() {
     super("User");
   }
+
+//  private static volatile UserDAO instance;
+//  public static UserDAO getInstance() {
+//    UserDAO result = instance;
+//    if (result == null) {
+//      synchronized (UserDAO.class) {
+//        result = instance;
+//        if (result == null) {
+//          instance = result = new UserDAO();
+//        }
+//      }
+//    }
+//    return result;
+//  }
+  private static class Holder {
+
+    private static final UserDAO INSTANCE = new UserDAO();
+  }
+
+  public static UserDAO getInstance() {
+    return Holder.INSTANCE;
+  }
+
+  private String SQL_INSERT = "INSERT INTO " + TABLE + " (name, password, email, phone, role, address, givenName, familyName, status, avatar, gender)" + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  private String SQL_SELECT = "SELECT * FROM " + TABLE + " WHERE UserID=?";
+  private String SQL_UPDATE = "UPDATE " + TABLE + " SET name=?, phone=?, aAddress=?, givenName=?, familyName=?, gender=?" + " WHERE userID=?";
+  private String SQL_DELETE = "DELETE FROM " + TABLE + " WHERE userID=?";
 
   public static void main(String[] args) {
     try {
@@ -60,7 +76,7 @@ public class UserDAO extends BaseDAO<User> {
     }
   }
 
-  private User parse(ResultSet rs) {
+  private User construct(ResultSet rs) {
     try {
       return new User(
         rs.getInt("userID"),
@@ -88,7 +104,7 @@ public class UserDAO extends BaseDAO<User> {
       ps.setInt(1, t.getUserID());
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
-        return parse(rs);
+        return construct(rs);
       } else {
         return null;
       }
@@ -99,6 +115,9 @@ public class UserDAO extends BaseDAO<User> {
   public void insert(User t) throws SQLException {
     try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {
       String hashedPassword = Utils.hash(t.getPassword());
+      if (hashedPassword == null) {
+        throw new SQLException("Hashing password encountered problem");
+      }
       ps.setString(1, t.getUserName());
       ps.setString(2, hashedPassword);
       ps.setString(3, t.getEmail());
@@ -135,19 +154,26 @@ public class UserDAO extends BaseDAO<User> {
    * @return user or null
    * @throws SQLException
    */
-  public User authorize(final String sudoLogin, final String password) throws SQLException {
-    String sql = "SELECT * FROM " + TABLE + " WHERE %s=?"
+  public User authenticate(final String sudoLogin, final String password) throws SQLException {
+    String sql = "SELECT * FROM " + TABLE + " WHERE %s = ?"
       .formatted(sudoLogin.contains("@") ? "email" : "name");
+
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
       ps.setString(1, sudoLogin);
+
       ResultSet rs = ps.executeQuery();
+
       if (!rs.next()) {
         return null;
       }
-      User user = parse(rs);
+
+      User user = construct(rs);
+
       if (user.getPassword() == null) {
-        throw new SQLException("account does not have password authentication enabled");
-      } else if (!user.getPassword().equals(Utils.hash(password))) {
+        throw new SQLException("Account does not have password authentication enabled");
+      }
+
+      if (!user.getPassword().equals(Utils.hash(password))) {
         return null;
       }
 
@@ -165,7 +191,7 @@ public class UserDAO extends BaseDAO<User> {
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
       ps.setString(1, email);
       ResultSet rs = ps.executeQuery();
-      return parse(rs);
+      return construct(rs);
     }
   }
 
@@ -174,7 +200,7 @@ public class UserDAO extends BaseDAO<User> {
     try (PreparedStatement ps = connection.prepareStatement(sql);) {
       ps.setString(1, name);
       ResultSet rs = ps.executeQuery();
-      return parse(rs);
+      return construct(rs);
     }
   }
 
@@ -230,4 +256,196 @@ public class UserDAO extends BaseDAO<User> {
     throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
   }
 
+  /* ******************** */
+  public String createAuthToken(int userId) throws SQLException {
+    int tokenTTL = 30; // in days
+    String sql = "INSERT INTO authToken"
+      + " (hashedToken, userId, expiry)"
+      + " VALUES (?, ?, ?)";
+
+    try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+      RandomString random = new RandomString(20);
+      String token = random.nextString();
+      String hashedToken = Utils.hash(token, "SHA-256");
+
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTimeInMillis(System.currentTimeMillis());
+      calendar.add(Calendar.DAY_OF_MONTH, tokenTTL);
+      Timestamp expiry = new Timestamp(calendar.getTimeInMillis());
+
+      if (hashedToken == null) {
+        throw new SQLException("Hashing token encountered problem");
+      }
+
+      ps.setString(1, hashedToken);
+      ps.setInt(2, userId);
+      ps.setTimestamp(3, expiry);
+
+      int affectedRows = ps.executeUpdate();
+
+      if (affectedRows == 0) {
+        throw new SQLException("Creating token failed, no rows affected");
+      }
+
+      try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+        if (!generatedKeys.next()) {
+          throw new SQLException("Creating token failed, no ID obtained");
+        }
+
+        long authTokenId = generatedKeys.getInt(1);
+        StringBuilder userToken = new StringBuilder();
+        userToken.append(authTokenId).append(":").append(token);
+        return userToken.toString();
+      }
+    }
+  }
+
+  public User fetchUserByToken(String userToken) throws Exception {
+
+    if (!validateUserToken(userToken)) {
+      throw new Exception("Invalid user token");
+    }
+
+    String[] params = userToken.split(":", -1);
+
+    int authTokenId = Integer.parseInt(params[0]);
+    String token = params[1];
+
+    String sql = "SELECT * FROM authToken WHERE authTokenId = ?";
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      ps.setInt(1, authTokenId);
+
+      try (ResultSet resultSet = ps.executeQuery()) {
+        if (!resultSet.next()) {
+          return null;
+        }
+
+        String hashedToken = Utils.hash(token, "SHA-256");
+
+        AuthToken authToken = AuthToken.construct(resultSet);
+        if (!authToken.isValid(hashedToken)) {
+          return null;
+        }
+
+        User user = new User();
+        user.setUserID(authToken.userId);
+        return select(user);
+      }
+    } catch (SQLException e) {
+      System.err.println(e);
+      return null;
+    }
+  }
+
+  public int invalidateUserToken(int userId, int authTokenId) {
+
+    if (userId <= 0) {
+      throw new IllegalArgumentException("Invalid user ID");
+    }
+
+    if (authTokenId <= 0) {
+      throw new IllegalArgumentException("Invalid auth token ID");
+    }
+
+    String sql = "UPDATE authToken SET status=? WHERE userId=? AND authTokenId=? AND status=?;";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+      ps.setString(1, AuthToken.STATUS_EXPIRED);
+      ps.setInt(2, userId);
+      ps.setInt(3, authTokenId);
+      ps.setString(4, AuthToken.STATUS_ACTIVE);
+
+      int rowsAffected = ps.executeUpdate();
+
+      return rowsAffected;
+    } catch (SQLException e) {
+      System.err.println("SQL error while invalidating user tokens: " + e.getMessage());
+      return 0;
+    }
+  }
+
+  public int invalidateUserTokens(int userId) {
+
+    if (userId <= 0) {
+      throw new IllegalArgumentException("Invalid user ID");
+    }
+
+    String sql = "UPDATE authToken SET status = ? WHERE userId=? AND status = ?;";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+      ps.setString(1, AuthToken.STATUS_REVOKED);
+      ps.setInt(2, userId);
+      ps.setString(3, AuthToken.STATUS_ACTIVE);
+
+      int rowsAffected = ps.executeUpdate();
+
+      return rowsAffected;
+    } catch (SQLException e) {
+      System.err.println("SQL error while invalidating user tokens: " + e.getMessage());
+      return 0;
+    }
+  }
+
+  public boolean validateUserToken(String userToken) {
+    String[] params = userToken.split(":", -1);
+    try {
+      Integer.parseInt(params[0]);
+
+      boolean isValidParams = params != null && params.length == 2;
+      if (!isValidParams || params[1].length() != 20) {
+        throw new Exception();
+      }
+
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  private record AuthToken(int authTokenId, String hashedToken, int userId, Date expiry, String status) {
+
+    public static final String STATUS_ACTIVE = "active";
+    public static final String STATUS_EXPIRED = "expired";
+    public static final String STATUS_REVOKED = "revoked";
+
+    public static AuthToken construct(ResultSet rs) throws SQLException {
+      return new AuthToken(
+        rs.getInt("authTokenId"),
+        rs.getString("hashedToken"),
+        rs.getInt("userId"),
+        new java.sql.Date(rs.getTimestamp("expiry").getTime()),
+        rs.getString("status")
+      );
+    }
+
+    public boolean isValid(String hashedToken) {
+      if (!this.hashedToken.equals(hashedToken)) {
+        return false;
+      }
+
+      if (!expiry.after(new Date(System.currentTimeMillis()))) {
+        /* expiry <= now; token expired */
+        // may be change token status to expired
+        return false;
+      }
+
+      if (!status.equals(STATUS_ACTIVE)) {
+        return false;
+      }
+
+      return true;
+    }
+  }
+
 }
+
+/*
+
+authTokenId int AI PK 
+hashedToken char(64) 
+userId int 
+expiry datetime 
+status enum('active','expired','revoked')
+
+ */

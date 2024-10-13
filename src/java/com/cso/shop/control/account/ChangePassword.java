@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpSession;
  */
 public class ChangePassword extends HttpServlet {
 
-  private UserDAO udao = new UserDAO();
+  private UserDAO udao = UserDAO.getInstance();
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)

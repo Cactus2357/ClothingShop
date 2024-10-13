@@ -67,8 +67,8 @@
           </div>
 
           <div class="form-check my-3">
-            <input class="form-check-input" type="checkbox" value="remember-me" id="remember" />
-            <label class="form-check-label" for="remember">Remember me</label>
+            <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" ${requestScope.rememberMe == true ? 'checked' : ''} />
+            <label class="form-check-label" for="rememberMe">Remember me</label>
             <a class="float-end text-decoration-none" href="#">Forgot password?</a>
           </div>
           <!--<p class="mb-3 text-danger">Server response</p>-->

@@ -9,10 +9,14 @@ import com.cso.shop.model.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +24,7 @@ import jakarta.servlet.http.HttpSession;
  */
 public class Signin extends HttpServlet {
 
-  private UserDAO udao = new UserDAO();
+  private UserDAO udao = UserDAO.getInstance();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override
@@ -61,18 +65,24 @@ public class Signin extends HttpServlet {
     try {
       String sudoLogin = req.getParameter("sudoLogin");
       String password = req.getParameter("password");
+      String remember = req.getParameter("rememberMe");
       String redirectURL = req.getParameter("redirect");
       if (redirectURL == null) {
         redirectURL = "home";
       }
 
-      User user = udao.authorize(sudoLogin, password);
+      User user = udao.authenticate(sudoLogin, password);
       if (user == null) {
         throw new Exception("Email/password is incorrect or your account does not have password authentication enabled");
       }
 
+      if (remember != null) {
+        rememberUser(req, resp, user);
+      }
+
       HttpSession session = req.getSession();
       session.setAttribute("user", user);
+
       resp.setHeader("refresh", "1.5;url=" + redirectURL);
       req.setAttribute("response", "Sign in successfully. Redirecting...");
       req.setAttribute("responseType", true);
@@ -93,6 +103,24 @@ public class Signin extends HttpServlet {
     }
 
     return true;
+  }
+
+  private void rememberUser(HttpServletRequest req, HttpServletResponse resp, User user) throws Exception {
+    req.setAttribute("rememberMe", true);
+    try {
+      String authToken = udao.createAuthToken(user.getUserID());
+      int tokenExpiry = 60 * 60 * 24 * 30; // 30 days
+      Cookie authTokenCookie = new Cookie("rememberme", authToken);
+      authTokenCookie.setMaxAge(tokenExpiry);
+      authTokenCookie.setHttpOnly(true);
+      authTokenCookie.setSecure(true);
+      authTokenCookie.setPath("/");
+
+      resp.addCookie(authTokenCookie);
+
+    } catch (SQLException e) {
+      throw new Exception("Persistent user sign in encountered a problem.", e);
+    }
   }
 
 }
