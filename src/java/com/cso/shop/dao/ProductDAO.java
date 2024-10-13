@@ -21,21 +21,12 @@ public class ProductDAO extends BaseDAO<Product> {
   public static void main(String[] args) {
     ProductDAO pdao = new ProductDAO();
     try {
-      pdao.selectAll(null, 6, 0, 5, 2).forEach(p
-        -> System.out.println(p)
-      );
-      Integer n = 13;
-      System.out.println(n);
-      something(n);
-      System.out.println(n);
+      pdao.selectAll(null, 0, 0, 20, 0);
+//        .forEach(p -> System.out.println(p));
 
     } catch (SQLException ex) {
       Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
     }
-  }
-
-  private static void something(Integer n) {
-    n = 41;
   }
 
   public ProductDAO() {
@@ -178,8 +169,8 @@ public class ProductDAO extends BaseDAO<Product> {
     p.setQuantity(rs.getInt("quantity"));
     p.setUnitPrice(rs.getDouble("unitPrice"));
     p.setSalePrice(rs.getDouble("salePrice"));
-    p.setImportDate(rs.getDate("importDate"));
-    p.setUpdateDate(rs.getDate("updateDate"));
+    p.setImportDate(new Date(rs.getTimestamp("importDate").getTime()));
+    p.setUpdateDate(new Date(rs.getTimestamp("updateDate").getTime()));
     p.setStatus(rs.getString("status"));
     return p;
   }
@@ -211,6 +202,7 @@ public class ProductDAO extends BaseDAO<Product> {
       ps.setInt(4, t.getQuantity());
       ps.setDouble(5, t.getUnitPrice());
       ps.setDouble(6, t.getSalePrice());
+
       int affectedRows = ps.executeUpdate();
       if (affectedRows == 0) {
         throw new SQLException("Creating product failed, no rows affected");
