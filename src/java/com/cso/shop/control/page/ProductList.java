@@ -41,7 +41,6 @@ public class ProductList extends HttpServlet {
     int size = Utils.tryParseInt(req.getParameter("size"), 9);
     int page = Utils.tryParseInt(req.getParameter("page"), 1);
     int display = Utils.tryParseInt(req.getParameter("display"), 2);
-
     int categoryId = Utils.tryParseInt(req.getParameter("category-id"), -1);
 
     if (size <= 4) {
@@ -56,7 +55,6 @@ public class ProductList extends HttpServlet {
     req.setAttribute("order", order);
     req.setAttribute("size", size);
     req.setAttribute("page", page);
-
     if (display >= 1 && display <= 3) {
       req.setAttribute("display", display);
     }
@@ -73,6 +71,7 @@ public class ProductList extends HttpServlet {
       req.setAttribute("productCategoryMap", productCategoryMap);
 
       categoryList = cdao.selectAll();
+
       req.setAttribute("suggestions", cdao.selectBatch("Men's Clothing", "Women's Clothing", "Accessories"));
     } catch (Exception e) {
       System.err.println(e);
@@ -80,10 +79,13 @@ public class ProductList extends HttpServlet {
     }
 
     int totalItems = pdao.countSelectAll(query, categoryId);
+    int pageCount = (int) Math.ceil((double) totalItems / (double) size);
+
     req.setAttribute("totalItems", totalItems);
-    req.setAttribute("totalPages", (int) Math.ceil((double) totalItems / (double) size));
+    req.setAttribute("totalPages", pageCount);
     req.setAttribute("productList", productList);
     req.setAttribute("categoryList", categoryList);
+
     req.getRequestDispatcher("WEB-INF/product-list.jsp").forward(req, resp);
   }
 
