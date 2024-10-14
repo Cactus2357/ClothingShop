@@ -145,18 +145,24 @@
                   </datalist>
                 </div>
                 <div class="col-auto col-xl-6 mb-3">
+                  <c:url var="orderURL" value="product-list">
+                    <c:param name="query" value="${query}" />
+                    <c:if test="${size ne null and size ne 9}"><c:param name="size" value="${size}" /> </c:if>
+                  </c:url>
                   <div class="d-flex flex-wrap float-end gap-2">
-                    <input type="radio" class="btn-check" name="order" value="0" id="radio1" autocomplete="off" ${(order ne null and order ne 0) ? '' : 'checked'} />
+                    <%--<input type="radio" class="btn-check" name="order" value="0" id="radio1" autocomplete="off" ${(order ne null and order ne 0) ? '' : 'checked'} />
                     <label class="btn btn-sm btn-outline-primary" for="radio1">New</label>
-
                     <input type="radio" class="btn-check" name="order" value="1" id="radio2" autocomplete="off" ${order eq 1 ? 'checked' : ''} />
                     <label class="btn btn-sm btn-outline-primary" for="radio2">Price ascending</label>
-
                     <input type="radio" class="btn-check" name="order" value="2" id="radio3" autocomplete="off" ${order eq 2 ? 'checked' : ''} />
                     <label class="btn btn-sm btn-outline-primary" for="radio3">Price descending</label>
-
                     <input type="radio" class="btn-check" name="order" value="3" id="radio4" autocomplete="off" ${order eq 3 ? 'checked' : ''} />
-                    <label class="btn btn-sm btn-outline-primary disabled" for="radio4">Rating</label>
+                    <label class="btn btn-sm btn-outline-primary disabled" for="radio4">Rating</label>--%>
+
+                    <a class="btn btn-sm btn-outline-primary ${(order ne null and order ne 0) ? '' : 'active'}" href="${orderURL}&order=0"> New </a>
+                    <a class="btn btn-sm btn-outline-primary ${order eq 1 ? 'active' : ''}" href="${orderURL}&order=1"> Price ascending </a>
+                    <a class="btn btn-sm btn-outline-primary ${order eq 2 ? 'active' : ''}" href="${orderURL}&order=2"> Price descending </a>
+                    <a class="btn btn-sm btn-outline-primary ${order eq 3 ? 'active' : ''} disabled" href="${orderURL}&order=3"> Rating </a>
 
                     <input type="number" name="size" min="5" max="20" value="${size ne null ? size : 9}" class="form-control form-control-sm w-auto" data-bs-toggle="tooltip" data-bs-title="Products per page"/>
                   </div>
@@ -257,7 +263,7 @@
                       <c:param name="query" value="${query}" />
                       <c:if test="${order ne null and order ne 0}"><c:param name="order" value="${order}" /></c:if>
                       <c:if test="${size ne null and size ne 9}"><c:param name="size" value="${size}" /> </c:if>
-                      <c:if test="${display ne null and display ne 2}"><c:param name="display" value="${display}" /> </c:if>
+                      <%--<c:if test="${display ne null and display ne 2}"><c:param name="display" value="${display}" /> </c:if>--%>
                     </c:url>
                     <ul class="pagination">
                       <c:if test="${(page != null && page > 1)}">
