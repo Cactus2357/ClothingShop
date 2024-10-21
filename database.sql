@@ -114,7 +114,7 @@ CREATE TABLE orderItem (
   FOREIGN KEY (productId) REFERENCES product(productId)
 );
 
-CREATE TABLE setting ( 
+CREATE TABLE setting (
   settingId INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   value VARCHAR(255) NOT NULL,
