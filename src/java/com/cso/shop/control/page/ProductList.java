@@ -67,6 +67,17 @@ public class ProductList extends HttpServlet {
         productIds[i] = productList.get(i).getId();
       }
 
+      productList.forEach(p -> {
+        String description = p.getDescription();
+        // Remove HTML tags
+        description = description.replaceAll("<[^>]*>", "");
+        // Limit description length 100 characters
+        if (description.length() > 100) {
+          description = description.substring(0, 100) + "...";
+        }
+        p.setDescription(description);
+      });
+
       Map<Integer, List<Category>> productCategoryMap = cdao.selectBatch(productIds);
       req.setAttribute("productCategoryMap", productCategoryMap);
 
