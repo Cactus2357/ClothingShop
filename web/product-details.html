@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="asset/script/color-modes.js"></script>
+
+    <link rel="stylesheet" href="asset/style/theme-button.css" />
+    <link rel="stylesheet" href="asset/style/image-placeholder.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.js"></script>
+
+    <style>
+      body {
+        min-height: 75rem;
+        padding-top: 4.5rem;
+      }
+
+      .product-item:hover {
+        --bs-border-opacity: 1;
+        border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+        box-shadow: var(--bs-box-shadow) !important;
+      }
+
+      .ratings {
+        display: flex !important;
+        gap: 0.25rem !important;
+        align-items: center !important;
+      }
+
+      .hidden-element {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol id="check2" viewBox="0 0 16 16">
+          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </symbol>
+        <symbol id="circle-half" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z" />
+        </symbol>
+        <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+          <path
+            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"
+          />
+          <path
+            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"
+          />
+        </symbol>
+        <symbol id="sun-fill" viewBox="0 0 16 16">
+          <path
+            d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"
+          />
+        </symbol>
+      </svg>
+      <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown">
+          <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>
+          <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow">
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+              Light
+              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+              Dark
+              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto">
+              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#circle-half"></use></svg>
+              Auto
+              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="sidebar-label">Backdrop with scrolling</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+          <p>Try scrolling the rest of the page to see this option in action.</p>
+          <hr />
+          <ul class="list-group" id="nav-list">
+            <a class="list-group-item list-group-item-action" href="product-list">Products</a>
+            <a class="list-group-item list-group-item-action" href="product">Add Product</a>
+            <a class="list-group-item list-group-item-action" href="category">Add Category</a>
+          </ul>
+        </div>
+      </div>
+
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark border-bottom" aria-label="sidebar">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebar">Side bar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+              </li>
+              <hr class="dropdown-divider" />
+            </ul>
+            <form class="d-flex me-2" role="search">
+              <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search..." />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </div>
+            </form>
+            <a href="#" class="btn btn-outline-primary me-2">Sign in</a>
+            <a href="#" class="btn btn-primary">Sign up</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+        <div id="notification" class="toast show bg-danger text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+          <div class="d-flex">
+            <div class="toast-body">${param.response}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <main class="container-fluid pt-5 px-3">
+      <div class="row g-3">
+        <div class="col-12 col-md-4 col-xl-3">
+          <aside class="container-fluid sticky-top" style="top: 4.5rem">
+            <div class="border bg-body-tertiary rounded p-2 row">
+              <div class="mb-3">
+                <label class="form-label">Keywords</label>
+                <br />
+                <span class="badge text-bg-primary">Keyword</span>
+                <span class="badge text-bg-primary">Keyword</span>
+                <span class="badge text-bg-primary">Keyword</span>
+              </div>
+              <div class="mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox1" />
+                  <label class="form-check-label" for="checkbox1"> Option 1 </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox2" />
+                  <label class="form-check-label" for="checkbox2"> Option 2 </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox3" />
+                  <label class="form-check-label" for="checkbox3"> Option 3 </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="range1" class="form-label">Label ($0-100)</label>
+                <strong class="float-end"> &gt; <output id="rangeOutput1">23</output>$</strong>
+                <input type="range" class="form-range" min="0" max="100" value="23" id="min-sale-price" oninput="$('#rangeOutput1').val(this.value)" />
+              </div>
+              <div class="mb-3">
+                <div class="mb-3">
+                  <label for="category" class="form-label">Category</label>
+                  <select class="form-select" name="dategory" id="dategory" disabled>
+                    <option selected disabled>Select a category</option>
+                    <option value="">New Delhi</option>
+                    <option value="">Istanbul</option>
+                    <option value="">Jakarta</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Category 1</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox4" />
+                  <label class="form-check-label" for="checkbox4"> Option 1 </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox5" />
+                  <label class="form-check-label" for="checkbox5"> Option 2 </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox6" />
+                  <label class="form-check-label" for="checkbox6"> Option 3 </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Category 2</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox7" />
+                  <label class="form-check-label" for="checkbox7"> Option 1 </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox8" />
+                  <label class="form-check-label" for="checkbox8"> Option 2 </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="checkbox9" />
+                  <label class="form-check-label" for="checkbox9"> Option 3 </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="display">Information count</label>
+                <input type="range" class="form-control" value="6" min="0" max="6" id="display" placeholder="Display" />
+              </div>
+            </div>
+          </aside>
+        </div>
+        <div class="col-12 col-md-8 col-xl-9">
+          <div class="row row-cols-1 row-cols-xl-2 g-3 mb-3">
+            <div cass="col">
+              <!-- <img src="asset/img/placeholder.jpg" class="img-fluid border rounded w-100" alt="..." /> -->
+              <div class="svg-image border rounded-3" id="placeholder" style="font-size: 10em">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                  <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path>
+                  <path
+                    d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <div class="col">
+              <div class="d-flex flex-column bg-body-secondary rounded p-4 h-100">
+                <h3 class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                  <span class="me-3"> Product Title </span>
+                  <span class="badge text-bg-primary rounded-pill">Category</span>
+                  <span class="badge text-bg-primary rounded-pill">Category</span>
+                  <span class="badge text-bg-primary rounded-pill">Category</span>
+                </h3>
+                <h5 class="mb-3">
+                  Pricing:
+                  <span class="fw-normal gap-3">
+                    <span class="text-success">$39.99</span>
+                    <small class="text-secondary text-decoration-line-through"> $29.99 </small>
+                  </span>
+                </h5>
+                <h5 class="mb-3">In stock: <span class="text-muted fw-normal"> 20 items </span></h5>
+                <h5 class="mb-3">Import date: <span class="text-muted fw-normal"> Sep 29, 2024 </span></h5>
+                <h5>Description</h5>
+                <p class="px-3" style="text-align: justify; text-justify: inter-word">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur autem quaerat ab nostrum architecto, ratione voluptate quasi voluptatum, voluptatem explicabo ipsa
+                  consequuntur expedita rerum amet cumque, dolores iure aperiam. Eaque, quasi! Commodi, quasi. Voluptates quas iure rerum animi, neque recusandae dicta eius porro explicabo
+                  impedit velit sed id facere provident.
+                </p>
+                <div class="ms-auto d-flex gap-2">
+                  <button class="btn btn-primary rounded-pill">Buy Now</button>
+                  <button class="btn btn-outline-primary rounded-pill">Add to Cart</button>
+                </div>
+                <!-- </div> -->
+              </div>
+            </div>
+          </div>
+          <hr />
+          <!-- <div class=" p-5 bg-success rounded"></div> -->
+          <div class="container-fluid p-3 rounded">
+            <div class="container">
+              <div class="d-flex gap-2 flex-wrap justify-content-between px-xl-5 mb-3">
+                <div>
+                  <h3>Reviews</h3>
+                  <h4 class="d-flex">
+                    <span class="me-2">4.3 out of 5.0</span>
+                    <span class="ratings text-warning me-2" value="4.5" max="5"></span>
+                  </h4>
+                  <span class="text-secondary">7 ratings</span>
+                </div>
+                <button class="btn btn-outline-primary rounded-pill align-self-center" id="write-review-btn" onclick="edit(this)">Write a review</button>
+                <!-- <a href="#review-23" class="btn btn-outline-primary rounded-pill align-self-center" id="write-review-btn">See my review</a> -->
+              </div>
+
+              <div class="container px-xl-5">
+                <div class="row g-3 mx-xl-5 mb-3">
+                  <!-- User write review -->
+                  <div class="card bg-body-tertiary" id="user-review-container">
+                    <div class="card-body">
+                      <form action="google.com">
+                        <div class="d-flex mb-2 mb-md-0">
+                          <img src="asset/img/default_picture.png" class="rounded-circle me-3" height="48" width="48" />
+                          <div class="flex-auto flex-grow-1">
+                            <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2">
+                              <span>Admin</span>
+                              <span class="text-warning fs-6">
+                                <input type="range" name="rating" min="1" max="5" id="user-rating" class="opacity-0 position-absolute" style="height: 1px; width: 96px" required />
+                                <span class="d-flex position-absolute" style="top: 18px">
+                                  <div class="d-inline-block">
+                                    <i class="ratings" value="0" max="5"></i>
+                                    <div class="ratings overflow-hidden position-absolute top-0" id="star-select-container">
+                                      <i class="bi bi-star-fill star-select" data-bs-value="1"></i>
+                                      <i class="bi bi-star-fill star-select" data-bs-value="2"></i>
+                                      <i class="bi bi-star-fill star-select" data-bs-value="3"></i>
+                                      <i class="bi bi-star-fill star-select" data-bs-value="4"></i>
+                                      <i class="bi bi-star-fill star-select" data-bs-value="5"></i>
+                                    </div>
+                                  </div>
+                                </span>
+                              </span>
+                            </h5>
+                            <textarea class="flex-grow-1 w-100" name="user-review" id="user-review"></textarea>
+                          </div>
+                        </div>
+                        <div class="float-end d-flex gap-2 mt-md-2" id="review-control">
+                          <button type="reset" id="cancel-review-btn" class="btn btn-secondary rounded-pill px-4" onclick="discard(this)">Cancel</button>
+                          <button type="submit" id="submit-review-btn" class="btn btn-primary rounded-pill px-4">Post</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <!-- User write review -->
+
+                  <div class="card bg-body-tertiary">
+                    <div class="card-body d-flex justify-content-between">
+                      <div class="d-flex mb-2 mb-md-0">
+                        <img src="asset/img/default_picture.png" class="rounded-circle me-3" height="48" width="48" />
+                        <div class="flex-auto">
+                          <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2">
+                            <span>Admin</span>
+                            <i class="ratings text-warning fs-6" value="1" max="5"></i>
+                          </h5>
+                          <small class="fw-light text-muted text-nowrap"> Oct 11, 2024 </small>
+                          <p class="mb-0"></p>
+                        </div>
+                      </div>
+                      <button type="button" class="btn rounded-circle align-self-start"><i class="bi bi-three-dots-vertical"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="card bg-body-tertiary">
+                    <div class="card-body d-flex justify-content-between">
+                      <div class="d-flex mb-2 mb-md-0">
+                        <img src="asset/img/default_picture.png" class="rounded-circle me-3" height="48" width="48" />
+                        <div class="flex-auto">
+                          <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2">
+                            <span>Admin</span>
+                            <i class="ratings text-warning fs-6" value="1" max="5"></i>
+                          </h5>
+                          <small class="fw-light text-muted text-nowrap"> Oct 11, 2024 </small>
+                          <p class="mb-0">Lorem ipsum dolor sit amet</p>
+                        </div>
+                      </div>
+                      <button type="button" class="btn rounded-circle align-self-start"><i class="bi bi-three-dots-vertical"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="card bg-body-tertiary" id="review-23">
+                    <div class="card-body d-flex justify-content-between">
+                      <div class="d-flex mb-2 mb-md-0">
+                        <img src="asset/img/default_picture.png" class="rounded-circle me-3" height="48" width="48" />
+                        <div class="flex-auto">
+                          <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2">
+                            <span>Admin</span>
+                            <i class="ratings text-warning fs-6" value="1" max="5"></i>
+                          </h5>
+                          <small class="fw-light text-muted text-nowrap"> Oct 11, 2024 </small>
+                          <p class="mb-0">What the point of making VPN with a god damn site to register, if I can't even open it without VPN ?</p>
+                        </div>
+                      </div>
+                      <button type="button" class="btn rounded-circle align-self-start"><i class="bi bi-three-dots-vertical"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="card bg-body-tertiary">
+                    <div class="card-body text-end">
+                      <blockquote class="blockquote mb-0">
+                        <p>This is an advertisment.</p>
+                        <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Google Ads</cite></footer>
+                      </blockquote>
+                    </div>
+                  </div>
+
+                  <div class="card bg-body-tertiary">
+                    <div class="card-body d-flex justify-content-between">
+                      <div class="d-flex mb-2 mb-md-0">
+                        <img src="asset/img/default_picture.png" class="rounded-circle me-3" height="48" width="48" />
+                        <div class="flex-auto">
+                          <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2 mb-2">
+                            <span> Admin </span>
+                            <i class="ratings text-warning fs-6" value="1" max="5"></i>
+                          </h5>
+                          <small class="fw-light text-muted text-nowrap"> Oct 11, 2024 </small>
+                          <p class="mb-0">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, expedita sunt magnam molestiae enim rerum vero dolorem laboriosam quasi quaerat.
+                          </p>
+                        </div>
+                      </div>
+                      <button type="button" class="align-self-start btn rounded-circle"><i class="bi bi-three-dots-vertical"></i></button>
+                    </div>
+                  </div>
+
+                  <div class="card bg-body-tertiary">
+                    <div class="card-body">
+                      <blockquote class="blockquote mb-0">
+                        <p>A well-known quote, contained in a blockquote element.</p>
+                        <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+                      </blockquote>
+                    </div>
+                  </div>
+                </div>
+                <a class="btn btn-outline-primary border-0 rounded-pill" href="javascript:void(0)">See all reviews</a>
+              </div>
+            </div>
+            <!-- <div class="container mt-3">
+              <button class="btn btn-sm btn-primary" onclick="edit()" type="button">Write</button>
+              <button class="btn btn-sm btn-success" onclick="save()" type="button">Save</button>
+              <button class="btn btn-sm btn-secondary" onclick="discard()" type="button">Discard</button>
+              <div class="container mt-4 mb-4 p-0">
+                <div id="user-review" class="summernote" name="editordata"></div>
+              </div>
+              <script></script>
+            </div> -->
+          </div>
+        </div>
+        <!-- user review -->
+        <!-- user review -->
+      </div>
+    </main>
+    <div class="container">
+      <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+        </ul>
+        <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+      </footer>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+      const $writeReviewBtn = $("#write-review-btn");
+      const setting = {
+        toolbar: [
+          ["font", ["bold", "italic", "underline"]],
+          ["para", ["ul", "ol", "paragraph"]],
+          ["insert", ["picture", "video"]],
+        ],
+        placeholder: "Write a review here...",
+        minHeight: 100,
+      };
+
+      function edit(btn) {
+        // $(btn).addClass("disabled");
+        $writeReviewBtn.attr("disabled", true);
+        $("#user-review-container").show();
+        $("#user-review").summernote({ focus: true });
+      }
+
+      function discard(btn) {
+        $writeReviewBtn.attr("disabled", false);
+        $("#user-review-container").hide();
+        $("#user-review").html(null);
+        // $("#user-review").summernote("destroy");
+      }
+
+      // function save(btn) {
+      //   $writeReviewBtn.attr("disabled", true);
+      //   let markup = $("#user-review").summernote("code");
+      //   if (!markup || markup == "<p><br></p>") {
+      //     $("#user-review").html(null);
+      //   }
+      //   $("#user-review").summernote("destroy");
+      //   $("#user-review").val(markup);
+      //   $("#review-control").remove();
+      // }
+
+      $(document).ready(function () {
+        $(".ratings").each(function () {
+          let rating = parseFloat($(this).attr("value"));
+          let maxRating = parseFloat($(this).attr("max")) || 5;
+          let fullStars = Math.floor(rating);
+          let halfStar = rating % 1 >= 0.5 ? 1 : 0;
+          let emptyStars = maxRating - fullStars - halfStar;
+          let starsHtml = '<i class="bi bi-star-fill"></i>'.repeat(fullStars) + (halfStar ? '<i class="bi bi-star-half"></i>' : "") + '<i class="bi bi-star"></i>'.repeat(emptyStars);
+          $(this).prepend(starsHtml);
+        });
+
+        updateStars(0);
+        $("#user-review").summernote(setting);
+        $("#user-review-container").hide();
+        $("#write-review-btn").click(edit);
+        $("#cancel-review-btn").click(discard);
+        // $("#submit-review-btn").click(save);
+
+        function updateStars(rating) {
+          $(".star-select").each(function () {
+            $(this).css("opacity", $(this).data("bs-value") <= rating ? 1 : 0);
+          });
+        }
+
+        $(".star-select").click((e) => {
+          let value = $(e.target).data("bs-value");
+          $("#user-rating").val(value).trigger("input");
+        });
+
+        $("#user-rating")
+          .focus(() => {
+            $("#star-select-container").addClass("border border-black");
+          })
+          .blur(() => {
+            $("#star-select-container").removeClass("border border-black");
+          });
+
+        $("#user-rating").on("input", function () {
+          updateStars($(this).val());
+        });
+      });
+    </script>
+  </body>
+</html>

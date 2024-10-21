@@ -1,0 +1,16 @@
+.svg-image {
+  background-color: var(--bs-tertiary-bg);
+  background-image: radial-gradient(circle, var(--bs-border-color) 1px, rgba(0, 0, 0, 0) 1px);
+  background-size: 1rem 1rem;
+  /* border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important; */
+  /* border-radius: var(--bs-border-radius-lg) !important; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+}
+
+.svg-image .bi {
+  width: 1em;
+  height: 1em;
+}
