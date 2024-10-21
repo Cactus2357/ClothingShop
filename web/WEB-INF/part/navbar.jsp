@@ -14,24 +14,13 @@
   <div class="offcanvas-body">
     <p>Try scrolling the rest of the page to see this option in action.</p>
     <hr />
-    <ul class="list-group" id="nav-list">
+    <ul class="list-group" id="offcanvas-links">
       <a class="list-group-item list-group-item-action" href="home">Home</a>
       <a class="list-group-item list-group-item-action" href="product-list">Products</a>
       <a class="list-group-item list-group-item-action" href="product">Add Product</a>
       <a class="list-group-item list-group-item-action" href="category">Add Category</a>
     </ul>
   </div>
-  <script>
-    $(() => {
-      const currentPath = window.location.pathname;
-      $('#nav-list a').each(function () {
-        if (this.pathname === currentPath) {
-          $(this).addClass('active');
-        }
-      });
-    });
-
-  </script>
 </div>
 
 <link rel="stylesheet" href="asset/style/theme-button.css"/>
@@ -65,9 +54,9 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+      <ul class="navbar-nav me-auto mb-2 mb-md-0" id="navbar-links">
         <li class="nav-item">
-          <a class="nav-link active" href="home">Home</a>
+          <a class="nav-link" href="home">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/Cactus2357/ClothingShop" target="_blank">Repository</a>
@@ -76,7 +65,7 @@
           <a class="nav-link" href="product-list">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="#">Cart</a>
+          <a class="nav-link disabled" href="cart">Cart</a>
         </li>
       </ul>
       <div class="dropdown me-2 bd-mode-toggle">
@@ -126,5 +115,14 @@
     </div>
   </div>
 </nav>
+
+<script>
+  const currentPath = window.location.pathname;
+  $('#navbar-links a, #offcanvas-links a').each(function () {
+    if (this.pathname === currentPath) {
+      $(this).addClass('active');
+    }
+  });
+</script>
 
 <script src="asset/script/color-modes.js"></script>

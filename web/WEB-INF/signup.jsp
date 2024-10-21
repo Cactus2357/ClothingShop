@@ -1,10 +1,4 @@
-<%-- 
-    Document   : signup
-    Created on : Sep 12, 2024, 11:12:00 PM
-    Author     : hi
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%-- Document : signup Created on : Sep 12, 2024, 11:12:00 PM Author : hi --%> <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -19,8 +13,7 @@
 
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" />
 
-
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
     <!-- Custom styles for this template -->
     <style>
@@ -38,10 +31,9 @@
     </jsp:include>
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
       <div class="col-12 col-lg-8 col-xxl-7">
-        <a href="home" class="text-decoration-none text-end"><h1> CSO </h1></a>
+        <a href="home" class="text-decoration-none text-end"><h1>CSO</h1></a>
         <h1 class="h3 mb-3 fw-normal text-end">Register your account</h1>
         <form action="signup" method="post" autocomplete="off" class="needs-validation" novalidate>
-
           <div class="form-floating mb-3 has-validation">
             <input type="text" class="form-control" id="username" name="name" value="${requestScope.name}" placeholder="Username" required />
             <label for="username">Username</label>
@@ -51,7 +43,7 @@
           <div class="form-floating mb-3 has-validation">
             <input type="email" class="form-control" id="email" name="email" value="${requestScope.email}" placeholder="name@example.com" required autocomplete="off" />
             <label for="email">Email address</label>
-            <div class="invalid-feedback">Email required</div> 
+            <div class="invalid-feedback">Email required</div>
           </div>
 
           <fieldset>
@@ -77,7 +69,6 @@
           </fieldset>
 
           <div class="row mb-3">
-
             <div class="col-6">
               <div class="form-floating">
                 <input type="text" class="form-control" id="familyName" name="familyName" value="${requestScope.familyName}" placeholder="Family Name" required />
@@ -91,8 +82,6 @@
                 <label for="givenName">Given Name</label>
               </div>
             </div>
-
-
           </div>
 
           <div class="mb-3 d-flex align-items-center gap-3">
@@ -107,7 +96,6 @@
           </div>
 
           <div class="row">
-
             <div class="col-md-4">
               <div class="form-floating mb-3">
                 <input type="tel" class="form-control" id="phone" name="phone" value="${requestScope.phone}" placeholder="888-88-888" />
@@ -121,19 +109,17 @@
                 <label for="address">Address</label>
               </div>
             </div>
-
           </div>
-          <div class="form-check-reverse mb-3 user-select-none"> 
+          <div class="form-check-reverse mb-3 user-select-none">
             <input class="form-check-input" type="checkbox" value="subscribe" id="subscribe" />
-            <label class="form-check-label" for="subscribe">Subscribe to our newsletter</label> 
+            <label class="form-check-label" for="subscribe">Subscribe to our newsletter</label>
             <!--            <p class="float-start text-truncate">
                           <span class="text-danger"> ${requestScope.response} </span>
                           <span class="text-success"> ${requestScope.response_ok} </span>
                         </p>-->
-          </div> 
+          </div>
 
           <button class="btn btn-success w-100 py-2 mb-3" type="submit">Sign up</button>
-
         </form>
 
         <div class="text-center">
@@ -176,14 +162,18 @@
           const forms = document.querySelectorAll(".needs-validation");
 
           Array.from(forms).forEach((form) => {
-            form.addEventListener("submit", (event) => {
-              if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-              }
+            form.addEventListener(
+              "submit",
+              (event) => {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
 
-              form.classList.add("was-validated");
-            }, false);
+                form.classList.add("was-validated");
+              },
+              false
+            );
           });
         })();
       });

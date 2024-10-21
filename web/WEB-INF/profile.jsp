@@ -42,7 +42,7 @@
         padding-top: 4.5rem;
       }
     </style>
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
   </head>
 
   <body>
@@ -73,7 +73,33 @@
               </div>
             </div>
           </div>
-          <a href="signout" class="btn btn-outline-danger btn-sm px-4"> Sign out </a>
+          <!--<a href="signout" class="btn btn-outline-danger btn-sm px-4"> Sign out </a>-->
+          <button class="btn btn-outline-danger btn-sm px-4" data-bs-toggle="modal" data-bs-target="#signout-modal">Sign out</button>
+          <div class="modal fade" id="signout-modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <!-- <div class="modal-header bg-danger-subtle">
+                    <span>
+                      <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                      This is extremely important.
+                    </span>
+                  </div> -->
+                <div class="modal-header">
+                  <h5 class="modal-title">Sign out</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-danger-subtle text-danger pt-4">
+                  <p>Are you sure you want to sign out?</p>
+                </div>
+                <div class="modal-footer">
+                  <div class="d-flex gap-2 w-100">
+                    <button type="button" class="btn btn-secondary col-6" data-bs-dismiss="modal">Cancel</button>
+                    <a href="signout" type="button" class="btn btn-danger col-6">Sign out</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </header>
         <div class="d-md-grid">
           <nav>
@@ -414,7 +440,7 @@
           </style>
         </footer>-->
     <!--</div>-->
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <!-- <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -430,12 +456,6 @@
     ></script> -->
     <script>
                   $(() => {
-                    //                    const toastLiveExample = document.getElementById("notification");
-                    //                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
-                    //                    // document.addEventListener("DOMContentLoaded", function () {
-                    //                    toastBootstrap.show();
-                    // });
-
                     const myModal = document.getElementById("myModal");
                     const myInput = document.getElementById("myInput");
 

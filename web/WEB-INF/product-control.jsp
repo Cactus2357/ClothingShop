@@ -6,14 +6,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
+
     <link rel="stylesheet" href="asset/style/theme-button.css" />
     <link rel="stylesheet" href="asset/style/select2-bootstrap-5-theme.css" />
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.js"></script>
+
     <script src="asset/script/color-modes.js"></script>
+    <link rel="stylesheet" href="asset/style/image-placeholder.css" />
 
     <style>
       body {
@@ -25,16 +32,18 @@
         border: 2px dashed rgba(var(--bs-primary-rgb), 1);
         background-color: #f8f9fa;
       }
+
+      #image::-webkit-file-upload-button {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <jsp:include page="part/navbar.jsp" />
-    <%--<jsp:include page="part/notification.jsp" />--%>
     <jsp:include page="part/notification.jsp">
       <jsp:param name="response" value="${response}" />
       <jsp:param name="responseType" value="${responseType}" />
     </jsp:include>
-
 
     <main class="container-fluid p-3">
       <form action="product" method="post" id="product-form" enctype="multipart/form-data">
@@ -81,21 +90,62 @@
                   </c:forEach>
                 </select>
                 <label class="form-label mt-3" for="description">Description</label>
-                <textarea name="description" class="form-control" id="description" rows="7" placeholder="Write a description here..." required="">${product.description}</textarea>
+                <textarea name="description" class="summernote" id="description" required="">${product.description}</textarea>
               </div>
             </div>
           </div>
           <div class="col-lg-5">
+            <!--            <div class="card">
+                          <div class="card-header">
+                            <label for="image" class="input-group">
+                              <span class="input-group-text"> Product Image </span>
+                              <input type="file" class="form-control" accept="image/png, image/jpeg" name="image" id="image" onchange="previewImage(this)" />
+                            </label>
+                          </div>
+                          <div class="card-body p-0">
+                            <label class="w-100" style="cursor: pointer" for="image">
+                              <img class="card-img object-fit-cover rounded-top-0" id="image-preview" src="${product ne null ? product.image : 'asset/img/placeholder.jpg'}" alt="preview" />
+                              <div class="svg-image rounded-bottom-3" id="placeholder" style="font-size: 10em">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path>
+                                <path
+                                  d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <img class="card-img object-fit-cover rounded-top-0" id="image-preview" src="${product ne null ? product.image : 'asset/img/placeholder.jpg'}" style="display: none" alt="preview" />
+                            </label>
+                            <input name="image-path" value="${product.image}" hidden="">
+                            <input type="file" accept="image/*" name="image" id="image" onchange="previewImage(this)" hidden ${product ne null ? '' : 'required'}/>
+                          </div>
+                        </div>-->
             <div class="card">
               <div class="card-header">
-                <label for="image"> Product Image </label>
+                <label for="image" class="input-group">
+                  <span class="input-group-text"> Product Image </span>
+                  <input type="file" class="form-control" accept="image/png, image/jpeg" name="image" id="image" onchange="previewImage(this)" ${product ne null ? '' : 'required'} />
+                </label>
               </div>
               <div class="card-body p-0">
                 <label class="w-100" style="cursor: pointer" for="image">
-                  <img class="card-img object-fit-cover rounded-top-0" id="image-preview" src="${product ne null ? product.image : 'asset/img/placeholder.jpg'}" alt="preview" />
+                  <c:choose>
+                    <c:when test="${product ne null}">
+                      <input name="image-path" value="${product.image}" hidden="">
+                      <img class="card-img object-fit-cover rounded-top-0" id="placeholder" src="${product.image}" alt="preview" />
+                    </c:when>
+                    <c:otherwise>
+                      <div class="svg-image rounded-bottom-3" id="placeholder" style="font-size: 10em">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path>
+                        <path
+                          d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
+                          ></path>
+                        </svg>
+                      </div>
+                    </c:otherwise>
+                  </c:choose>
+                  <img class="card-img object-fit-cover rounded-top-0" id="image-preview" src="#" style="display: none" alt="preview" />
                 </label>
-                <input name="image-path" value="${product.image}" hidden="">
-                <input type="file" accept="image/*" name="image" id="image" onchange="previewImage(this)" hidden ${product ne null ? '' : 'required'}/>
               </div>
             </div>
           </div>
@@ -107,35 +157,53 @@
 
     <script src="js/bootstrap.bundle.min.js">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js">
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js">
     </script>
     <script>
-      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-      const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
-
+      const productDescription = $('#description').val();
       const $imagePreview = $("#image-preview");
-      const imageSrc = $imagePreview.attr("src");
+      const $placeholder = $("#placeholder");
 
       function previewImage(input) {
         if (input.files && input.files[0]) {
           let reader = new FileReader();
-          reader.onload = (e) => $imagePreview.attr("src", e.target.result);
+          reader.onload = function (e) {
+            $("#image-preview").attr("src", e.target.result).show();
+            $("#placeholder").hide();
+          };
           reader.readAsDataURL(input.files[0]);
         }
       }
 
+      $("#image").on("change", function () {
+        if (!this.files.length) {
+          $("#image-preview").hide();
+          $("#placeholder").show();
+        }
+      });
+
       $("#product-form").on("reset", () => {
-        $imagePreview.attr("src", imageSrc);
+        $("#image-preview").attr("src", null);
+        $("#image-preview").hide();
+        $("#placeholder").show();
       });
-      $("#category").select2({
-        theme: "bootstrap-5",
-        width: $(this).data("width") || $(this).hasClass("w-100") ? "100%" : "style",
-        placeholder: $(this).data("placeholder") || "Select options...",
-        closeOnSelect: false,
-        allowClear: true,
-      });
+
+      $(() => {
+        $("#category").select2({
+          theme: "bootstrap-5",
+          width: $(this).data("width") || $(this).hasClass("w-100") ? "100%" : "style",
+          placeholder: $(this).data("placeholder") || "Select options...",
+          closeOnSelect: false,
+          allowClear: true,
+        });
+
+        $(".summernote").summernote({
+          placeholder: "Write a description here...",
+          tabsize: 2,
+          height: null,
+          minHeight: 200,
+        });
+      })
     </script>
   </body>
 </html>

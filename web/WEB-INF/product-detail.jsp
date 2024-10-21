@@ -1,6 +1,5 @@
-<%-- Document : product-detail Created on : Oct 1, 2024, 10:06:44 PM Author : hi --%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%> <%@ taglib prefix = "fmt" uri ="http://java.sun.com/jsp/jstl/fmt" %>
+<%-- Document : product-detail Created on : Oct 1, 2024, 10:06:44 PM Author : hi --%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="c"
+uri="http://java.sun.com/jsp/jstl/core" %> <%@page contentType="text/html" pageEncoding="UTF-8"%> <%@ taglib prefix = "fmt" uri ="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -9,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
@@ -32,7 +31,6 @@
     </style>
   </head>
   <body>
-
     <jsp:include page="part/navbar.jsp" />
 
     <main class="container-fluid p-3">
@@ -44,7 +42,7 @@
           <div class="d-flex flex-column bg-body-secondary rounded p-4 h-100">
             <h2 class="container d-flex flex-wrap align-items-center gap-2 mb-4">
               <span class="me-3 mb-2"> ${requestScope.product.name} </span>
-              <c:forEach items="${categoryList}" var="category" >
+              <c:forEach items="${categoryList}" var="category">
                 <a class="badge text-bg-primary nav-link mb-2" href="product-list?category-id=${category.id}">${category.name}</a>
               </c:forEach>
             </h2>
@@ -85,7 +83,7 @@
     <jsp:include page="part/footer.jsp" />
 
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script>
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
       const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
@@ -97,9 +95,9 @@
           let halfStar = rating % 1 >= 0.5 ? 1 : 0;
           let emptyStars = maxRating - fullStars - halfStar;
           let starsHtml =
-                  '<i class="bi bi-star-fill text-warning"></i>'.repeat(fullStars) +
-                  (halfStar ? '<i class="bi bi-star-half text-warning"></i>' : "") +
-                  '<i class="bi bi-star text-warning"></i>'.repeat(emptyStars);
+            '<i class="bi bi-star-fill text-warning"></i>'.repeat(fullStars) +
+            (halfStar ? '<i class="bi bi-star-half text-warning"></i>' : "") +
+            '<i class="bi bi-star text-warning"></i>'.repeat(emptyStars);
 
           $(this).prepend(starsHtml);
         });

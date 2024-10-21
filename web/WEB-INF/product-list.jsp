@@ -1,6 +1,7 @@
 <%-- Document : product-list Created on : Sep 28, 2024, 10:00:23 PM Author : hi --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix = "fmt" uri ="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix = "fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix = "fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -9,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
@@ -38,7 +39,6 @@
       <jsp:param name="responseType" value="${responseType}" />
     </jsp:include>
 
-
     <main class="container-fluid p-5 pt-0">
       <form action="#" method="get">
         <div class="row">
@@ -49,7 +49,7 @@
                 <label class="form-label">Suggestions</label>
                 <br />
                 <c:forEach items="${suggestions}" var="c">
-                  <a class="badge text-bg-primary nav-link" href="product-list?category-id=${c.id}">${c.name}</a>
+                  <a class="badge rounded-pill text-bg-primary nav-link" href="product-list?category-id=${c.id}">${c.name}</a>
                 </c:forEach>
               </div>
               <div class="mb-3">
@@ -75,9 +75,7 @@
                 <div class="mb-3">
                   <label for="category" class="form-label">Category</label>
                   <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="category" data-bs-toggle="dropdown">
-                      Select a Category
-                    </button>
+                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="category" data-bs-toggle="dropdown">Select a Category</button>
                     <ul class="dropdown-menu w-100">
                       <li>
                         <a class="dropdown-item" href="product-list">None</a>
@@ -150,21 +148,21 @@
                     <c:if test="${size ne null and size ne 9}"><c:param name="size" value="${size}" /> </c:if>
                   </c:url>
                   <div class="d-flex flex-wrap float-end gap-2">
-                    <%--<input type="radio" class="btn-check" name="order" value="0" id="radio1" autocomplete="off" ${(order ne null and order ne 0) ? '' : 'checked'} />
-                    <label class="btn btn-sm btn-outline-primary" for="radio1">New</label>
-                    <input type="radio" class="btn-check" name="order" value="1" id="radio2" autocomplete="off" ${order eq 1 ? 'checked' : ''} />
-                    <label class="btn btn-sm btn-outline-primary" for="radio2">Price ascending</label>
-                    <input type="radio" class="btn-check" name="order" value="2" id="radio3" autocomplete="off" ${order eq 2 ? 'checked' : ''} />
-                    <label class="btn btn-sm btn-outline-primary" for="radio3">Price descending</label>
-                    <input type="radio" class="btn-check" name="order" value="3" id="radio4" autocomplete="off" ${order eq 3 ? 'checked' : ''} />
-                    <label class="btn btn-sm btn-outline-primary disabled" for="radio4">Rating</label>--%>
-
-                    <a class="btn btn-sm btn-outline-primary ${(order ne null and order ne 0) ? '' : 'active'}" href="${orderURL}&order=0"> New </a>
+                    <a class="btn btn-sm btn-outline-primary ${(order ne null and order ne 0) ? '' : 'active'}" href="${orderURL}"> New </a>
                     <a class="btn btn-sm btn-outline-primary ${order eq 1 ? 'active' : ''}" href="${orderURL}&order=1"> Price ascending </a>
                     <a class="btn btn-sm btn-outline-primary ${order eq 2 ? 'active' : ''}" href="${orderURL}&order=2"> Price descending </a>
                     <a class="btn btn-sm btn-outline-primary ${order eq 3 ? 'active' : ''} disabled" href="${orderURL}&order=3"> Rating </a>
 
-                    <input type="number" name="size" min="5" max="20" value="${size ne null ? size : 9}" class="form-control form-control-sm w-auto" data-bs-toggle="tooltip" data-bs-title="Products per page"/>
+                    <input
+                      type="number"
+                      name="size"
+                      min="5"
+                      max="20"
+                      value="${size ne null ? size : 9}"
+                      class="form-control form-control-sm w-auto"
+                      data-bs-toggle="tooltip"
+                      data-bs-title="Products per page"
+                      />
                   </div>
                 </div>
               </div>
@@ -186,46 +184,7 @@
             <div class="container mb-3">
               <!-- !!! -->
               <div class="row row-cols-1 row-cols-lg-2 row-cols-xxl-3 g-4 mb-3" id="product-list" data-masonry='{"percentPosition": true }'>
-                <%--<div class="col">
-                  <div class="card bg-body-tertiary h-100 product-item">
-                    <a href="product-detail?id=${product.id}"><img src="${product.image}" height="400px" class="card-img-top object-fit-cover" alt="..." /></a>
-                    <div class="position-absolute p-2 d-flex gap-1">
-                      <c:if test="${sessionScope.user.role eq 'admin'}">
-                        <a class="badge text-bg-success nav-link" href="product?id=${product.id}">Edit</a>
-                      </c:if>
-                      <c:forEach items="${productCategoryMap.get(product.id)}" var="category">
-                        <a class="badge text-bg-primary nav-link" href="product-list?id=${category.id}">${category.name}</a>
-                      </c:forEach>
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">
-                        ${product.name}
-                        <c:if test="${display == 3}">
-                          <span class="float-end text-muted fw-normal">
-                            <fmt:formatDate type="date" value="${product.importDate}" />
-                          </span>
-                        </c:if>
-                      </h5>
-                      <c:if test="${display >= 2}">
-                        <p class="card-text ${display == 2 ? 'text-truncate' : ''}">${product.description}</p>
-                      </c:if>
-                      <div class="d-flex justify-content-between align-items-center">
-                        <span class="card-text text-success fs-4">
-                          $${product.salePrice}
-                          <c:if test="${display == 3}">
-                            <span class="text-secondary text-decoration-line-through ms-2">$${product.unitPrice}</span>
-                          </c:if>
-                        </span>
-                        <span class="float-end">
-                          <a href="product-detail?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>--%>
                 <c:forEach var="product" items="${productList}">
-
-
                   <div class="col">
                     <div class="card bg-body-tertiary h-100 product-item">
                       <a href="product-detail?id=${product.id}">
@@ -233,27 +192,27 @@
                       </a>
                       <div class="position-absolute p-2 product-category">
                         <c:if test="${sessionScope.user.role eq 'admin'}">
-                          <a class="badge text-bg-success nav-link" href="product?id=${product.id}">Edit</a>
+                          <a class="badge text-bg-success rounded-pill nav-link" href="product?id=${product.id}">Edit</a>
                         </c:if>
                         <c:forEach items="${productCategoryMap.get(product.id)}" var="category">
-                          <a class="badge text-bg-primary nav-link" href="product-list?category-id=${category.id}">${category.name}</a>
+                          <a class="badge text-bg-primary rounded-pill nav-link" href="product-list?category-id=${category.id}">${category.name}</a>
                         </c:forEach>
                       </div>
                       <div class="card-body product-info">
                         <small class="float-end text-muted product-import-date"><fmt:formatDate type="date" value="${product.importDate}" /></small>
-                        <h5 class="card-title product-name">${product.name}</h5>
-                        <p class="card-text text-truncate product-description">${product.description}</p>
-                        <!--<div>-->
-                        <span class="text-success fs-4 product-sale-price"> $${product.salePrice} </span>
-                        <small class="text-secondary text-decoration-line-through product-unit-price"> $${product.unitPrice} </small>
-                        <span class="float-end">
-                          <a href="product-detail?id=${product.id}" class="btn btn-primary me-1">More info</a><a href="#" class="btn btn-outline-primary"> <i class="bi bi-cart"></i> </a>
-                        </span>
-                        <!--</div>--> 
+                        <h5 class="card-title text-truncate product-name">${product.name}</h5>
+                        <div class="card-text text-truncate product-description"><%--${fn:substring((product.description), 0, 50)}...--%>${product.description}</div>
+                        <div class="mt-2">
+                          <span class="text-success fs-4 product-sale-price"> $${product.salePrice} </span>
+                          <small class="text-secondary text-decoration-line-through product-unit-price"> $${product.unitPrice} </small>
+                          <span class="float-end d-flex gap-1">
+                            <a href="#" class="btn btn-outline-primary border-0 rounded-circle"> <i class="bi bi-cart"></i> </a>
+                            <a href="product-detail?id=${product.id}" class="btn btn-primary rounded-pill"> More info </a>
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-
                 </c:forEach>
               </div>
               <div class="container d-flex px-0 justify-content-between">
@@ -303,14 +262,15 @@
       integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D"
       crossorigin="anonymous"
     ></script>
-    <script src="https://unpkg.com/jquery@3/dist/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script>
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
       const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
       $(document).ready(function () {
-
         let lastInfoCount = parseInt($("#display").val(), 10);
+
+//        $(".product-description").text($(".product-description").text());
 
         $("#display").on("input", function () {
           let infoCount = parseInt($(this).val(), 10);
@@ -328,6 +288,7 @@
           } else if (infoCount > elements.length) {
             infoCount = elements.length;
           }
+
           $(".product-item").each(function () {
             $(this).find(elements.flat().join(",")).hide().removeClass("item masonry-brick");
 
@@ -341,9 +302,9 @@
               }
             }
           });
-          $('#product-list').masonry()
-        });
 
+          $("#product-list").masonry();
+        });
       });
     </script>
   </body>
