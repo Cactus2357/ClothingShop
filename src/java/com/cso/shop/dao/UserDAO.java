@@ -47,7 +47,7 @@ public class UserDAO extends BaseDAO<User> {
 
   private String SQL_INSERT = "INSERT INTO " + TABLE + " (name, password, email, phone, role, address, givenName, familyName, status, avatar, gender)" + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
   private String SQL_SELECT = "SELECT * FROM " + TABLE + " WHERE UserID=?";
-  private String SQL_UPDATE = "UPDATE " + TABLE + " SET name=?, phone=?, aAddress=?, givenName=?, familyName=?, gender=?" + " WHERE userID=?";
+  private String SQL_UPDATE = "UPDATE " + TABLE + " SET name=?, phone=?, address=?, givenName=?, familyName=?, gender=?" + " WHERE userID=?";
   private String SQL_DELETE = "DELETE FROM " + TABLE + " WHERE userID=?";
 
   public static void main(String[] args) {
