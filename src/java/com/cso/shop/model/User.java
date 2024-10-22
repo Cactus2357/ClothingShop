@@ -12,146 +12,146 @@ import java.util.Date;
  */
 public class User extends BaseBean {
 
-  private int UserID;
-  private String UserName;
-  private String Password;
-  private String Email;
-  private String Phone;
-  private String Role = "customer";
-  private String Address;
-  private String GivenName;
-  private String FamilyName;
-  private String Status = "active";
-  private String Avatar;
-  private String Gender;
-  private Date CreatedAt;
+  private int userID;
+  private String userName;
+  private String password;
+  private String email;
+  private String phone;
+  private String role = "customer";
+  private String address;
+  private String givenName;
+  private String familyName;
+  private String status = "active";
+  private String avatar;
+  private String gender;
+  private Date createdAt;
 
   public User() {
   }
 
   public User(int UserID, String UserName, String Password, String Email, String Phone, String Role, String Address, String GivenName, String FamilyName, String Status, String Avatar, String Gender, Date CreatedAt) {
-    this.UserID = UserID;
-    this.UserName = UserName;
-    this.Password = Password;
-    this.Email = Email;
-    this.Phone = Phone;
-    this.Role = Role;
-    this.Address = Address;
-    this.GivenName = GivenName;
-    this.FamilyName = FamilyName;
-    this.Status = Status;
-    this.Avatar = Avatar;
-    this.Gender = Gender;
-    this.CreatedAt = CreatedAt;
+    this.userID = UserID;
+    this.userName = UserName;
+    this.password = Password;
+    this.email = Email;
+    this.phone = Phone;
+    this.role = Role;
+    this.address = Address;
+    this.givenName = GivenName;
+    this.familyName = FamilyName;
+    this.status = Status;
+    this.avatar = Avatar;
+    this.gender = Gender;
+    this.createdAt = CreatedAt;
   }
 
   @Override
   public String toString() {
-    return "User{" + "UserID=" + UserID + ", UserName=" + UserName + ", Password=" + Password + ", Email=" + Email + ", Phone=" + Phone + ", Role=" + Role + ", Address=" + Address + ", GivenName=" + GivenName + ", FamilyName=" + FamilyName + ", Status=" + Status + ", Avatar=" + Avatar + ", Gender=" + Gender + ", CreatedAt=" + CreatedAt + '}';
+    return "User{" + "UserID=" + userID + ", UserName=" + userName + ", Password=" + password + ", Email=" + email + ", Phone=" + phone + ", Role=" + role + ", Address=" + address + ", GivenName=" + givenName + ", FamilyName=" + familyName + ", Status=" + status + ", Avatar=" + avatar + ", Gender=" + gender + ", CreatedAt=" + createdAt + '}';
   }
 
   public int getUserID() {
-    return UserID;
+    return userID;
   }
 
-  public void setUserID(int UserID) {
-    this.UserID = UserID;
+  public void setUserID(int userID) {
+    this.userID = userID;
   }
 
   public String getUserName() {
-    return UserName;
+    return userName;
   }
 
-  public void setUserName(String UserName) {
-    this.UserName = UserName;
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 
   public String getPassword() {
-    return Password;
+    return password;
   }
 
-  public void setPassword(String Password) {
-    this.Password = Password;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getEmail() {
-    return Email;
+    return email;
   }
 
-  public void setEmail(String Email) {
-    this.Email = Email;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getPhone() {
-    return Phone;
+    return phone;
   }
 
-  public void setPhone(String Phone) {
-    this.Phone = Phone;
+  public void setPhone(String phone) {
+    this.phone = phone;
   }
 
   public String getRole() {
-    return Role;
+    return role;
   }
 
-  public void setRole(String Role) {
-    this.Role = Role;
+  public void setRole(String role) {
+    this.role = role;
   }
 
   public String getAddress() {
-    return Address;
+    return address;
   }
 
-  public void setAddress(String Address) {
-    this.Address = Address;
+  public void setAddress(String address) {
+    this.address = address;
   }
 
   public String getGivenName() {
-    return GivenName;
+    return givenName;
   }
 
-  public void setGivenName(String GivenName) {
-    this.GivenName = GivenName;
+  public void setGivenName(String givenName) {
+    this.givenName = givenName;
   }
 
   public String getFamilyName() {
-    return FamilyName;
+    return familyName;
   }
 
-  public void setFamilyName(String FamilyName) {
-    this.FamilyName = FamilyName;
+  public void setFamilyName(String familyName) {
+    this.familyName = familyName;
   }
 
   public String getStatus() {
-    return Status;
+    return status;
   }
 
-  public void setStatus(String Status) {
-    this.Status = Status;
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public String getAvatar() {
-    return Avatar;
+    return avatar;
   }
 
-  public void setAvatar(String Avatar) {
-    this.Avatar = Avatar;
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
   }
 
   public String getGender() {
-    return Gender;
+    return gender;
   }
 
-  public void setGender(String Gender) {
-    this.Gender = Gender;
+  public void setGender(String gender) {
+    this.gender = gender;
   }
 
   public Date getCreatedAt() {
-    return CreatedAt;
+    return createdAt;
   }
 
-  public void setCreatedAt(Date CreatedAt) {
-    this.CreatedAt = CreatedAt;
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
 
 }
