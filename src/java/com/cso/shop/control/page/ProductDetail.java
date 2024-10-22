@@ -6,6 +6,7 @@ package com.cso.shop.control.page;
 
 import com.cso.shop.dao.CategoryDAO;
 import com.cso.shop.dao.ProductDAO;
+import com.cso.shop.dao.ReviewDAO;
 import com.cso.shop.model.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,8 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +25,7 @@ public class ProductDetail extends HttpServlet {
 
   private ProductDAO pdao = new ProductDAO();
   private CategoryDAO cdao = new CategoryDAO();
+  private ReviewDAO rdao = new ReviewDAO();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override
@@ -42,9 +42,25 @@ public class ProductDetail extends HttpServlet {
         throw new Exception("no product found");
       }
 
-      List list = cdao.selectAll(productId);
-      req.setAttribute("categoryList", list);
+      List categoryList = cdao.selectAll(productId);
+      List reviewList = rdao.selectAll(productId, 3);
+      List<Float> ratingList = rdao.selectAllRatings(productId);
+      int reviewCount = ratingList.size();
+      float productRating = 0;
+      for (float rating : ratingList) {
+        productRating += rating;
+      }
+
+      if (reviewCount > 1) {
+        productRating = productRating / (float) reviewCount;
+      }
+
       req.setAttribute("product", p);
+      req.setAttribute("categoryList", categoryList);
+      req.setAttribute("reviewCount", reviewCount);
+      req.setAttribute("productRating", productRating);
+      req.setAttribute("reviewList", reviewList);
+
       req.getRequestDispatcher("WEB-INF/product-detail.jsp").forward(req, resp);
       return;
     } catch (SQLException e) {
