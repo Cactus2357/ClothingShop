@@ -6,22 +6,25 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="sidebar-label">Backdrop with scrolling</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+<c:if test="${sessionScope.user ne null and sessionScope.user.role ne 'customer'}">
+  <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="sidebar-label">Backdrop with scrolling</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <p>Try scrolling the rest of the page to see this option in action.</p>
+      <hr />
+      <ul class="list-group" id="offcanvas-links">
+        <a class="list-group-item list-group-item-action" href="home">Home</a>
+        <a class="list-group-item list-group-item-action" href="product-list">Products</a>
+        <a class="list-group-item list-group-item-action" href="product">Add Product</a>
+        <a class="list-group-item list-group-item-action" href="category">Add Category</a>
+        <a class="list-group-item list-group-item-action" href="users">User</a>
+      </ul>
+    </div>
   </div>
-  <div class="offcanvas-body">
-    <p>Try scrolling the rest of the page to see this option in action.</p>
-    <hr />
-    <ul class="list-group" id="offcanvas-links">
-      <a class="list-group-item list-group-item-action" href="home">Home</a>
-      <a class="list-group-item list-group-item-action" href="product-list">Products</a>
-      <a class="list-group-item list-group-item-action" href="product">Add Product</a>
-      <a class="list-group-item list-group-item-action" href="category">Add Category</a>
-    </ul>
-  </div>
-</div>
+</c:if>
 
 <link rel="stylesheet" href="asset/style/theme-button.css"/>
 
@@ -49,7 +52,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark border-bottom">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebar" accesskey="s">Side bar</a>
+    <a href="${pageContext.request.contextPath}" class="navbar-brand text-primary">CSO</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -67,6 +70,11 @@
         <li class="nav-item">
           <a class="nav-link disabled" href="cart">Cart</a>
         </li>
+        <c:if test="${sessionScope.user ne null and sessionScope.user.role ne 'customer'}">
+          <li>
+            <button class="nav-link text-primary" data-bs-toggle="offcanvas" data-bs-target="#sidebar" accesskey="d">Dashboard</button>
+          </li>
+        </c:if>
       </ul>
       <div class="dropdown me-2 bd-mode-toggle">
         <button class="btn btn-bd-primary dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown">
