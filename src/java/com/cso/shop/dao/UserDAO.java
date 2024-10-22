@@ -9,6 +9,7 @@ import com.cso.shop.util.RandomString;
 import com.cso.shop.util.Utils;
 import java.sql.SQLException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import java.util.List;
@@ -91,7 +92,7 @@ public class UserDAO extends BaseDAO<User> {
         rs.getString("status"),
         rs.getString("avatar"),
         rs.getString("gender"),
-        rs.getDate("createdAt")
+        new Date(rs.getTimestamp("createdAt").getTime())
       );
     } catch (Exception e) {
       return null;
@@ -254,7 +255,14 @@ public class UserDAO extends BaseDAO<User> {
 
   @Override
   public List<User> selectAll() throws SQLException {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    String sql = "SELECT * FROM " + TABLE;
+    List<User> list = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+      while (rs.next()) {
+        list.add(construct(rs));
+      }
+      return list;
+    }
   }
 
   /* ******************** */
