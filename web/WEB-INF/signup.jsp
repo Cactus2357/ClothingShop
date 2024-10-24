@@ -113,10 +113,6 @@
           <div class="form-check-reverse mb-3 user-select-none">
             <input class="form-check-input" type="checkbox" value="subscribe" id="subscribe" />
             <label class="form-check-label" for="subscribe">Subscribe to our newsletter</label>
-            <!--            <p class="float-start text-truncate">
-                          <span class="text-danger"> ${requestScope.response} </span>
-                          <span class="text-success"> ${requestScope.response_ok} </span>
-                        </p>-->
           </div>
 
           <button class="btn btn-success w-100 py-2 mb-3" type="submit">Sign up</button>

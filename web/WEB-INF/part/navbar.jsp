@@ -131,6 +131,11 @@
       $(this).addClass('active');
     }
   });
+  $('#navbar-links a').each(function () {
+    if (this.pathname === currentPath) {
+      $(this).addClass('text-decoration-underline link-offset-2');
+    }
+  });
 </script>
 
 <script src="asset/script/color-modes.js"></script>
