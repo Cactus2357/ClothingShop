@@ -70,8 +70,8 @@ CREATE TABLE review (
   productId INT,
   userId INT,
   createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updatedAt DATETIME ON UPDATE CURRENT_TIMESTAMP,
-  status ENUM('active', 'inactive', 'deleted'),
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status ENUM('active', 'inactive', 'deleted') DEFAULT 'active',
   FOREIGN KEY (productId) REFERENCES product(productId),
   FOREIGN KEY (userId) REFERENCES user(userId)
 );
