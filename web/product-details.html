@@ -33,8 +33,19 @@
         align-items: center !important;
       }
 
-      .hidden-element {
+      #attachments::-webkit-file-upload-button {
         display: none;
+      }
+
+      .attachment-btn {
+        /* border-radius: var(--bs-border-radius-pill) !important;
+        padding-right: 1rem !important;
+        padding-left: 1rem !important; */
+        background-color: var(--bs-success-bg-subtle) !important;
+        --bs-text-opacity: 1;
+        color: rgba(var(--bs-success-rgb), var(--bs-text-opacity)) !important;
+        --bs-border-opacity: 1;
+        border-color: rgba(var(--bs-success-rgb), var(--bs-border-opacity)) !important;
       }
     </style>
   </head>
@@ -62,30 +73,44 @@
         </symbol>
       </svg>
       <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown">
-          <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>
+        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+          <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
+            <use href="#circle-half"></use>
+          </svg>
           <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-end shadow">
           <li>
             <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
-              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+              <svg class="bi me-2 opacity-50" width="1em" height="1em">
+                <use href="#sun-fill"></use>
+              </svg>
               Light
-              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+              <svg class="bi ms-auto d-none" width="1em" height="1em">
+                <use href="#check2"></use>
+              </svg>
             </button>
           </li>
           <li>
             <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
-              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+              <svg class="bi me-2 opacity-50" width="1em" height="1em">
+                <use href="#moon-stars-fill"></use>
+              </svg>
               Dark
-              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+              <svg class="bi ms-auto d-none" width="1em" height="1em">
+                <use href="#check2"></use>
+              </svg>
             </button>
           </li>
           <li>
             <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto">
-              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#circle-half"></use></svg>
+              <svg class="bi me-2 opacity-50" width="1em" height="1em">
+                <use href="#circle-half"></use>
+              </svg>
               Auto
-              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+              <svg class="bi ms-auto d-none" width="1em" height="1em">
+                <use href="#check2"></use>
+              </svg>
             </button>
           </li>
         </ul>
@@ -116,7 +141,7 @@
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
-                <a class="nav-link active" href="#">Home</a>
+                <a class="nav-link active text-decoration-underline link-offset-2" href="#">Home</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
@@ -190,88 +215,97 @@
                 </div>
               </div>
               <div class="mb-3">
-                <label class="form-label">Category 1</label>
+                <label class="form-label">Product Details</label>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="checkbox4" />
-                  <label class="form-check-label" for="checkbox4"> Option 1 </label>
+                  <input class="form-check-input toggle-display" type="checkbox" value="product-name" id="checkbox4" checked />
+                  <label class="form-check-label" for="checkbox4"> Title </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="checkbox5" />
-                  <label class="form-check-label" for="checkbox5"> Option 2 </label>
+                  <input class="form-check-input toggle-display" type="checkbox" value="product-category" id="checkbox5" checked />
+                  <label class="form-check-label" for="checkbox5"> Categories </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="checkbox6" />
-                  <label class="form-check-label" for="checkbox6"> Option 3 </label>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Category 2</label>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="checkbox7" />
-                  <label class="form-check-label" for="checkbox7"> Option 1 </label>
+                  <input class="form-check-input toggle-display" type="checkbox" value="product-unit-price" id="checkbox6" checked />
+                  <label class="form-check-label" for="checkbox6"> Original Price </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="checkbox8" />
-                  <label class="form-check-label" for="checkbox8"> Option 2 </label>
+                  <input class="form-check-input toggle-display" type="checkbox" value="product-sale-price" id="checkbox7" checked />
+                  <label class="form-check-label" for="checkbox7"> Sale Price </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="checkbox9" />
-                  <label class="form-check-label" for="checkbox9"> Option 3 </label>
+                  <input class="form-check-input toggle-display" type="checkbox" value="product-stock" id="checkbox8" checked />
+                  <label class="form-check-label" for="checkbox8"> Quantity </label>
                 </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="display">Information count</label>
-                <input type="range" class="form-control" value="6" min="0" max="6" id="display" placeholder="Display" />
+                <div class="form-check">
+                  <input class="form-check-input toggle-display" type="checkbox" value="product-import-date" id="checkbox9" checked />
+                  <label class="form-check-label" for="checkbox9"> Import Date </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input toggle-display" type="checkbox" value="product-description" id="checkbox10" checked />
+                  <label class="form-check-label" for="checkbox10"> Description </label>
+                </div>
               </div>
             </div>
           </aside>
         </div>
         <div class="col-12 col-md-8 col-xl-9">
           <div class="row row-cols-1 row-cols-xl-2 g-3 mb-3">
+            <!-- <img src="asset/img/placeholder.jpg" class="img-fluid border rounded w-100" alt="..." /> -->
             <div cass="col">
-              <!-- <img src="asset/img/placeholder.jpg" class="img-fluid border rounded w-100" alt="..." /> -->
               <div class="svg-image border rounded-3" id="placeholder" style="font-size: 10em">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
                   <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"></path>
-                  <path
-                    d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
-                  ></path>
+                  <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"></path>
                 </svg>
               </div>
             </div>
             <div class="col">
-              <div class="d-flex flex-column bg-body-secondary rounded p-4 h-100">
-                <h3 class="d-flex flex-wrap align-items-center gap-2 mb-4">
-                  <span class="me-3"> Product Title </span>
-                  <span class="badge text-bg-primary rounded-pill">Category</span>
-                  <span class="badge text-bg-primary rounded-pill">Category</span>
-                  <span class="badge text-bg-primary rounded-pill">Category</span>
+              <div class="d-flex flex-column gap-3 bg-body-secondary rounded p-4 h-100 product-info">
+                <h3 class="d-flex flex-wrap align-items-center gap-2">
+                  <span class="me-3 product-name"> Product Title </span>
+                  <span class="badge text-bg-primary rounded-pill product-category">Category</span>
+                  <span class="badge text-bg-primary rounded-pill product-category">Category</span>
+                  <span class="badge text-bg-primary rounded-pill product-category">Category</span>
                 </h3>
-                <h5 class="mb-3">
+                <h5 class="product-sale-price">
                   Pricing:
                   <span class="fw-normal gap-3">
                     <span class="text-success">$39.99</span>
-                    <small class="text-secondary text-decoration-line-through"> $29.99 </small>
+                    <small class="text-secondary text-decoration-line-through product-unit-price"> $29.99 </small>
                   </span>
                 </h5>
-                <h5 class="mb-3">In stock: <span class="text-muted fw-normal"> 20 items </span></h5>
-                <h5 class="mb-3">Import date: <span class="text-muted fw-normal"> Sep 29, 2024 </span></h5>
-                <h5>Description</h5>
-                <p class="px-3" style="text-align: justify; text-justify: inter-word">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur autem quaerat ab nostrum architecto, ratione voluptate quasi voluptatum, voluptatem explicabo ipsa
-                  consequuntur expedita rerum amet cumque, dolores iure aperiam. Eaque, quasi! Commodi, quasi. Voluptates quas iure rerum animi, neque recusandae dicta eius porro explicabo
-                  impedit velit sed id facere provident.
-                </p>
+                <h5 class="product-stock">In stock: <span class="text-muted fw-normal"> 20 items </span></h5>
+                <h5 class="product-import-date">
+                  Import date:
+                  <span class="text-muted fw-normal"> Sep 29, 2024 </span>
+                </h5>
+                <div class="product-description">
+                  <h5>Description</h5>
+                  <p class="px-3" style="text-align: justify; text-justify: inter-word">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tenetur autem quaerat ab nostrum architecto, ratione voluptate quasi voluptatum, voluptatem explicabo ipsa consequuntur expedita rerum amet cumque, dolores iure
+                    aperiam. Eaque, quasi! Commodi, quasi. Voluptates quas iure rerum animi, neque recusandae dicta eius porro explicabo impedit velit sed id facere provident.
+                  </p>
+                </div>
                 <div class="ms-auto d-flex gap-2">
                   <button class="btn btn-primary rounded-pill">Buy Now</button>
                   <button class="btn btn-outline-primary rounded-pill">Add to Cart</button>
                 </div>
-                <!-- </div> -->
               </div>
             </div>
           </div>
           <hr />
-          <!-- <div class=" p-5 bg-success rounded"></div> -->
+          <script>
+            $(document).ready(function () {
+              $(".toggle-display").change(function () {
+                let classToToggle = $(this).val();
+                if ($(this).is(":checked")) {
+                  $("." + classToToggle).show();
+                } else {
+                  $("." + classToToggle).hide();
+                }
+              });
+            });
+          </script>
           <div class="container-fluid p-3 rounded">
             <div class="container">
               <div class="d-flex gap-2 flex-wrap justify-content-between px-xl-5 mb-3">
@@ -283,8 +317,117 @@
                   </h4>
                   <span class="text-secondary">7 ratings</span>
                 </div>
+                <button class="btn btn-dark rounded-pill align-self-center" data-bs-toggle="modal" data-bs-target="#reviewsModal">Test Modal</button>
                 <button class="btn btn-outline-primary rounded-pill align-self-center" id="write-review-btn" onclick="edit(this)">Write a review</button>
-                <!-- <a href="#review-23" class="btn btn-outline-primary rounded-pill align-self-center" id="write-review-btn">See my review</a> -->
+                <button class="btn btn-outline-primary rounded-pill align-self-center" id="view-review-btn" data-bs-value="12">See my reviews</button>
+                <script>
+                  $("#view-review-btn").click(function () {
+                    let reviewId = $(this).attr("data-bs-value");
+                    let $review = $("#review-" + reviewId);
+                    if ($review.length) {
+                      $("html, body").animate({ scrollTop: $review.offset().top - 65 }, 100);
+                    }
+                  });
+                </script>
+              </div>
+
+              <div class="modal fade" id="reviewsModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-lg-down modal-xl">
+                  <div class="modal-content" style="min-height: 80dvh">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="reviewsModalLabel">User reviews</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="container p-5">
+                        <h4 class="d-flex">
+                          <span class="me-2">4.3 out of 5.0</span>
+                          <span class="ratings text-warning me-2" value="4.5" max="5"></span>
+                        </h4>
+                        <div class="row g-3 mx-xl-5 mb-3" id="user-reviews-container"></div>
+                        <div class="d-flex">
+                          <button class="btn btn-outline-primary rounded-pill px-4 mx-auto" id="load-more-btn">Load more</button>
+                        </div>
+                      </div>
+                      <script>
+                        $(() => {
+                          const $reviewContainer = $("#user-reviews-container");
+
+                          function appendReview(result) {
+                            if (!result.reviewList.length) {
+                              $reviewContainer.html(`<h5 class="text-center">">No review yet</h5>`);
+                              return;
+                            }
+
+                            let reviewHtml = [];
+                            const attachmentType = {
+                              image: ["btn-outline-primary", "bi bi-image"],
+                              video: ["btn-outline-danger", "bi bi-camera-video"],
+                              default: ["btn-outline-secondary", "bi bi-paperclip"],
+                            };
+
+                            result.reviewList.forEach((review) => {
+                              let attachmentList = result.attachmentMap[review.reviewId] || [];
+
+                              let attachmentHtml = attachmentList
+                                .map((a) => {
+                                  return `<a href="${a.attachment}" class="btn btn-sm ${attachmentType[a.type][0]} rounded-pill px-3"><i class="${attachmentType[a.type][1]}"></i></a>`;
+                                })
+                                .join("");
+
+                              if (attachmentList.length) {
+                                attachmentHtml = `<div class="mt-2">${attachmentHtml}</div>`;
+                              }
+
+                              let reviewItem = `
+                                <div class="card bg-body-tertiary" id="review-${review.reviewId}">
+                                  <div class="card-body d-flex justify-content-between">
+                                    <div class="d-flex mb-2 mb-md-0">
+                                      <img src="${review.userAvatar || "asset/img/default_picture.png"}" class="rounded-circle me-3" height="48" width="48" />
+                                      <div class="flex-auto">
+                                        <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2">
+                                          <span>@${review.userName}</span>
+                                          <i class="ratings text-warning fs-6" value="${review.rating}" max="5"></i>
+                                        </h5>
+                                        <small class="fw-light text-muted text-nowrap">${new Date(review.createdAt).toLocaleDateString()}</small>
+                                        <p class="mb-0">${review.comment}</p>
+                                        ${attachmentHtml}
+                                      </div>
+                                    </div>
+                                    <button type="button" class="btn rounded-circle align-self-start">
+                                      <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                  </div>
+                                </div>`;
+
+                              reviewHtml.push(reviewItem);
+                            });
+
+                            $reviewContainer.html(reviewHtml.join(""));
+                          }
+
+                          $("#reviewsModal").on("show.bs.modal", (e) => {
+                            $.ajax({
+                              url: "http://localhost:8080/shop/review",
+                              type: "get",
+                              timeout: 5000,
+                              data: {
+                                productId: 23,
+                              },
+                              success: (result, status, xhr) => {
+                                appendReview(result);
+                              },
+                              error: (xhr, status, error) => {
+                                console.error("Error:", error);
+                                $("#user-reviews-container").html(`<h5 class="text-center text-danger">Fail to retrieve user reviews</h5>`);
+                              },
+                            });
+                          });
+                        });
+                      </script>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="container px-xl-5">
@@ -296,7 +439,7 @@
                         <div class="d-flex mb-2 mb-md-0">
                           <img src="asset/img/default_picture.png" class="rounded-circle me-3" height="48" width="48" />
                           <div class="flex-auto flex-grow-1">
-                            <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2">
+                            <h5 class="lh-1 d-flex align-items-center gap-2">
                               <span>Admin</span>
                               <span class="text-warning fs-6">
                                 <input type="range" name="rating" min="1" max="5" id="user-rating" class="opacity-0 position-absolute" style="height: 1px; width: 96px" required />
@@ -314,19 +457,59 @@
                                 </span>
                               </span>
                             </h5>
-                            <textarea class="flex-grow-1 w-100" name="user-review" id="user-review"></textarea>
+                            <div class="input-group input-group-sm mb-1">
+                              <label class="btn attachment-btn rounded-pill" for="attachments"><i class="bi bi-paperclip me-1"></i>&le; 4 Attachment(s)</label>
+                              <input type="file" name="attachment[]" accept="video/*,image/*" id="attachments" class="form-control bg-transparent border-0 shadow-none" multiple />
+                              <span class="form-text">&le; 10MB</span>
+                            </div>
+                            <textarea class="flex-grow-1 w-100 form-control" rows="4" name="user-review" id="user-review"></textarea>
                           </div>
+                          <script>
+                            $(() => {
+                              const maxFiles = 4;
+                              const maxSizeInMB = 10;
+                              const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+
+                              $("#attachments").on("change", function (event) {
+                                const files = event.target.files;
+                                let errorMessage = "";
+
+                                if (files.length > maxFiles) {
+                                  errorMessage += `You can upload a maximum of ${maxFiles} files. `;
+                                }
+
+                                // for (let i = 0; i < files.length; i++) {
+                                //   if (files[i].size > maxSizeInBytes) {
+                                //     errorMessage += `${files[i].name} exceeds the size limit of ${maxSizeInMB} MB. `;
+                                //   }
+                                // }
+
+                                files.forEach((element) => {
+                                  if (element.size > maxSizeInBytes) {
+                                    errorMessage += `${files[i].name} exceeds the size limit of ${maxSizeInMB} MB. `;
+                                  }
+                                });
+
+                                if (errorMessage) {
+                                  alert(errorMessage);
+                                  $(this).val(null);
+                                }
+                              });
+                            });
+                          </script>
                         </div>
                         <div class="float-end d-flex gap-2 mt-md-2" id="review-control">
-                          <button type="reset" id="cancel-review-btn" class="btn btn-secondary rounded-pill px-4" onclick="discard(this)">Cancel</button>
-                          <button type="submit" id="submit-review-btn" class="btn btn-primary rounded-pill px-4">Post</button>
+                          <button type="reset" id="cancel-review-btn" class="btn btn-sm btn-outline-secondary rounded-pill px-4 border-0" onclick="discard(this)">Cancel</button>
+                          <button type="submit" id="submit-review-btn" class="btn btn-sm btn-primary rounded-pill px-4">Post</button>
                         </div>
                       </form>
                     </div>
                   </div>
                   <!-- User write review -->
 
-                  <div class="card bg-body-tertiary">
+                  <h5 class="text-center">No review yet</h5>
+
+                  <div class="card bg-body-tertiary" id="review-12">
                     <div class="card-body d-flex justify-content-between">
                       <div class="d-flex mb-2 mb-md-0">
                         <img src="asset/img/default_picture.png" class="rounded-circle me-3" height="48" width="48" />
@@ -354,6 +537,13 @@
                           </h5>
                           <small class="fw-light text-muted text-nowrap"> Oct 11, 2024 </small>
                           <p class="mb-0">Lorem ipsum dolor sit amet</p>
+                          <div class="mt-2">
+                            <!-- <a href="#" class="btn btn-sm attachment-btn bi-image rounded-pill px-3"></a> -->
+                            <a href="#" class="btn btn-sm attachment-btn rounded-pill px-3"><i class="bi bi-image"></i></a>
+                            <a href="#" class="btn btn-sm attachment-btn rounded-pill px-3"><i class="bi bi-image"></i></a>
+                            <a href="#" class="btn btn-sm attachment-btn rounded-pill px-3"><i class="bi bi-camera-video"></i></a>
+                            <a href="#" class="btn btn-sm attachment-btn rounded-pill px-3"><i class="bi bi-paperclip"></i></a>
+                          </div>
                         </div>
                       </div>
                       <button type="button" class="btn rounded-circle align-self-start"><i class="bi bi-three-dots-vertical"></i></button>
@@ -396,9 +586,7 @@
                             <i class="ratings text-warning fs-6" value="1" max="5"></i>
                           </h5>
                           <small class="fw-light text-muted text-nowrap"> Oct 11, 2024 </small>
-                          <p class="mb-0">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, expedita sunt magnam molestiae enim rerum vero dolorem laboriosam quasi quaerat.
-                          </p>
+                          <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, expedita sunt magnam molestiae enim rerum vero dolorem laboriosam quasi quaerat.</p>
                         </div>
                       </div>
                       <button type="button" class="align-self-start btn rounded-circle"><i class="bi bi-three-dots-vertical"></i></button>
@@ -414,7 +602,7 @@
                     </div>
                   </div>
                 </div>
-                <a class="btn btn-outline-primary border-0 rounded-pill" href="javascript:void(0)">See all reviews</a>
+                <a class="btn btn-outline-primary border-0 rounded-pill ms-lg-5" href="javascript:void(0)">See all reviews</a>
               </div>
             </div>
             <!-- <div class="container mt-3">
@@ -435,11 +623,21 @@
     <div class="container">
       <footer class="py-3 my-4">
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">Features</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">Pricing</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">FAQs</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link px-2 text-body-secondary">About</a>
+          </li>
         </ul>
         <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
       </footer>
@@ -450,21 +648,20 @@
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
       const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
       const $writeReviewBtn = $("#write-review-btn");
-      const setting = {
-        toolbar: [
-          ["font", ["bold", "italic", "underline"]],
-          ["para", ["ul", "ol", "paragraph"]],
-          ["insert", ["picture", "video"]],
-        ],
-        placeholder: "Write a review here...",
-        minHeight: 100,
-      };
+      // const setting = {
+      //   toolbar: [
+      //     ["font", ["bold", "italic", "underline"]],
+      //     ["para", ["ul", "ol", "paragraph"]],
+      //     ["insert", ["picture", "video"]],
+      //   ],
+      //   placeholder: "Write a review here...",
+      //   minHeight: 100,
+      // };
 
       function edit(btn) {
-        // $(btn).addClass("disabled");
         $writeReviewBtn.attr("disabled", true);
         $("#user-review-container").show();
-        $("#user-review").summernote({ focus: true });
+        $("#user-review").focus(); /* .summernote({ focus: true }); */
       }
 
       function discard(btn) {
@@ -473,17 +670,6 @@
         $("#user-review").html(null);
         // $("#user-review").summernote("destroy");
       }
-
-      // function save(btn) {
-      //   $writeReviewBtn.attr("disabled", true);
-      //   let markup = $("#user-review").summernote("code");
-      //   if (!markup || markup == "<p><br></p>") {
-      //     $("#user-review").html(null);
-      //   }
-      //   $("#user-review").summernote("destroy");
-      //   $("#user-review").val(markup);
-      //   $("#review-control").remove();
-      // }
 
       $(document).ready(function () {
         $(".ratings").each(function () {
@@ -497,11 +683,10 @@
         });
 
         updateStars(0);
-        $("#user-review").summernote(setting);
+        // $("#user-review").summernote(setting);
         $("#user-review-container").hide();
         $("#write-review-btn").click(edit);
         $("#cancel-review-btn").click(discard);
-        // $("#submit-review-btn").click(save);
 
         function updateStars(rating) {
           $(".star-select").each(function () {
@@ -516,10 +701,10 @@
 
         $("#user-rating")
           .focus(() => {
-            $("#star-select-container").addClass("border border-black");
+            $("#star-select-container").addClass("border border-warning");
           })
           .blur(() => {
-            $("#star-select-container").removeClass("border border-black");
+            $("#star-select-container").removeClass("border border-warning");
           });
 
         $("#user-rating").on("input", function () {
