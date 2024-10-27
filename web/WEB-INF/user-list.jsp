@@ -130,30 +130,26 @@ contentType="text/html" pageEncoding="UTF-8"%>
                 </li>
               </ul>
             </div>
-            <script>
+            <!-- <script>
               $(() => {
-                function display() {
-                  $(".toggle-display").each((e) => {
-                    let toggleClass = $(this).val();
-                    if ($(this).is(":checked")) {
-                      $("." + toggleClass).show();
-                    } else {
-                      $("." + toggleClass).hide();
-                    }
-                  });
-                }
-                display();
-                $(".toggle-display").change(display);
+                $(".toggle-display").change(function () {
+                  let toggleClass = $(this).val();
+                  if ($(this).is(":checked")) {
+                    $("." + toggleClass).show();
+                  } else {
+                    $("." + toggleClass).hide();
+                  }
+                });
               });
-            </script>
+            </script> -->
           </div>
         </h3>
       </div>
-      <!-- <div class="container-fluid mb-3 mx-3 d-flex flex-wrap gap-3">
-        <input type="text" class="form-control border-secondary" style="width: 300px" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" />
+      <div class="container-fluid mb-3 mx-3 d-flex flex-wrap gap-3">
+        <input type="text" class="form-control border-secondary" style="width: 300px" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" disabled />
         <div class="btn-group" style="width: 400px">
           <div class="btn-group w-100">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">User roles</button>
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" disabled>User roles</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Admin</a></li>
               <li><a class="dropdown-item" href="#">Manager</a></li>
@@ -162,25 +158,25 @@ contentType="text/html" pageEncoding="UTF-8"%>
             </ul>
           </div>
           <div class="btn-group w-100">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">Status</button>
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" disabled>Status</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Active</a></li>
               <li><a class="dropdown-item" href="#">Inactive</a></li>
               <li><a class="dropdown-item" href="#">Blocked</a></li>
             </ul>
           </div>
-          <button class="btn btn-outline-secondary w-100" type="button">More filters</button>
+          <button class="btn btn-outline-secondary w-100" type="button" disabled>More filters</button>
         </div>
-        <button class="btn btn-primary d-flex justify-content-center gap-2 px-3 me-3 ms-xl-auto"><i class="bi bi-plus"></i> Add user</button>
-      </div> -->
+        <button class="btn btn-primary d-flex justify-content-center gap-2 px-3 me-3 ms-xl-auto" disabled><i class="bi bi-plus"></i> Add user</button>
+      </div>
       <div class="container-fluid table-responsive mx-3 pe-4">
         <table class="table table-striped table-hover" id="user-table">
           <thead>
             <tr>
               <th scope="col" class="user-id">#</th>
+              <th scope="col" class="user-avatar no-sort">Avatar</th>
               <th scope="col" class="user-name">Username</th>
               <th scope="col" class="user-email">Email</th>
-              <th scope="col" class="user-avatar">Avatar</th>
               <th scope="col" class="user-family-name">FamilyName</th>
               <th scope="col" class="user-given-name">GivenName</th>
               <th scope="col" class="user-gender">Gender</th>
@@ -189,18 +185,18 @@ contentType="text/html" pageEncoding="UTF-8"%>
               <th scope="col" class="user-role">Role</th>
               <th scope="col" class="user-status">Status</th>
               <th scope="col" class="user-created-at">Created At</th>
-              <th scope="col">Option</th>
+              <th scope="col" class="no-sort">Option</th>
             </tr>
           </thead>
           <tbody class="table-group-divider">
             <c:forEach items="${userList}" var="user">
               <tr class="align-middle">
                 <th scope="row" class="user-id">${user.userID}</th>
-                <td class="user-name">@${user.userName}</td>
-                <td class="user-email"><a href="mailto:${user.email}">${user.email}</a></td>
                 <td class="user-avatar">
                   <a href="#"><img src="${user.avatar ne null ? user.avatar : 'asset/img/default_picture.png'}" width="36" height="36" class="rounded-circle" alt="" /></a>
                 </td>
+                <td class="user-name">@${user.userName}</td>
+                <td class="user-email"><a href="mailto:${user.email}">${user.email}</a></td>
                 <td class="user-family-name">${user.familyName}</td>
                 <td class="user-given-name">${user.givenName}</td>
                 <td class="user-gender">${user.gender}</td>
@@ -217,7 +213,30 @@ contentType="text/html" pageEncoding="UTF-8"%>
           </tbody>
         </table>
         <script>
-          $("#user-table").DataTable();
+          $(document).ready(function () {
+            $("#user-table").DataTable({
+              responsive: true,
+              autoWidth: false,
+              columnDefs: [
+                { targets: "no-sort", orderable: false }, // Disable sorting on certain columns if needed (e.g., Options)
+              ],
+            });
+
+            function display() {
+              $(".toggle-display").each(function () {
+                let toggleClass = $(this).val();
+                if ($(this).is(":checked")) {
+                  $("." + toggleClass).show();
+                } else {
+                  $("." + toggleClass).hide();
+                }
+              });
+            }
+
+            display();
+
+            $(".toggle-display").change(display);
+          });
         </script>
       </div>
     </main>
