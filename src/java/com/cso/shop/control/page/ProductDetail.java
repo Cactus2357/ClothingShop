@@ -7,7 +7,11 @@ package com.cso.shop.control.page;
 import com.cso.shop.dao.CategoryDAO;
 import com.cso.shop.dao.ProductDAO;
 import com.cso.shop.dao.ReviewDAO;
+import com.cso.shop.model.Category;
 import com.cso.shop.model.Product;
+import com.cso.shop.model.ProductReview;
+import com.cso.shop.model.ReviewAttachment;
+import com.cso.shop.util.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -31,42 +36,43 @@ public class ProductDetail extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    try {
-      String productIdString = req.getParameter("id");
-      int productId = Integer.parseInt(productIdString);
 
-      Product p = new Product();
-      p.setId(productId);
-      p = pdao.select(p);
-      if (p == null) {
+    int productId = Utils.tryParseInt(req.getParameter("id"), -1);
+    Product product = new Product();
+    product.setId(productId);
+
+    try {
+      product = pdao.select(product);
+
+      if (product == null) {
         throw new Exception("no product found");
       }
 
-      List categoryList = cdao.selectAll(productId);
-      List reviewList = rdao.selectAll(productId, 3);
+      List<Category> categoryList = cdao.selectAll(productId);
+      List<ProductReview> reviewList = rdao.selectAll(productId, 3);
+
+      int[] reviewIds = reviewList.stream().mapToInt(ProductReview::getReviewId).toArray();
+      Map<Integer, List<ReviewAttachment>> attachmentMap = rdao.mapAllReviewAttachment(reviewIds);
+
       List<Float> ratingList = rdao.selectAllRatings(productId);
+      float productRating = (float) ratingList.stream().mapToDouble(Float::doubleValue).average().orElse(0.0);
       int reviewCount = ratingList.size();
-      float productRating = 0;
-      for (float rating : ratingList) {
-        productRating += rating;
-      }
 
-      if (reviewCount > 1) {
-        productRating = productRating / (float) reviewCount;
-      }
-
-      req.setAttribute("product", p);
+      req.setAttribute("product", product);
+      req.setAttribute("productRating", productRating);
       req.setAttribute("categoryList", categoryList);
       req.setAttribute("reviewCount", reviewCount);
-      req.setAttribute("productRating", productRating);
       req.setAttribute("reviewList", reviewList);
+      req.setAttribute("attachmentMap", attachmentMap);
+      req.setAttribute("haveMoreReviews", (reviewCount > reviewList.size()));
 
       req.getRequestDispatcher("WEB-INF/product-detail.jsp").forward(req, resp);
       return;
+
     } catch (SQLException e) {
       log(e.getMessage());
     } catch (Exception e) {
-      log(e.getMessage());
+      System.err.println(e);
     }
 
     resp.sendRedirect("product-list");

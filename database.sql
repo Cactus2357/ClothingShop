@@ -76,6 +76,16 @@ CREATE TABLE review (
   FOREIGN KEY (userId) REFERENCES user(userId)
 );
 
+CREATE TABLE reviewAttachment (
+	reviewAttachmentId INT AUTO_INCREMENT PRIMARY KEY,
+    reviewId INT,
+    attachment TEXT NOT NULL,
+    status ENUM('active', 'inactive', 'removed') DEFAULT 'active',
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (reviewId) REFERENCES review(reviewId)
+);
+
 CREATE TABLE post (
   postId INT AUTO_INCREMENT PRIMARY KEY,
   userId INT,

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+  <context-param>
+    <param-name>file.location</param-name>
+    <param-value>D:/Code/Apache NetBeans/OnlineClothingShop/upload</param-value>
+    <description>Dedicated storage for uploading files</description>
+  </context-param>
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
   <welcome-file-list>
     <welcome-file>home</welcome-file>
     <welcome-file>/index.html</welcome-file>
@@ -43,7 +51,7 @@
   </servlet>
   <servlet>
     <servlet-name>ProductReview</servlet-name>
-    <servlet-class>com.cso.shop.control.account.ProductReview</servlet-class>
+    <servlet-class>com.cso.shop.control.account.UserReview</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ProductList</servlet-name>
@@ -69,9 +77,6 @@
     <servlet-name>ProductReview</servlet-name>
     <url-pattern>/review</url-pattern>
   </servlet-mapping>
-  <session-config>
-    <session-timeout>60</session-timeout>
-  </session-config>
   <servlet>
     <servlet-name>ChangePassword</servlet-name>
     <servlet-class>com.cso.shop.control.account.ChangePassword</servlet-class>

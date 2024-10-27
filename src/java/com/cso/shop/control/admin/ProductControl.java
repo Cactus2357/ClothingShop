@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 )
 public class ProductControl extends HttpServlet {
 
-  private static String webImagePath = "asset/img/";
   private ProductDAO pdao = new ProductDAO();
   private CategoryDAO cdao = new CategoryDAO();
 
@@ -115,7 +114,8 @@ public class ProductControl extends HttpServlet {
         throw new Exception("Invalid product product quantity");
       }
 
-      String image = createImage(imagePart, webImagePath);
+      String fileLocation = getServletContext().getInitParameter("file.location");
+      String image = Utils.writeFile(imagePart, fileLocation);
 
       Product p = new Product();
       p.setName(name);
@@ -142,11 +142,7 @@ public class ProductControl extends HttpServlet {
         cdao.insertProductCategories(productId, categoryIds);
         req.setAttribute("response", "Product updated successfully");
       }
-//else {
-//        pdao.insert(p);
-//        cdao.insertProductCategories(p.getId(), categoryIds);
-//        req.setAttribute("response", "Product added successfully");
-//      }
+
       req.setAttribute("responseType", true);
       req.setAttribute("id", p.getId());
     } catch (Exception e) {
@@ -158,45 +154,43 @@ public class ProductControl extends HttpServlet {
     doGet(req, resp);
   }
 
-  /**
-   *
-   * @param image Image part
-   * @param webImageDir directory on web server (ends with '/')
-   * @return A relative URL string to image on server
-   */
-  private String createImage(Part image, String webImageDir) throws IOException {
-    if (image == null || webImageDir == null) {
-      return null;
-    }
-    String name = image.getSubmittedFileName();
-    int dotIndex = name.lastIndexOf('.');
-    String extension = (dotIndex > 0) ? name.substring(dotIndex) : "";
-    if (extension.isBlank()) {
-      return null;
-    }
-
-    String timestamp = LocalDateTime.now()
-      .format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
-    String new_name = Utils.hash(timestamp + name) + extension;
-
-    String img_dir = getServletContext().getRealPath(webImageDir);
-    String web_path = webImageDir + new_name;
-    String physical_path = img_dir + new_name;
-
-    File dir = new File(img_dir);
-    if (!dir.exists()) {
-      dir.mkdirs();
-    }
-
-    image.write(physical_path);
-    return web_path;
-  }
-
-  private String createUniqueName(String name, String extension) {
-    String timestamp = LocalDateTime.now()
-      .format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
-    String newName = Utils.hash(timestamp + name) + extension;
-    return newName;
-  }
-
+//  /**
+//   *
+//   * @param image Image part
+//   * @param webImageDir directory on web server (ends with '/')
+//   * @return A relative URL string to image on server
+//   */
+//  private String createImage(Part image, String webImageDir) throws IOException {
+//    if (image == null || webImageDir == null) {
+//      return null;
+//    }
+//    String name = image.getSubmittedFileName();
+//    int dotIndex = name.lastIndexOf('.');
+//    String extension = (dotIndex > 0) ? name.substring(dotIndex) : "";
+//    if (extension.isBlank()) {
+//      return null;
+//    }
+//
+//    String timestamp = LocalDateTime.now()
+//      .format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
+//    String new_name = Utils.hash(timestamp + name) + extension;
+//
+//    String img_dir = getServletContext().getRealPath(webImageDir);
+//    String web_path = webImageDir + new_name;
+//    String physical_path = img_dir + new_name;
+//
+//    File dir = new File(img_dir);
+//    if (!dir.exists()) {
+//      dir.mkdirs();
+//    }
+//
+//    image.write(physical_path);
+//    return web_path;
+//  }
+//  private String createUniqueName(String name, String extension) {
+//    String timestamp = LocalDateTime.now()
+//      .format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
+//    String newName = Utils.hash(timestamp + name) + extension;
+//    return newName;
+//  }
 }
