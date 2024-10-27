@@ -317,7 +317,7 @@
                   </h4>
                   <span class="text-secondary">7 ratings</span>
                 </div>
-                <button class="btn btn-dark rounded-pill align-self-center" data-bs-toggle="modal" data-bs-target="#reviewsModal">Test Modal</button>
+                <button class="btn btn-dark rounded-pill align-self-center" data-bs-toggle="modal" data-bs-target="#reviewsModal" id="test-modal">Test Modal</button>
                 <button class="btn btn-outline-primary rounded-pill align-self-center" id="write-review-btn" onclick="edit(this)">Write a review</button>
                 <button class="btn btn-outline-primary rounded-pill align-self-center" id="view-review-btn" data-bs-value="12">See my reviews</button>
                 <script>
@@ -336,15 +336,21 @@
                   <div class="modal-content" style="min-height: 80dvh">
                     <div class="modal-header">
                       <h1 class="modal-title fs-5" id="reviewsModalLabel">User reviews</h1>
+                      <span class="fw-semibold fs-5 ms-4" id="modal-product-rating">0.0 out of 5.0</span>
+                      <span class="fs-5 ratings text-warning ms-2" value="0.0" max="5" id="modal-star-rating"></span>
                       <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                       <div class="container p-5">
                         <h4 class="d-flex">
-                          <span class="me-2">4.3 out of 5.0</span>
-                          <span class="ratings text-warning me-2" value="4.5" max="5"></span>
+                          <span class="me-2" id="modal-product-rating">0.0 out of 5.0</span>
+                          <span class="ratings text-warning me-2" value="0.0" max="5" id="modal-star-rating"></span>
                         </h4>
-                        <div class="row g-3 mx-xl-5 mb-3" id="user-reviews-container"></div>
+                        <div class="row g-3 mx-xl-5 mb-3" id="user-reviews-container">
+                          <div class="spinner-border mx-auto" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
                         <div class="d-flex">
                           <button class="btn btn-outline-primary rounded-pill px-4 mx-auto" id="load-more-btn">Load more</button>
                         </div>
@@ -352,10 +358,16 @@
                       <script>
                         $(() => {
                           const $reviewContainer = $("#user-reviews-container");
+                          const $loadMoreBtn = $("#load-more-btn");
+                          const productId = 23;
+                          let offset = 0;
 
                           function appendReview(result) {
+                            $("#modal-product-rating").text(`${result.productRating} out of 5.0`);
+                            $("#modal-star-rating").attr("value", result.productRating);
                             if (!result.reviewList.length) {
                               $reviewContainer.html(`<h5 class="text-center">">No review yet</h5>`);
+                              $loadMoreBtn.hide();
                               return;
                             }
 
@@ -368,7 +380,6 @@
 
                             result.reviewList.forEach((review) => {
                               let attachmentList = result.attachmentMap[review.reviewId] || [];
-
                               let attachmentHtml = attachmentList
                                 .map((a) => {
                                   return `<a href="${a.attachment}" class="btn btn-sm ${attachmentType[a.type][0]} rounded-pill px-3"><i class="${attachmentType[a.type][1]}"></i></a>`;
@@ -389,7 +400,7 @@
                                           <span>@${review.userName}</span>
                                           <i class="ratings text-warning fs-6" value="${review.rating}" max="5"></i>
                                         </h5>
-                                        <small class="fw-light text-muted text-nowrap">${new Date(review.createdAt).toLocaleDateString()}</small>
+                                        <small class="fw-light text-muted text-nowrap">${review.createdAt}</small>
                                         <p class="mb-0">${review.comment}</p>
                                         ${attachmentHtml}
                                       </div>
@@ -404,24 +415,44 @@
                             });
 
                             $reviewContainer.html(reviewHtml.join(""));
+
+                            if (!result.haveMoreReviews) {
+                              $loadMoreBtn.hide();
+                            }
                           }
 
-                          $("#reviewsModal").on("show.bs.modal", (e) => {
+                          function loadReviews(productId, offset) {
                             $.ajax({
                               url: "http://localhost:8080/shop/review",
                               type: "get",
                               timeout: 5000,
                               data: {
-                                productId: 23,
+                                productId: productId,
+                                offset: offset,
                               },
                               success: (result, status, xhr) => {
-                                appendReview(result);
+                                setTimeout(() => {
+                                  appendReview(result);
+                                  offset += result.reviewList.length;
+                                  console.log(result);
+                                  // Remove spinner after content is loaded
+                                  $("#user-reviews-container .spinner-border").remove();
+                                }, 2000);
                               },
                               error: (xhr, status, error) => {
                                 console.error("Error:", error);
-                                $("#user-reviews-container").html(`<h5 class="text-center text-danger">Fail to retrieve user reviews</h5>`);
+                                setTimeout(() => {
+                                  $("#user-reviews-container").html(`<h5 class="text-center text-danger">Failed to retrieve user reviews</h5>`);
+                                }, 2000);
                               },
                             });
+                          }
+
+                          $loadMoreBtn.click(loadReviews(productId, offset));
+
+                          $("#reviewsModal").on("show.bs.modal", (e) => {
+                            offset = 0;
+                            loadReviews(productId, offset);
                           });
                         });
                       </script>
@@ -446,7 +477,7 @@
                                 <span class="d-flex position-absolute" style="top: 18px">
                                   <div class="d-inline-block">
                                     <i class="ratings" value="0" max="5"></i>
-                                    <div class="ratings overflow-hidden position-absolute top-0" id="star-select-container">
+                                    <div class="d-flex gap-1 align-items-center overflow-hidden position-absolute top-0" id="star-select-container">
                                       <i class="bi bi-star-fill star-select" data-bs-value="1"></i>
                                       <i class="bi bi-star-fill star-select" data-bs-value="2"></i>
                                       <i class="bi bi-star-fill star-select" data-bs-value="3"></i>
@@ -458,7 +489,7 @@
                               </span>
                             </h5>
                             <div class="input-group input-group-sm mb-1">
-                              <label class="btn attachment-btn rounded-pill" for="attachments"><i class="bi bi-paperclip me-1"></i>&le; 4 Attachment(s)</label>
+                              <label class="btn btn-success rounded-pill" for="attachments"><i class="bi bi-paperclip me-1"></i>&le; 4 Attachment(s)</label>
                               <input type="file" name="attachment[]" accept="video/*,image/*" id="attachments" class="form-control bg-transparent border-0 shadow-none" multiple />
                               <span class="form-text">&le; 10MB</span>
                             </div>
@@ -672,7 +703,9 @@
       }
 
       $(document).ready(function () {
-        $(".ratings").each(function () {
+        $(".ratings").each(updateUserRating);
+
+        function updateUserRating() {
           let rating = parseFloat($(this).attr("value"));
           let maxRating = parseFloat($(this).attr("max")) || 5;
           let fullStars = Math.floor(rating);
@@ -680,7 +713,7 @@
           let emptyStars = maxRating - fullStars - halfStar;
           let starsHtml = '<i class="bi bi-star-fill"></i>'.repeat(fullStars) + (halfStar ? '<i class="bi bi-star-half"></i>' : "") + '<i class="bi bi-star"></i>'.repeat(emptyStars);
           $(this).prepend(starsHtml);
-        });
+        }
 
         updateStars(0);
         // $("#user-review").summernote(setting);
