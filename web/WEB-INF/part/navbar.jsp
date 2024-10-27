@@ -76,8 +76,8 @@
           </li>
         </c:if>
       </ul>
-      <div class="dropdown me-2 bd-mode-toggle">
-        <button class="btn btn-bd-primary dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown">
+      <div class="dropdown me-2 bd-mode-toggle" >
+        <button class="btn btn-bd-primary dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside">
           <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>
           <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
         </button>
