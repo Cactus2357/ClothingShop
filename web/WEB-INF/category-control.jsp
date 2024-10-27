@@ -1,11 +1,12 @@
-<%-- Document : category-control Created on : Oct 7, 2024, 3:35:18 AM Author : hi --%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@page contentType="text/html"
-pageEncoding="UTF-8"%>
+<%-- Document : category-control Created on : Oct 7, 2024, 3:35:18 AM Author : hi --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Categories</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet" />

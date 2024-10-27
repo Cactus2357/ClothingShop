@@ -1,5 +1,5 @@
 <%-- Document : signin Created on : Sep 11, 2024, 11:42:43 PM Author : hi --%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="fn"
-uri="http://java.sun.com/jsp/jstl/functions" %> <%@page contentType="text/html" pageEncoding="UTF-8"%>
+                                                                                                                                                           uri="http://java.sun.com/jsp/jstl/functions" %> <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
   <head>
@@ -11,7 +11,7 @@ uri="http://java.sun.com/jsp/jstl/functions" %> <%@page contentType="text/html" 
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <title>Signin Template · Bootstrap v5.3</title>
+    <title>Signin</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
@@ -87,17 +87,17 @@ uri="http://java.sun.com/jsp/jstl/functions" %> <%@page contentType="text/html" 
 
           Array.from(forms).forEach((form) => {
             form.addEventListener(
-              "submit",
-              (event) => {
-                if (!form.checkValidity()) {
-                  event.preventDefault();
-                  event.stopPropagation();
-                }
+                    "submit",
+                    (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
 
-                form.classList.add("was-validated");
-              },
-              false
-            );
+              form.classList.add("was-validated");
+            },
+                    false
+                    );
           });
         })();
       });
