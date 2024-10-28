@@ -204,7 +204,7 @@ contentType="text/html" pageEncoding="UTF-8"%>
                 <td class="user-address">${user.address}</td>
                 <td class="user-role">${user.role}</td>
                 <td class="user-status">${user.status}</td>
-                <td class="text-nowrap"><fmt:formatDate pattern="yyyy/MM/dd hh:mm:ss" value="${user.createdAt}" /></td>
+                <td class="user-created-at text-nowrap"><fmt:formatDate pattern="yyyy/MM/dd hh:mm:ss" value="${user.createdAt}" /></td>
                 <td>
                   <button class="btn rounded-circle"><i class="bi bi-three-dots-vertical"></i></button>
                 </td>
