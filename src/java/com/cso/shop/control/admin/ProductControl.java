@@ -16,10 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import java.io.File;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -154,43 +151,4 @@ public class ProductControl extends HttpServlet {
     doGet(req, resp);
   }
 
-//  /**
-//   *
-//   * @param image Image part
-//   * @param webImageDir directory on web server (ends with '/')
-//   * @return A relative URL string to image on server
-//   */
-//  private String createImage(Part image, String webImageDir) throws IOException {
-//    if (image == null || webImageDir == null) {
-//      return null;
-//    }
-//    String name = image.getSubmittedFileName();
-//    int dotIndex = name.lastIndexOf('.');
-//    String extension = (dotIndex > 0) ? name.substring(dotIndex) : "";
-//    if (extension.isBlank()) {
-//      return null;
-//    }
-//
-//    String timestamp = LocalDateTime.now()
-//      .format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
-//    String new_name = Utils.hash(timestamp + name) + extension;
-//
-//    String img_dir = getServletContext().getRealPath(webImageDir);
-//    String web_path = webImageDir + new_name;
-//    String physical_path = img_dir + new_name;
-//
-//    File dir = new File(img_dir);
-//    if (!dir.exists()) {
-//      dir.mkdirs();
-//    }
-//
-//    image.write(physical_path);
-//    return web_path;
-//  }
-//  private String createUniqueName(String name, String extension) {
-//    String timestamp = LocalDateTime.now()
-//      .format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
-//    String newName = Utils.hash(timestamp + name) + extension;
-//    return newName;
-//  }
 }
