@@ -16,17 +16,17 @@
       <p>Try scrolling the rest of the page to see this option in action.</p>
       <hr />
       <ul class="list-group" id="offcanvas-links">
-        <a class="list-group-item list-group-item-action" href="home">Home</a>
-        <a class="list-group-item list-group-item-action" href="product-list">Products</a>
-        <a class="list-group-item list-group-item-action" href="product">Add Product</a>
-        <a class="list-group-item list-group-item-action" href="category">Add Category</a>
-        <a class="list-group-item list-group-item-action" href="users">User</a>
+        <a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/home">Home</a>
+        <a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/product-list">Products</a>
+        <a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/product">Add Product</a>
+        <a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/category">Add Category</a>
+        <a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/users">User</a>
       </ul>
     </div>
   </div>
 </c:if>
 
-<link rel="stylesheet" href="asset/style/theme-button.css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/asset/style/theme-button.css"/>
 
 <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
   <symbol id="check2" viewBox="0 0 16 16">
@@ -113,11 +113,11 @@
       </form>
       <c:choose>
         <c:when test="${sessionScope.user eq null}">
-          <a href="signin" class="btn btn-outline-primary me-2">Sign in</a>
-          <a href="signup" class="btn btn-primary">Sign up</a>
+          <a href="${pageContext.request.contextPath}/signin" class="btn btn-outline-primary me-2">Sign in</a>
+          <a href="${pageContext.request.contextPath}/signup" class="btn btn-primary">Sign up</a>
         </c:when>
         <c:otherwise>
-          <a href="profile" class="btn btn-primary">Profile</a>
+          <a href="${pageContext.request.contextPath}/profile" class="btn btn-primary">Profile</a>
         </c:otherwise>
       </c:choose>
     </div>
@@ -138,4 +138,4 @@
   });
 </script>
 
-<script src="asset/script/color-modes.js"></script>
+<script src="${pageContext.request.contextPath}/asset/script/color-modes.js"></script>

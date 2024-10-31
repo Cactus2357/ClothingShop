@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CSO</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
       .bd-placeholder-img {
@@ -24,14 +24,12 @@
     </style>
 
     <!-- Custom styles for this template -->
-    <link href="asset/style/index.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/asset/style/index.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
   </head>
   <body>
     <header>
-
       <jsp:include page="part/navbar.jsp" />
-
     </header>
 
     <main>
@@ -43,23 +41,25 @@
         </div>
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+            <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
             <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
-            </svg>
+            </svg> -->
+            <img src="${pageContext.request.contextPath}/asset/img/autumn-slider.webp" class="object-fit-cover" width="100%" height="100%" alt="" />
             <div class="container">
-              <div class="carousel-caption text-start">
+              <div class="carousel-caption bg-dark text-light bg-opacity-25 px-2 text-start">
                 <h1>Example headline.</h1>
                 <p class="opacity-75">Some representative placeholder content for the first slide of the carousel.</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+                <p><a class="btn btn-lg btn-primary" href="signup">Sign up today</a></p>
               </div>
             </div>
           </div>
           <div class="carousel-item">
-            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-            <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
-            </svg>
+            <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+              <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
+            </svg> -->
+            <img src="${pageContext.request.contextPath}/asset/img/discount-slider.webp" class="object-fit-cover" width="100%" height="100%" alt="" />
             <div class="container">
-              <div class="carousel-caption">
+              <div class="carousel-caption bg-dark text-light bg-opacity-25 px-2">
                 <h1>Another example headline.</h1>
                 <p>Some representative placeholder content for the second slide of the carousel.</p>
                 <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
@@ -67,14 +67,15 @@
             </div>
           </div>
           <div class="carousel-item">
-            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-            <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
-            </svg>
+            <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+              <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
+            </svg> -->
+            <img src="${pageContext.request.contextPath}/asset/img/trendy-slider.png" class="object-fit-cover" width="100%" height="100%" alt="" />
             <div class="container">
-              <div class="carousel-caption text-end">
+              <div class="carousel-caption bg-dark text-light bg-opacity-25 px-2 text-end">
                 <h1>One more for good measure.</h1>
                 <p>Some representative placeholder content for the third slide of this carousel.</p>
-                <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+                <p><a class="btn btn-lg btn-primary" href="product-list">Browse gallery</a></p>
               </div>
             </div>
           </div>
@@ -97,16 +98,7 @@
         <!-- Three columns of text below the carousel -->
         <div class="row">
           <div class="col-lg-4">
-            <svg
-              class="bd-placeholder-img rounded-circle"
-              width="140"
-              height="140"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-              aria-label="Placeholder"
-              preserveAspectRatio="xMidYMid slice"
-              focusable="false"
-              >
+            <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
             <title>Placeholder</title>
             <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
             </svg>
@@ -116,16 +108,7 @@
           </div>
           <!-- /.col-lg-4 -->
           <div class="col-lg-4">
-            <svg
-              class="bd-placeholder-img rounded-circle"
-              width="140"
-              height="140"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-              aria-label="Placeholder"
-              preserveAspectRatio="xMidYMid slice"
-              focusable="false"
-              >
+            <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
             <title>Placeholder</title>
             <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
             </svg>
@@ -135,16 +118,7 @@
           </div>
           <!-- /.col-lg-4 -->
           <div class="col-lg-4">
-            <svg
-              class="bd-placeholder-img rounded-circle"
-              width="140"
-              height="140"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-              aria-label="Placeholder"
-              preserveAspectRatio="xMidYMid slice"
-              focusable="false"
-              >
+            <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
             <title>Placeholder</title>
             <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
             </svg>
@@ -214,8 +188,7 @@
           <div class="col-md-7">
             <h2 class="featurette-heading fw-normal lh-1">And lastly, this one. <span class="text-body-secondary">Checkmate.</span></h2>
             <p class="lead">
-              And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would
-              look like with some actual content. Your content.
+              And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.
             </p>
           </div>
           <div class="col-md-5">
@@ -248,8 +221,7 @@
         <p>&copy; 2017–2024 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
       </footer>
       <%--<jsp:include page="part/footer.jsp" />--%>
-
     </main>
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="asset/script/color-modes.js"></script>
+    <script src="${pageContext.request.contextPath}/asset/script/color-modes.js"></script>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -160,18 +160,14 @@
           const forms = document.querySelectorAll(".needs-validation");
 
           Array.from(forms).forEach((form) => {
-            form.addEventListener(
-                    "submit",
-                    (event) => {
+            form.addEventListener("submit", (event) => {
               if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
               }
 
               form.classList.add("was-validated");
-            },
-                    false
-                    );
+            }, false);
           });
         })();
       });

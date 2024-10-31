@@ -8,12 +8,12 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
   <head>
-    <script src="asset/script/color-modes.js"></script>
+    <script src="${pageContext.request.contextPath}/asset/script/color-modes.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title></title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" />
     <style>
       html,
       body {
@@ -42,6 +42,6 @@
       </div>
     </main>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

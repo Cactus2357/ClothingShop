@@ -11,16 +11,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
 
-    <link rel="stylesheet" href="asset/style/theme-button.css" />
-    <link rel="stylesheet" href="asset/style/select2-bootstrap-5-theme.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/asset/style/theme-button.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/asset/style/select2-bootstrap-5-theme.css" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.js"></script>
 
-    <script src="asset/script/color-modes.js"></script>
-    <link rel="stylesheet" href="asset/style/image-placeholder.css" />
+    <script src="${pageContext.request.contextPath}/asset/script/color-modes.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/asset/style/image-placeholder.css" />
 
     <style>
       body {
@@ -46,7 +46,7 @@
     </jsp:include>
 
     <main class="container-fluid p-3">
-      <form action="product" method="post" id="product-form" enctype="multipart/form-data">
+      <form action="${pageContext.request.contextPath}/product" method="post" id="product-form" enctype="multipart/form-data">
         <div class="row g-3">
           <div class="container">
             <h2 class="float-start">${product ne null ? 'Update' : 'Add'} a Product</h2>
@@ -155,7 +155,7 @@
 
     <jsp:include page="part/footer.jsp" />
 
-    <script src="js/bootstrap.bundle.min.js">
+    <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js">
     </script>

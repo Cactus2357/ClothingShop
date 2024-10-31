@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <!-- Cropper.min.css -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" /> -->
@@ -94,7 +94,7 @@
                 <div class="modal-footer">
                   <div class="d-flex gap-2 w-100">
                     <button type="button" class="btn btn-secondary col-6" data-bs-dismiss="modal">Cancel</button>
-                    <a href="signout" type="button" class="btn btn-danger col-6">Sign out</a>
+                    <a href="${pageContext.request.contextPath}/signout" type="button" class="btn btn-danger col-6">Sign out</a>
                   </div>
                 </div>
               </div>
@@ -122,7 +122,7 @@
             <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
               <div class="clearfix d-flex flex-shrink-0 flex-column-reverse flex-md-row gap-md-3">
                 <div class="col-12 col-md-8">
-                  <form action="profile" method="post">
+                  <form action="${pageContext.request.contextPath}/profile" method="post">
                     <div class="row">
                       <dl>
                         <dt><label for="username">Name</label></dt>
@@ -224,7 +224,7 @@
                     <dl class="user-select-none">
                       <dt><label class="d-block mb-2">Profile picture</label></dt>
                       <dd class="clearfix position-relative">
-                        <form action="/" method="post" enctype="multipart/form-data">
+                        <form action="${pageContext.request.contextPath}/profile" method="post" enctype="multipart/form-data">
                           <input type="file" name="avatar_img" id="avatar_upload" accept="image/*" hidden />
                         </form>
                         <div class="container-fluid">
@@ -444,13 +444,15 @@
           </style>
         </footer>-->
     <!--</div>-->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js">
+    </script>
     <!-- <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script> -->
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js">
+    </script>
     <!-- Cropper.min.js -->
     <!-- <script
       src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"
@@ -459,21 +461,21 @@
       referrerpolicy="no-referrer"
     ></script> -->
     <script>
-                  $(() => {
-                    const myModal = document.getElementById("myModal");
-                    const myInput = document.getElementById("myInput");
+      $(() => {
+        const myModal = document.getElementById("myModal");
+        const myInput = document.getElementById("myInput");
 
-                    myModal.addEventListener("shown.bs.modal", () => {
-                      myInput.focus();
-                    });
+        myModal.addEventListener("shown.bs.modal", () => {
+          myInput.focus();
+        });
 
-                    let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-                    let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-                      return new bootstrap.Popover(popoverTriggerEl);
-                    });
+        let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+          return new bootstrap.Popover(popoverTriggerEl);
+        });
 
-                    $('[data-toggle="tooltip"]').tooltip();
-                  });
+        $('[data-toggle="tooltip"]').tooltip();
+      });
     </script>
   </body>
 </html>

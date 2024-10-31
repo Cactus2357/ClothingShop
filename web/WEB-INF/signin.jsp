@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
   <head>
-    <script src="asset/script/color-modes.js"></script>
+    <script src="${pageContext.request.contextPath}/asset/script/color-modes.js"></script>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -43,7 +43,7 @@
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
       <div class="col-10 col-lg-8 col-xxl-6">
         <form action="${url}" method="post" class="has-validation needs-validation" novalidate>
-          <a href="home" class="text-decoration-none"><h1>CSO</h1></a>
+          <a href="${pageContext.request.contextPath}/home" class="text-decoration-none"><h1>CSO</h1></a>
           <h1 class="h3 mb-3 fw-normal">Sign in</h1>
 
           <div class="form-floating">
@@ -89,18 +89,14 @@
           const forms = document.querySelectorAll(".needs-validation");
 
           Array.from(forms).forEach((form) => {
-            form.addEventListener(
-                    "submit",
-                    (event) => {
+            form.addEventListener("submit", (event) => {
               if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
               }
 
               form.classList.add("was-validated");
-            },
-                    false
-                    );
+            }, false);
           });
         })();
       });

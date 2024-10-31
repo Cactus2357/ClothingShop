@@ -9,8 +9,8 @@
     <title>Categories</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <script src="asset/script/color-modes.js"></script>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="${pageContext.request.contextPath}/asset/script/color-modes.js"></script>
 
     <link rel="stylesheet" href="asset/style/theme-button.css" />
 
@@ -78,7 +78,7 @@
       </form>
     </main>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
