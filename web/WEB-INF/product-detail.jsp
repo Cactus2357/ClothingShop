@@ -11,10 +11,10 @@
     <title>${product.name}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.js"></script>
-    <link rel="stylesheet" href="asset/style/image-placeholder.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/asset/style/image-placeholder.css"/>
 
     <style>
       body {
@@ -35,13 +35,13 @@
       <div class="row g-3">
         <div class="col-12 col-md-4 col-xl-3">
           <aside class="container-fluid sticky-top" style="top: 4.5rem">
-            <div class="border bg-body-tertiary rounded p-2 row">
+            <div class="border bg-body-tertiary rounded p-2 mt-3 row">
               <div class="mb-3">
-                <label class="form-label">Keywords</label>
+                <label class="form-label">Suggestions</label>
                 <br />
-                <span class="badge text-bg-primary">Keyword</span>
-                <span class="badge text-bg-primary">Keyword</span>
-                <span class="badge text-bg-primary">Keyword</span>
+                <c:forEach items="${suggestions}" var="c">
+                  <a class="badge rounded-pill text-bg-primary nav-link" href="product-list?category-id=${c.id}">${c.name}</a>
+                </c:forEach>
               </div>
               <div class="mb-3">
                 <div class="form-check">
@@ -60,17 +60,24 @@
               <div class="mb-3">
                 <label for="range1" class="form-label">Label ($0-100)</label>
                 <strong class="float-end"> &gt; <output id="rangeOutput1">23</output>$</strong>
-                <input type="range" class="form-range" min="0" step="10" max="100" value="23" id="min-sale-price" oninput="$('#rangeOutput1').val(this.value)" />
+                <input type="range" class="form-range" min="0" max="100" value="23" id="min-sale-price" oninput="$('#rangeOutput1').val(this.value)" />
               </div>
               <div class="mb-3">
                 <div class="mb-3">
                   <label for="category" class="form-label">Category</label>
-                  <select class="form-select" name="dategory" id="dategory" disabled>
-                    <option selected disabled>Select a category</option>
-                    <option value="">New Delhi</option>
-                    <option value="">Istanbul</option>
-                    <option value="">Jakarta</option>
-                  </select>
+                  <div class="dropdown">
+                    <button class="btn btn-outline-primary text-start dropdown-toggle w-100" type="button" id="category" data-bs-toggle="dropdown">Select a Category</button>
+                    <ul class="dropdown-menu w-100">
+                      <li>
+                        <a class="dropdown-item" href="product-list">None</a>
+                      </li>
+                      <c:forEach items="${categoryList}" var="c">
+                        <li>
+                          <a class="dropdown-item" href="product-list?category-id=${c.id}">${c.name}</a>
+                        </li>
+                      </c:forEach>
+                    </ul>
+                  </div>
                 </div>
               </div>
               <div class="mb-3">
@@ -103,28 +110,24 @@
                   <input class="form-check-input toggle-display" type="checkbox" value="product-description" id="checkbox10" checked />
                   <label class="form-check-label" for="checkbox10"> Description </label>
                 </div>
-                <script>
-                  $(document).ready(function () {
-                    // When any checkbox changes its state
-                    $(".toggle-display").change(function () {
-                      let classToToggle = $(this).val();
-                      if ($(this).is(":checked")) {
-                        $("." + classToToggle).show();
-                      } else {
-                        $("." + classToToggle).hide();
-                      }
-                    });
+              </div>
+              <script>
+                $(document).ready(function () {
+                  // When any checkbox changes its state
+                  $(".toggle-display").change(function () {
+                    let classToToggle = $(this).val();
+                    if ($(this).is(":checked")) {
+                      $("." + classToToggle).show();
+                    } else {
+                      $("." + classToToggle).hide();
+                    }
                   });
-                </script>
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="display">Information count</label>
-                <input type="range" class="form-control" value="6" min="0" max="6" id="display" placeholder="Display" />
-              </div>
+                });
+              </script>
             </div>
           </aside>
         </div>
-        <div class="col-12 col-md-8 col-xl-9">
+        <div class="col-12 col-md-8 col-xl-9 pt-3">
           <div class="row row-cols-1 row-cols-xl-2 g-3 mb-3">
             <div cass="col">
               <c:choose>
@@ -145,7 +148,7 @@
               <div class="d-flex flex-column gap-3 bg-body-secondary rounded p-4 product-info">
                 <h3 class="d-flex flex-wrap align-items-center gap-2">
                   <span class="me-3 product-name"> ${requestScope.product.name} </span>
-                  <c:forEach items="${categoryList}" var="category">
+                  <c:forEach items="${productCategoryList}" var="category">
                     <a class="badge text-bg-primary rounded-pill nav-link product-category" href="product-list?category-id=${category.id}">${category.name}</a>
                   </c:forEach>
                 </h3>
@@ -178,7 +181,7 @@
     <!--  -->
     <jsp:include page="part/footer.jsp" />
 
-    <script src="js/bootstrap.bundle.min.js">
+    <script src="${pageContext.request.contextPath}/js/bootstrap.bundle.min.js">
     </script>
     <script>
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');

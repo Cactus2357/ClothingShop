@@ -48,7 +48,7 @@ public class ProductDetail extends HttpServlet {
         throw new Exception("no product found");
       }
 
-      List<Category> categoryList = cdao.selectAll(productId);
+      List<Category> productCategoryList = cdao.selectAll(productId);
       List<ProductReview> reviewList = rdao.selectAll(productId, 3);
 
       int[] reviewIds = reviewList.stream().mapToInt(ProductReview::getReviewId).toArray();
@@ -58,9 +58,16 @@ public class ProductDetail extends HttpServlet {
       float productRating = (float) ratingList.stream().mapToDouble(Float::doubleValue).average().orElse(0.0);
       int reviewCount = ratingList.size();
 
+      /// Sidebar
+      List<Category> categoryList = cdao.selectAll();
+      List<Category> suggestions = cdao.selectBatch("Men's Clothing", "Women's Clothing", "Accessories");
+      ///
+
       req.setAttribute("product", product);
       req.setAttribute("productRating", productRating);
+      req.setAttribute("productCategoryList", productCategoryList);
       req.setAttribute("categoryList", categoryList);
+      req.setAttribute("suggestions", suggestions);
       req.setAttribute("reviewCount", reviewCount);
       req.setAttribute("reviewList", reviewList);
       req.setAttribute("attachmentMap", attachmentMap);
