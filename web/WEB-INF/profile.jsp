@@ -109,7 +109,7 @@
               </button>
 
               <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-password" role="tab" id="nav-password-tab">
-                <span class="order-0 fs-6">Change Password</span>
+                <span class="order-0 fs-6">${sessionScope.user.password ne null ? 'Change Password' : 'Add Password'}</span>
               </button>
 
               <!-- <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-delete-account" role="tab" id="nav-delete-account-tab">
@@ -284,13 +284,17 @@
             <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab" tabindex="0">
               <div class="d-inline">
                 <form action="change-password" method="post">
-                  <input type="hidden" name="_method" value="put" autocomplete="off" />
-                  <dl>
-                    <dt><label for="user_old_password">Old Password</label></dt>
-                    <dd>
-                      <input type="password" name="oldPassword" id="user_old_password" required="required" class="form-control form-control" />
-                    </dd>
-                  </dl>
+                  <input type="text" style="display:none">
+                  <input type="password" style="display:none" autocomplete="new-password" >
+                  <input type="email" name="email" class="visually-hidden" value="${sessionScope.user.email}">
+                  <c:if test="${sessionScope.user.password ne null}">
+                    <dl>
+                      <dt><label for="user_old_password">Old Password</label></dt>
+                      <dd>
+                        <input type="password" name="oldPassword" id="user_old_password" required="required" class="form-control form-control" />
+                      </dd>
+                    </dl>
+                  </c:if>
                   <fieldset>
                     <dl>
                       <dt><label for="user_new_password">New Password</label></dt>
@@ -307,7 +311,7 @@
                   </fieldset>
                   <p class="d-flex align-items-center">
                     <button type="submit" class="btn btn-success me-2">Update password</button>
-                    <span><a class="text-decoration-none" href="/password-reset">I forgot my password</a></span>
+                    <span><a class="text-decoration-none" href="reset-password">I forgot my password</a></span>
                   </p>
                 </form>
               </div>

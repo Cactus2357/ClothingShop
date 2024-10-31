@@ -41,7 +41,7 @@
     <%--<c:param name="redirect" value="${fn:escapeXml(redirect)}" />--%>
 
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
-      <div class="col-12 col-lg-8 col-xxl-7">
+      <div class="col-10 col-lg-8 col-xxl-6">
         <form action="${url}" method="post" class="has-validation needs-validation" novalidate>
           <a href="home" class="text-decoration-none"><h1>CSO</h1></a>
           <h1 class="h3 mb-3 fw-normal">Sign in</h1>
@@ -58,7 +58,7 @@
           <div class="form-check my-3">
             <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" ${requestScope.rememberMe == true ? 'checked' : ''} />
             <label class="form-check-label" for="rememberMe">Remember me</label>
-            <a class="float-end text-decoration-none" href="#">Forgot password?</a>
+            <a class="float-end text-decoration-none" href="reset-password">Forgot password?</a>
           </div>
           <!--<p class="mb-3 text-danger">Server response</p>-->
           <%--
@@ -69,7 +69,10 @@
           --%>
           <button class="btn btn-success w-100 py-2 mb-3" type="submit">Sign in</button>
           <p class="mb-3 text-center">or sign in with</p>
-          <button class="btn btn-danger w-100 py-2 mb-3" type="submit"><i class="bi bi-google me-2"></i>Google</button>
+          <c:url var="signinURL" value="signin">
+            <c:param name="method" value="google" />
+          </c:url>
+          <a href="${signinURL}" class="btn btn-danger w-100 py-2 mb-3"><i class="bi bi-google me-2"></i>Google</a>
         </form>
         <hr />
         <div class="text-center">

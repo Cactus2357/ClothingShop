@@ -22,6 +22,9 @@ import java.util.Date;
  */
 public class Email {
 
+  private static String propertiesPath = "D:\\Code\\Apache NetBeans\\OnlineClothingShop\\OnlineClothingShop\\nbproject\\private\\private.properties";
+  public static String siteLink = "";
+
   private static final String defaultMail = "se1864cso@gmail.com";
   private static final String defaultMailPass = "rsna flok golk btir";
   private static final String defaultContent = "Default mail content for testing";
@@ -30,7 +33,7 @@ public class Email {
 
   static {
     try {
-      properties.load(new FileInputStream("nbproject/private/private.properties"));
+      properties.load(new FileInputStream(propertiesPath));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -45,13 +48,15 @@ public class Email {
   }
 
   public static void main(String[] args) {
-    Email.mail();
+    Email.mail("Email verification code: 513463", verifyEmailContent(getEmail(), "513463"));
+//    Email.mail("Change password", changePasswordContent(getEmail(), "513463"));
+
 //    System.out.println(getEmail());
 //    System.out.println(getEmailPassword());
   }
 
   public static void mail() {
-    mail("Testing email", generateEmailContent("000000", defaultContent, "Testing send email"));
+    mail("Testing email", "Testing sending email feature");
   }
 
   public static void mail(String subject, String content) {
@@ -85,21 +90,10 @@ public class Email {
       MimeMessage msg = new MimeMessage(ses);
       msg.addHeader("content-type", "text/html; charset=UTF-8");
       msg.setFrom(from);
-      msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+      msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
       msg.setSubject(subject);
       msg.setSentDate(new Date());
-      msg.setReplyTo(InternetAddress.parse(from));
-//      String emailContent
-//        = """
-//          <!DOCTYPE html>
-//          <html lang="en">
-//            <body>
-//              <h2>Verify email</h2>
-//              <p>Verification code : <b>%s</b></p>
-//              <p><small><i>Code expires in 3 minutes.</i></small></p>
-//            </body>
-//          </html>
-//        """;
+      msg.setReplyTo(InternetAddress.parse(from, false));
       msg.setContent(content, "text/html");
 
       Transport.send(msg);
@@ -109,32 +103,66 @@ public class Email {
     }
   }
 
-  public static String generateEmailContent(String pinCode, String messageBody, String emailSubject) {
-    String emailTemplate = """
+  public static String verifyEmailContent(String email, String pin) {
+    return verifyEmailContent(email, pin, null, null);
+  }
+
+  public static String verifyEmailContent(String email, String pin, String site, String redirect) {
+    String siteLink = site != null ? site : "#";
+    String redirectLink = redirect != null ? " <a href=\"%s\">here</a>".formatted(redirect) : "";
+
+    String content = """
       <!DOCTYPE html>
       <html lang="en">
         <head>
           <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>%s</title>
-          <style>body {font-family: Arial, sans-serif;background-color: #f4f4f4;margin: 0;padding: 0;}
-            .container {max-width: 600px;margin: 20px auto;background-color: #fff;padding: 20px;border-radius: 8px;box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);text-align: center;}
-            .header {background-color: #007bff;color: #fff;padding: 15px 0;border-radius: 8px 8px 0 0;font-size: 24px;}
-            .content {padding: 20px;}
-            .pin {font-size: 32px;font-weight: bold;color: #007bff;letter-spacing: 4px;margin: 20px 0;}
-            .footer {font-size: 14px;color: #777;}
-          </style>
+          <title>Email verification code: %s</title>
+          <style>* {margin: 0;padding: 0;box-sizing: border-box;}body {font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;}a {text-decoration: none;}.container {margin: auto;max-width: 600px;border: 2px solid lightgray;border-radius: 0.375rem;padding: 3rem;}h1 {font-size: 2.5rem;margin-bottom: 1rem;}h4 {font-size: 1.5rem;margin-bottom: 0.5rem;}h1,h4 {font-weight: 500;text-align: center;}hr {margin: 1.5rem 0;}p {margin-bottom: 1rem;color: #495057;}</style>
         </head>
         <body>
-          <div class="container">
-            <div class="header">%s</div>
-            <div class="content"><p>%s</p><div class="pin">%s</div><p><small>This code will expire in 10 minutes.</small></p></div>
-            <div class="footer"><p>If you didn't request this, please ignore this email.</p></div>
+          <div class="container" style="max-width: 600px">
+            <h4><a href="%s">CSO</a></h4>
+            <h4>Verify your email address</h4><hr />
+            <p>CSO has recieved a request to use <b>%s</b> as verified email for an account.</p>
+            <p>Use this code to finish verifying your account%s.</p>
+            <h1>%s</h1>
+            <p>This code will expire in 60 mins.</p>
+            <p>If you don't recognize this, you can safely ignore this email.</p>
           </div>
         </body>
-      </html>""";
+      </html>""".formatted(pin, siteLink, email, redirectLink, pin);
+    return content;
+  }
 
-    return String.format(emailTemplate, emailSubject, emailSubject, messageBody, pinCode);
+  public static String changePasswordContent(String email, String pin) {
+    return changePasswordContent(email, pin, null, null);
+  }
+
+  public static String changePasswordContent(String email, String pin, String site, String redirect) {
+    String siteLink = site != null ? site : "#";
+    String redirectLink = redirect != null ? " <a href=\"%s\">here</a>".formatted(redirect) : "";
+
+    String content = """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8" />
+          <title>Password Reset</title>
+          <style>* {margin: 0;padding: 0;box-sizing: border-box;}body {font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;}a {text-decoration: none;}.container {margin: auto;max-width: 600px;border: 2px solid lightgray;border-radius: 0.375rem;padding: 3rem;}h1 {font-size: 2.5rem;margin-bottom: 1rem;}h4 {font-size: 1.5rem;margin-bottom: 0.5rem;}h1,h4 {font-weight: 500;text-align: center;}hr {margin: 1.5rem 0;}p {margin-bottom: 1rem;color: #495057;}</style>
+        </head>
+        <body>
+          <div class="container" style="max-width: 600px">
+            <h4><a href="%s">CSO</a></h4>
+            <h4>Reset Your Password</h4><hr />
+            <p>CSO has received a request to reset password for the account associated with <b>%s</b>.</p>
+            <p>Use this code to to verify your action%s.</p>
+            <h1>%s</h1>
+            <p>If you don't recognize this, you can safely ignore this email.</p>
+          </div>
+        </body>
+      </html>""".formatted(siteLink, email, redirectLink, pin);
+
+    return content;
   }
 
 }

@@ -202,7 +202,7 @@
                               <i class="bi \${attachmentType[a.type][1]}"></i>
                             </a>`;
                   })
-                  .join("");
+                  .join("\n");
 
           if (attachmentList.length) {
             attachmentHtml = `<div class="mt-2">\${attachmentHtml}</div>`;
@@ -233,6 +233,7 @@
         });
 
         $reviewContainer.append(reviewHtml.join(""));
+        updateRatings();
 
         offset += result.reviewList.length
 
@@ -257,11 +258,12 @@
           success: (result, status, xhr) => {
             $("#modal-product-rating").text(`\${result.productRating.toFixed(1)} out of 5.0`);
             $("#modal-star-rating").attr("value", result.productRating);
-            $(".ratings").each(updateUserRating);
             $reviewContainer.append(spinnerHtml);
+            $(".ratings").each(updateRatings);
             setTimeout(() => {
               appendReview(result);
               $("#user-reviews-container .spinner-border").remove();
+              $(".ratings").each(updateRatings);
             }, timeOut);
           },
           error: (xhr, status, error) => {
@@ -305,7 +307,7 @@
         });
       }
 
-      function updateUserRating() {
+      function updateRatings() {
         let rating = parseFloat($(this).attr("value"));
         let maxRating = parseFloat($(this).attr("max")) || 5;
         let fullStars = Math.floor(rating);
@@ -313,11 +315,6 @@
         let emptyStars = maxRating - fullStars - halfStar;
         let html = '<i class="bi bi-star-fill"></i>'.repeat(fullStars) + (halfStar ? '<i class="bi bi-star-half"></i>' : "") + '<i class="bi bi-star"></i>'.repeat(emptyStars);
         $(this).html(html);
-        $("#star-select-container star-select").each(s =>{
-          if (s.attr('data-bs-value') <= rating) {
-            s.addClass('bg-secondary bg-opacity-25')
-          }
-        })
       }
 
       updateUserRatings(0);
@@ -342,7 +339,7 @@
         }
       });
 
-      $(".ratings").each(updateUserRating);
+      $(".ratings").each(updateRatings);
 
       $(".star-select").click((e) => {
         let value = $(e.target).data("bs-value");

@@ -30,10 +30,12 @@
       <jsp:param name="responseType" value="${responseType}" />
     </jsp:include>
     <main class="form-signin container w-100 m-auto d-flex justify-content-center z-2 p-3">
-      <div class="col-12 col-lg-8 col-xxl-7">
+      <div class="col-10 col-lg-8 col-xxl-6">
         <a href="home" class="text-decoration-none text-end"><h1>CSO</h1></a>
         <h1 class="h3 mb-3 fw-normal text-end">Register your account</h1>
         <form action="signup" method="post" autocomplete="off" class="needs-validation" novalidate>
+          <input type="text" style="display:none">
+          <input type="password" style="display:none" autocomplete="new-password" >
           <div class="form-floating mb-3 has-validation">
             <input type="text" class="form-control" id="username" name="name" value="${requestScope.name}" placeholder="Username" required />
             <label for="username">Username</label>
@@ -159,17 +161,17 @@
 
           Array.from(forms).forEach((form) => {
             form.addEventListener(
-              "submit",
-              (event) => {
-                if (!form.checkValidity()) {
-                  event.preventDefault();
-                  event.stopPropagation();
-                }
+                    "submit",
+                    (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
 
-                form.classList.add("was-validated");
-              },
-              false
-            );
+              form.classList.add("was-validated");
+            },
+                    false
+                    );
           });
         })();
       });

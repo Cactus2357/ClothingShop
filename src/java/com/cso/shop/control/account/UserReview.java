@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,6 +93,13 @@ public class UserReview extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User) session.getAttribute("user");
 
+    if (user == null) {
+      String originalURL = URLEncoder.encode(req.getRequestURI(), "UTF-8");
+      String redirectURL = req.getContextPath() + "/signin?redirect=" + originalURL;
+      resp.sendRedirect(redirectURL);
+      return;
+    }
+
     int productId = Utils.tryParseInt(req.getParameter("productId"), -1);
     float rating = Utils.tryParseFloat(req.getParameter("rating"), -1);
     String comment = req.getParameter("comment");
@@ -115,7 +123,7 @@ public class UserReview extends HttpServlet {
       rdao.insert(userReview);
 
       String webFilePath = Utils.getWebFilePath();
-      String regex = webFilePath + ("([^/\\\\]+)");
+      String regex = webFilePath.replaceAll("\\\\", "\\\\\\\\") + ("([^/\\\\]+)");
       Pattern pattern = Pattern.compile(regex);
 
       for (Part part : req.getParts()) {

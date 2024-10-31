@@ -23,7 +23,7 @@ public class User extends BaseBean {
   private String familyName;
   private String status = "active";
   private String avatar;
-  private String gender;
+  private String gender = "male";
   private Date createdAt;
 
   public User() {

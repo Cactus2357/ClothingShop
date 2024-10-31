@@ -7,8 +7,8 @@ package com.cso.shop.control.account;
 import com.cso.shop.dao.UserDAO;
 import com.cso.shop.model.User;
 import com.cso.shop.util.Utils;
+import com.cso.shop.validator.Validator;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,33 +28,47 @@ public class ChangePassword extends HttpServlet {
     throws ServletException, IOException {
 
     HttpSession session = req.getSession(false);
-    if (session == null || session.getAttribute("user") == null) {
-      try (PrintWriter out = resp.getWriter()) {
-        out.println("User not sign in.");
-        resp.setHeader("refresh", "1.5;url=signin");
-      }
+    if (session == null) {
+      resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
+    User user = (User) session.getAttribute("user");
+    String email = (String) session.getAttribute("email");
 
     try {
-      validate2ndForm(req);
-      User u = (User) session.getAttribute("user");
-      User clone = new User();
-      clone.setUserID(u.getUserID());
+      if (email == null) {
+        if (user.getPassword() != null) {
+          validateChangePasswordRequest(req);
+        }
+
+        email = user.getEmail();
+      }
+
+      User clone = udao.selectByEmail(email);
+      clone.setEmail(email);
       clone.setPassword(req.getParameter("newPassword"));
       udao.updatePassword(clone);
 
+      session.invalidate();
       req.setAttribute("response", "Password updated successfully");
       req.setAttribute("responseType", true);
+
     } catch (Exception e) {
       req.setAttribute("response", e.getMessage());
+      e.printStackTrace();
     }
 
-    req.getRequestDispatcher("profile").forward(req, resp);
-
+//    req.setAttribute("sudoLogin", email);
+    req.getRequestDispatcher("WEB-INF/signin.jsp").forward(req, resp);
+//    resp.setHeader("refresh", "2;url=signin");
+//    if (user != null) {
+//      req.getRequestDispatcher("WEB-INF/profile.jsp").forward(req, resp);
+//    } else {
+//      req.getRequestDispatcher("WEB-INF/misc/form-reset-password.jsp").forward(req, resp);
+//    }
   }
 
-  private boolean validate2ndForm(HttpServletRequest req) throws Exception {
+  private boolean validateChangePasswordRequest(HttpServletRequest req) throws Exception {
     String oldPassword = req.getParameter("oldPassword");
     String newPassword = req.getParameter("newPassword");
     String newPassword2 = req.getParameter("newPassword2");
@@ -72,10 +86,14 @@ public class ChangePassword extends HttpServlet {
       throw new Exception("Old password is incorrect");
     }
 
-    if (oldPassword.equals(newPassword)) {
-      throw new Exception("New password must be different to old password");
+    var passwordValidator = Validator.isValidPassword(newPassword);
+    if (!passwordValidator.isValid()) {
+      throw new Exception(passwordValidator.getMessage());
     }
 
+//    if (oldPassword.equals(newPassword)) {
+//      throw new Exception("New password must be different to old password");
+//    }
     if (!newPassword.equals(newPassword2)) {
       throw new Exception("Password confirm is not match");
     }

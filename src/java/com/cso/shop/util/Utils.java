@@ -37,6 +37,7 @@ public class Utils {
 
   public static void setWebFilePath(String webFilePath) {
     Utils.webFilePath = webFilePath;
+
   }
 
   public static void main(String[] args) {
@@ -50,6 +51,9 @@ public class Utils {
   }
 
   public static String hash(String string, String algorithm) {
+    if (string == null) {
+      return null;
+    }
     try {
       MessageDigest md = MessageDigest.getInstance(algorithm);
 

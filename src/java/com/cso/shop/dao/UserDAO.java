@@ -69,6 +69,7 @@ public class UserDAO extends BaseDAO<User> {
         "male", // Gender
         null
       );
+
       udao.insert(user);
       System.out.println(user);
 
@@ -116,9 +117,9 @@ public class UserDAO extends BaseDAO<User> {
   public void insert(User t) throws SQLException {
     try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {
       String hashedPassword = Utils.hash(t.getPassword());
-      if (hashedPassword == null) {
-        throw new SQLException("Hashing password encountered problem");
-      }
+//      if (hashedPassword == null) {
+//        throw new SQLException("Hashing password encountered problem");
+//      }
       ps.setString(1, t.getUserName());
       ps.setString(2, hashedPassword);
       ps.setString(3, t.getEmail());
@@ -148,6 +149,66 @@ public class UserDAO extends BaseDAO<User> {
     }
   }
 
+  public String generateUniqueUsername(String prefix) throws SQLException {
+    String baseName = prefix.trim().toLowerCase().replaceAll("\\s+", "");
+
+    String query = "SELECT name FROM user WHERE name LIKE ?";
+
+    try (PreparedStatement ps = connection.prepareStatement(query)) {
+      ps.setString(1, baseName + "%");
+
+      try (ResultSet rs = ps.executeQuery()) {
+        int maxSuffix = 0;
+        while (rs.next()) {
+          String existingUsername = rs.getString("name");
+          if (existingUsername.equals(baseName)) {
+            maxSuffix = Math.max(maxSuffix, 1); // Base name exists
+          } else if (existingUsername.matches(baseName + "\\d+")) {
+            String suffix = existingUsername.substring(baseName.length());
+            try {
+              int suffixNum = Integer.parseInt(suffix);
+              maxSuffix = Math.max(maxSuffix, suffixNum);
+            } catch (NumberFormatException e) {
+            }
+          }
+        }
+
+        if (maxSuffix == 0) {
+          return baseName;
+        } else {
+          return baseName + (maxSuffix + 1);
+        }
+      }
+    }
+  }
+
+  public String reduceUsername(String input) {
+    String modified = input.replaceAll("[^\\w]", "");
+    if (modified.length() > 20) {
+      modified = modified.substring(0, 20);
+    }
+    return modified.length() >= 3 ? modified : "user";
+  }
+
+//  public void insertAuth(User t) throws SQLException {
+//    String sql = "INSERT INTO " + TABLE + " (name, email, givenName, familyName, avatar)" + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";;
+//    try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {
+//
+//      int affectedRows = ps.executeUpdate();
+//
+//      if (affectedRows == 0) {
+//        throw new SQLException("Creating user failed, no rows affected");
+//      }
+//
+//      try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+//        if (generatedKeys.next()) {
+//          t.setUserID(generatedKeys.getInt(1));
+//        } else {
+//          throw new SQLException("Creating user failed, no ID obtained");
+//        }
+//      }
+//    }
+//  }
   /**
    *
    * @param sudoLogin
@@ -192,7 +253,10 @@ public class UserDAO extends BaseDAO<User> {
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
       ps.setString(1, email);
       ResultSet rs = ps.executeQuery();
-      return construct(rs);
+      if (rs.next()) {
+        return construct(rs);
+      }
+      return null;
     }
   }
 
@@ -201,14 +265,17 @@ public class UserDAO extends BaseDAO<User> {
     try (PreparedStatement ps = connection.prepareStatement(sql);) {
       ps.setString(1, name);
       ResultSet rs = ps.executeQuery();
-      return construct(rs);
+      if (rs.next()) {
+        return construct(rs);
+      }
+      return null;
     }
   }
 
   public void updatePassword(User t) throws SQLException {
     String sql = "UPDATE " + TABLE
       + " SET password=?"
-      + " WHERE userID=?";
+      + " WHERE userid=?";
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
       String hashedPassword = Utils.hash(t.getPassword());
       ps.setString(1, hashedPassword);
