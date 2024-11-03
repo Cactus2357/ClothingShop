@@ -22,6 +22,7 @@ import jakarta.servlet.http.Part;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +51,9 @@ public class UserReview extends HttpServlet {
     throws ServletException, IOException {
     resp.setCharacterEncoding("UTF-8");
     resp.setContentType("application/json");
-    resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    resp.setHeader("Access-Control-Allow-Origin", "*");
-    resp.setHeader("Access-Control-Allow-Methods", "GET");
+    resp.setHeader("access-control-allow-headers", "content-type");
+    resp.setHeader("access-control-allow-origin", "*");
+    resp.setHeader("access-control-allow-methods", "get");
 
     try {
       int productId = Utils.tryParseInt(req.getParameter("productId"), -1);
@@ -126,19 +127,35 @@ public class UserReview extends HttpServlet {
       String regex = webFilePath.replaceAll("\\\\", "\\\\\\\\") + ("([^/\\\\]+)");
       Pattern pattern = Pattern.compile(regex);
 
-      for (Part part : req.getParts()) {
-        if (!"attachment[]".equals(part.getName()) || part.getSize() <= 0) {
-          continue;
-        }
+      Part[] parts = req.getParts()
+        .stream()
+        .filter(part -> "attachment[]".equals(part.getName()) && part.getSize() > 0)
+        .toArray(Part[]::new);
 
-        String attachmentPath = Utils.writeFile(part, fileLocation);
+      String[] partDescriptions = req.getParameterValues("attachment-description[]");
+      if (partDescriptions == null) {
+        partDescriptions = new String[0];
+      }
+
+      for (int i = 0; i < parts.length; i++) {
+//        if (i >= partDescriptions.length) {
+//          break;
+//        }
+
+//        if (!"attachment[]".equals(parts[i].getName()) || parts[i].getSize() <= 0) {
+//          continue;
+//        }
+        String attachmentPath = Utils.writeFile(parts[i], fileLocation);
         if (attachmentPath != null) {
           ReviewAttachment attachment = new ReviewAttachment();
           attachment.setAttachment(attachmentPath);
+
           Matcher matcher = pattern.matcher(attachmentPath);
           if (matcher.find()) {
             attachment.setType(matcher.group(1));
           }
+          String description = (i < partDescriptions.length && partDescriptions[i] != null) ? partDescriptions[i] : "";
+          attachment.setDescription(description);
           attachmentList.add(attachment);
         }
       }

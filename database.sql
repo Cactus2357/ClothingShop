@@ -80,6 +80,7 @@ CREATE TABLE reviewAttachment (
 	reviewAttachmentId INT AUTO_INCREMENT PRIMARY KEY,
     reviewId INT,
     attachment TEXT NOT NULL,
+    description TEXT,
     status ENUM('active', 'inactive', 'removed') DEFAULT 'active',
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

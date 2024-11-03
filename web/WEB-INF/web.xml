@@ -3,15 +3,12 @@
   <context-param>
     <param-name>file.location</param-name>
     <param-value>D:/Code/Apache NetBeans/OnlineClothingShop/upload</param-value>
-    <description>Dedicated storage for uploading files</description>
   </context-param>
-  <servlet-mapping>
-    <servlet-name>ResetPassword</servlet-name>
-    <url-pattern>/reset-password</url-pattern>
-  </servlet-mapping>
+
   <session-config>
     <session-timeout>60</session-timeout>
   </session-config>
+
   <welcome-file-list>
     <welcome-file>home</welcome-file>
     <welcome-file>/index.html</welcome-file>
@@ -19,6 +16,12 @@
   <error-page>
     <location>/WEB-INF/misc/error-page.jsp</location>
   </error-page>
+
+  <servlet-mapping>
+    <servlet-name>ResetPassword</servlet-name>
+    <url-pattern>/reset-password</url-pattern>
+  </servlet-mapping>
+  
   <filter>
     <filter-name>UserFilter</filter-name>
     <filter-class>com.cso.shop.filter.UserFilter</filter-class>

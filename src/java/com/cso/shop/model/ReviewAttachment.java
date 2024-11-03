@@ -15,6 +15,7 @@ public class ReviewAttachment {
   private int id;
   private int reviewId;
   private String attachment;
+  private String description;
   private String type;
   private String status;
   private Date createdAt;
@@ -23,10 +24,11 @@ public class ReviewAttachment {
   public ReviewAttachment() {
   }
 
-  public ReviewAttachment(int id, int reviewId, String attachment, String type, String status, Date createdAt, Date updatedAt) {
+  public ReviewAttachment(int id, int reviewId, String attachment, String description, String type, String status, Date createdAt, Date updatedAt) {
     this.id = id;
     this.reviewId = reviewId;
     this.attachment = attachment;
+    this.description = description;
     this.type = type;
     this.status = status;
     this.createdAt = createdAt;
@@ -35,7 +37,7 @@ public class ReviewAttachment {
 
   @Override
   public String toString() {
-    return "ReviewAttachment{" + "id=" + id + ", reviewId=" + reviewId + ", attachment=" + attachment + ", type=" + type + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+    return "ReviewAttachment{" + "id=" + id + ", reviewId=" + reviewId + ", attachment=" + attachment + ", description=" + description + ", type=" + type + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
   }
 
   public int getId() {
@@ -60,6 +62,14 @@ public class ReviewAttachment {
 
   public void setAttachment(String attachment) {
     this.attachment = attachment;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public String getType() {

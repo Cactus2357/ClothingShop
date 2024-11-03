@@ -137,7 +137,7 @@ public class ReviewDAO extends BaseDAO<Review> {
     }
 
     StringBuilder sql = new StringBuilder(
-      "SELECT reviewId, attachment, type"
+      "SELECT reviewId, attachment, description, type"
       + " FROM reviewAttachment"
       + " WHERE reviewId IN ("
     );
@@ -158,6 +158,7 @@ public class ReviewDAO extends BaseDAO<Review> {
           ReviewAttachment attachment = new ReviewAttachment();
           attachment.setReviewId(reviewId);
           attachment.setAttachment(rs.getString("attachment"));
+          attachment.setDescription(rs.getString("description"));
           attachment.setType(rs.getString("type"));
 
           attachmentMap.computeIfAbsent(reviewId, k -> new ArrayList<>())
@@ -170,14 +171,15 @@ public class ReviewDAO extends BaseDAO<Review> {
   }
 
   public void insertAttachments(int reviewId, List<ReviewAttachment> attachments) throws SQLException {
-    String sql = "INSERT INTO reviewAttachment (reviewId, attachment, type)"
-      + " VALUES (?, ?, ?)";
+    String sql = "INSERT INTO reviewAttachment (reviewId, attachment, description, type)"
+      + " VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
       for (ReviewAttachment attachment : attachments) {
         ps.setInt(1, reviewId);
         ps.setString(2, attachment.getAttachment());
-        ps.setString(3, attachment.getType());
+        ps.setString(3, attachment.getDescription());
+        ps.setString(4, attachment.getType());
         ps.addBatch();
       }
 

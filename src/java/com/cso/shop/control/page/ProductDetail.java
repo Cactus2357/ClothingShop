@@ -32,7 +32,6 @@ public class ProductDetail extends HttpServlet {
   private CategoryDAO cdao = new CategoryDAO();
   private ReviewDAO rdao = new ReviewDAO();
 
-  // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
@@ -51,9 +50,8 @@ public class ProductDetail extends HttpServlet {
       List<Category> productCategoryList = cdao.selectAll(productId);
       List<ProductReview> reviewList = rdao.selectAll(productId, 3);
 
-      int[] reviewIds = reviewList.stream().mapToInt(ProductReview::getReviewId).toArray();
-      Map<Integer, List<ReviewAttachment>> attachmentMap = rdao.mapAllReviewAttachment(reviewIds);
-
+//      int[] reviewIds = reviewList.stream().mapToInt(ProductReview::getReviewId).toArray();
+//      Map<Integer, List<ReviewAttachment>> attachmentMap = rdao.mapAllReviewAttachment(reviewIds);
       List<Float> ratingList = rdao.selectAllRatings(productId);
       float productRating = (float) ratingList.stream().mapToDouble(Float::doubleValue).average().orElse(0.0);
       int reviewCount = ratingList.size();
@@ -69,8 +67,8 @@ public class ProductDetail extends HttpServlet {
       req.setAttribute("categoryList", categoryList);
       req.setAttribute("suggestions", suggestions);
       req.setAttribute("reviewCount", reviewCount);
-      req.setAttribute("reviewList", reviewList);
-      req.setAttribute("attachmentMap", attachmentMap);
+//      req.setAttribute("reviewList", reviewList);
+//      req.setAttribute("attachmentMap", attachmentMap);
       req.setAttribute("haveMoreReviews", (reviewCount > reviewList.size()));
 
       req.getRequestDispatcher("WEB-INF/product-detail.jsp").forward(req, resp);
@@ -94,7 +92,7 @@ public class ProductDetail extends HttpServlet {
   @Override
   public String getServletInfo() {
     return "Short description";
-  }// </editor-fold>
+  }
 
   protected void processRequest(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {

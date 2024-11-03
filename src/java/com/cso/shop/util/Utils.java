@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  */
 public class Utils {
 
-  private static String webFilePath = "file\\";
+  private static String webFilePath = "http://localhost:8080/shop/file/";
 
   public static String getWebFilePath() {
     return webFilePath;
