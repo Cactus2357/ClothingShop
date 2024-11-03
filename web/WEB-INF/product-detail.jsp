@@ -172,7 +172,7 @@
               </div>
             </div>
           </div>
-          <hr />
+          <!--<hr />-->
 
           <jsp:include page="part/user-review.jsp"/>
 
