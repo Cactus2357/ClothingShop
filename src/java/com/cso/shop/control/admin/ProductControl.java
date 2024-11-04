@@ -81,9 +81,9 @@ public class ProductControl extends HttpServlet {
     double unitPrice = Utils.tryParseDouble(req.getParameter("original-price"), -1.0);
     double salePrice = Utils.tryParseDouble(req.getParameter("selling-price"), -1.0);
     int quantity = Utils.tryParseInt(req.getParameter("quantity"), -1);
+
     String[] categoryIdStrings = req.getParameterValues("category");
     int[] categoryIds = new int[0];
-
     if (categoryIdStrings != null && categoryIdStrings.length != 0) {
       categoryIds = new int[categoryIdStrings.length];
       for (int i = 0; i < categoryIds.length; i++) {
@@ -96,20 +96,7 @@ public class ProductControl extends HttpServlet {
     Part imagePart = req.getPart("image");
 
     try {
-      if (name == null || name.isBlank()) {
-        throw new Exception("Invalid product name");
-      }
-      if (unitPrice < 0.0) {
-        throw new Exception("Invalid product unit price");
-      }
-
-      if (salePrice < 0.0) {
-        throw new Exception("Invalid product sale price");
-      }
-
-      if (quantity < 0) {
-        throw new Exception("Invalid product product quantity");
-      }
+      validateUserInput(name, unitPrice, salePrice, quantity);
 
       String fileLocation = getServletContext().getInitParameter("file.location");
       String image = Utils.writeFile(imagePart, fileLocation);
@@ -125,23 +112,28 @@ public class ProductControl extends HttpServlet {
       } else if (imagePath != null && !imagePath.isBlank()) {
         p.setImage(imagePath);
       }
-      String out = "";
-      if (categoryIdStrings != null) {
-        for (String s : categoryIdStrings) {
-          out += s + " ";
-        }
-      }
-      req.setAttribute("response", out);
 
+//      String out = "";
+//      if (categoryIdStrings != null) {
+//        for (String s : categoryIdStrings) {
+//          out += s + " ";
+//        }
+//      }
+//      req.setAttribute("response", out);
       if (productId > 0) {
         p.setId(productId);
         pdao.update(p);
         cdao.insertProductCategories(productId, categoryIds);
         req.setAttribute("response", "Product updated successfully");
+      } else {
+        pdao.insert(p);
+        cdao.insertProductCategories(p.getId(), categoryIds);
+        req.setAttribute("response", "Product added successfully");
       }
 
+//      req.setAttribute("id", p.getId());
       req.setAttribute("responseType", true);
-      req.setAttribute("id", p.getId());
+
     } catch (Exception e) {
       log(e.getMessage());
       req.setAttribute("response", e.getMessage());
@@ -149,6 +141,23 @@ public class ProductControl extends HttpServlet {
     }
 
     doGet(req, resp);
+
   }
 
+  private void validateUserInput(String name, double unitPrice, double salePrice, int quantity) throws Exception {
+    if (name == null || name.isBlank()) {
+      throw new Exception("Invalid product name");
+    }
+    if (unitPrice < 0.0) {
+      throw new Exception("Invalid product unit price");
+    }
+
+    if (salePrice < 0.0) {
+      throw new Exception("Invalid product sale price");
+    }
+
+    if (quantity < 0) {
+      throw new Exception("Invalid product product quantity");
+    }
+  }
 }
