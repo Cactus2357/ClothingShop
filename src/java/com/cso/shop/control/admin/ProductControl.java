@@ -47,17 +47,12 @@ public class ProductControl extends HttpServlet {
 
       int productId = Utils.tryParseInt(req.getParameter("id"), -1);
       if (productId != -1) {
-        List<Category> productCategory = cdao.selectAll(productId);
-        Map<Integer, Boolean> map = new HashMap<>();
-        productCategory.forEach(c -> map.put(c.getId(), true));
-        Product p = new Product();
-        p.setId(productId);
-
-        req.setAttribute("productCategory", map);
-        req.setAttribute("product", pdao.select(p));
+        populateProductAttributes(req, productId);
       }
+
     } catch (SQLException ex) {
       Logger.getLogger(ProductControl.class.getName()).log(Level.SEVERE, null, ex);
+      req.setAttribute("response", "Eror retrieving product information.");
     }
     req.getRequestDispatcher("WEB-INF/product-control.jsp").forward(req, resp);
   }
@@ -81,63 +76,31 @@ public class ProductControl extends HttpServlet {
     double unitPrice = Utils.tryParseDouble(req.getParameter("original-price"), -1.0);
     double salePrice = Utils.tryParseDouble(req.getParameter("selling-price"), -1.0);
     int quantity = Utils.tryParseInt(req.getParameter("quantity"), -1);
-
-    String[] categoryIdStrings = req.getParameterValues("category");
-    int[] categoryIds = new int[0];
-    if (categoryIdStrings != null && categoryIdStrings.length != 0) {
-      categoryIds = new int[categoryIdStrings.length];
-      for (int i = 0; i < categoryIds.length; i++) {
-        categoryIds[i] = Utils.tryParseInt(categoryIdStrings[i], -1);
-      }
-    }
-
+    int[] categoryIds = parseCategoryIds(req.getParameterValues("category"));
     String description = req.getParameter("description");
+
     String imagePath = req.getParameter("image-path");
     Part imagePart = req.getPart("image");
 
     try {
       validateUserInput(name, unitPrice, salePrice, quantity);
 
-      String fileLocation = getServletContext().getInitParameter("file.location");
-      String image = Utils.writeFile(imagePart, fileLocation);
+      String imageLocation = saveImage(imagePart, imagePath);
 
-      Product p = new Product();
-      p.setName(name);
-      p.setUnitPrice(unitPrice);
-      p.setSalePrice(salePrice);
-      p.setQuantity(quantity);
-      p.setDescription(description);
-      if (image != null) {
-        p.setImage(image);
-      } else if (imagePath != null && !imagePath.isBlank()) {
-        p.setImage(imagePath);
-      }
+//      String fileLocation = getServletContext().getInitParameter("file.location");
+//      String image = Utils.writeFile(imagePart, fileLocation);
+      Product product = createProduct(productId, name, unitPrice, salePrice, quantity, description, imageLocation);
 
-//      String out = "";
-//      if (categoryIdStrings != null) {
-//        for (String s : categoryIdStrings) {
-//          out += s + " ";
-//        }
-//      }
-//      req.setAttribute("response", out);
       if (productId > 0) {
-        p.setId(productId);
-        pdao.update(p);
-        cdao.insertProductCategories(productId, categoryIds);
-        req.setAttribute("response", "Product updated successfully");
+        updateProduct(req, product, categoryIds);
       } else {
-        pdao.insert(p);
-        cdao.insertProductCategories(p.getId(), categoryIds);
-        req.setAttribute("response", "Product added successfully");
+        addNewProduct(req, product, categoryIds);
       }
 
-//      req.setAttribute("id", p.getId());
       req.setAttribute("responseType", true);
-
     } catch (Exception e) {
       log(e.getMessage());
       req.setAttribute("response", e.getMessage());
-      req.setAttribute("responseType", false);
     }
 
     doGet(req, resp);
@@ -160,4 +123,64 @@ public class ProductControl extends HttpServlet {
       throw new Exception("Invalid product product quantity");
     }
   }
+
+  private void populateProductAttributes(HttpServletRequest req, int productId) throws SQLException {
+    List<Category> productCategory = cdao.selectAll(productId);
+    Map<Integer, Boolean> map = new HashMap<>();
+    productCategory.forEach(c -> map.put(c.getId(), true));
+
+    Product product = new Product();
+    product.setId(productId);
+    product = pdao.select(product);
+
+    req.setAttribute("productCategory", map);
+    req.setAttribute("product", product);
+  }
+
+  private int[] parseCategoryIds(String[] categoryIdStrings) {
+    if (categoryIdStrings == null || categoryIdStrings.length == 0) {
+      return new int[0];
+    }
+
+    int[] categoryIds = new int[categoryIdStrings.length];
+    for (int i = 0; i < categoryIds.length; i++) {
+      categoryIds[i] = Utils.tryParseInt(categoryIdStrings[i], -1);
+    }
+    return categoryIds;
+
+  }
+
+  private String saveImage(Part imagePart, String imagePath) throws IOException {
+    if (imagePart != null && imagePart.getSize() > 0) {
+      String fileLocation = getServletContext().getInitParameter("file.location");
+      return Utils.writeFile(imagePart, fileLocation);
+    }
+    return imagePath != null && !imagePath.isBlank() ? imagePath : null;
+  }
+
+  private Product createProduct(int productId, String name, double unitPrice, double salePrice, int quantity, String description, String imageLocation) {
+    Product product = new Product();
+    product.setId(productId);
+    product.setName(name);
+    product.setUnitPrice(unitPrice);
+    product.setSalePrice(salePrice);
+    product.setQuantity(quantity);
+    product.setDescription(description);
+    product.setImage(imageLocation);
+    return product;
+  }
+
+  private void updateProduct(HttpServletRequest req, Product product, int[] categoryIds) throws SQLException {
+    pdao.update(product);
+    cdao.insertProductCategories(product.getId(), categoryIds);
+    req.setAttribute("response", "Product updated successfully");
+  }
+
+  private void addNewProduct(HttpServletRequest req, Product product, int[] categoryIds) throws SQLException {
+    pdao.insert(product);
+    cdao.insertProductCategories(product.getId(), categoryIds);
+    req.setAttribute("response", "Product added successfully");
+
+  }
+
 }
