@@ -119,7 +119,7 @@
           </nav>
 
           <div class="container-xl tab-content py-4">
-            <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+            <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="-1">
               <div class="clearfix d-flex flex-shrink-0 flex-column-reverse flex-md-row gap-md-3">
                 <div class="col-12 col-md-8">
                   <form action="${pageContext.request.contextPath}/profile" method="post">
@@ -281,12 +281,12 @@
                 </div>
               </div>
             </div>
-            <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab" tabindex="0">
+            <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab" tabindex="-1">
               <div class="d-inline">
                 <form action="change-password" method="post">
-                  <input type="text" style="display:none">
-                  <input type="password" style="display:none" autocomplete="new-password" >
-                  <input type="email" name="email" class="visually-hidden" value="${sessionScope.user.email}">
+                  <input type="text" style="display:none" tabindex="-1">
+                  <input type="password" style="display:none" autocomplete="new-password" tabindex="-1">
+                  <input type="email" name="email" class="visually-hidden" value="${sessionScope.user.email}"tabindex="-1">
                   <c:if test="${sessionScope.user.password ne null}">
                     <dl>
                       <dt><label for="user_old_password">Old Password</label></dt>
@@ -317,72 +317,72 @@
               </div>
             </div>
             <!--  -->
-            <div class="tab-pane fade" id="nav-delete-account" role="tabpanel" aria-labelledby="nav-delete-account-tab" tabindex="0">
-              <div class="d-inline">
-                <p class="mb-2">Once you delete your account, there is no going back. Please be certain.</p>
-                <button type="submit" class="btn-outline-danger btn me-2" data-bs-toggle="modal" data-bs-target="#delete-account-modal">Delete your account</button>
-                <div class="modal fade" id="delete-account-modal" tabindex="-1">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <form action="" autocomplete="off" id="delete_account_form">
-                        <div class="modal-header">
-                          <h5 class="modal-title">Modal title</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-header bg-danger-subtle">
-                          <span>
-                            <i class="bi bi-exclamation-triangle text-danger me-2"></i>
-                            This is extremely important.
-                          </span>
-                        </div>
-                        <div class="modal-body">
-                          <p>We will <strong>delete all your data</strong>, and your username will be available to anyone on Template.</p>
-                          <hr />
-                          <dl>
-                            <dt><label for="sudo_login"> Your username or email </label></dt>
-                            <dd>
-                              <input type="text" name="sudo_login" id="sudo_login" required="required" autocomplete="off" class="form-control form-control" />
-                            </dd>
-                            <dt>
-                              <label for="verify_text"> Type <i class="fw-normal user-select-none">delete my account </i>below to verify </label>
-                            </dt>
-                            <dd>
-                              <input type="text" name="verify_text" id="verify_text" required="required" autocomplete="off" class="form-control form-control" />
-                            </dd>
-                            <dt><label for="confirm_password"> Confirm your password </label></dt>
-                            <dd>
-                              <input type="password" name="confirm_password" id="confirm_password" required="required" autocomplete="off" class="form-control form-control" />
-                            </dd>
-                          </dl>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" id="delete_account_btn" class="btn btn-danger w-100" disabled>Delete this account</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <script>
-                  const deleteAccountForm = document.getElementById("delete_account_form");
-                  deleteAccountForm.addEventListener("input", function () {
-                    const sudoLogin = document.getElementById("sudo_login").value;
-                    const vefiryText = document.getElementById("verify_text").value;
-                    const confirmPassword = document.getElementById("confirm_password").value;
-                    const submitBtn = document.getElementById("delete_account_btn");
-
-                    const isSudoLoginValid = sudoLogin === "Username" || sudoLogin === "user@email.com";
-                    const isVerifyTextValid = vefiryText === "delete my account";
-                    const isConfirmPasswordValid = confirmPassword !== "";
-
-                    if (isSudoLoginValid && isVerifyTextValid && isConfirmPasswordValid) {
-                      submitBtn.disabled = false;
-                    } else {
-                      submitBtn.disabled = true;
-                    }
-                  });
-                </script>
-              </div>
-            </div>
+            <!--            <div class="tab-pane fade" id="nav-delete-account" role="tabpanel" aria-labelledby="nav-delete-account-tab" tabindex="-1">
+                          <div class="d-inline">
+                            <p class="mb-2">Once you delete your account, there is no going back. Please be certain.</p>
+                            <button type="submit" class="btn-outline-danger btn me-2" data-bs-toggle="modal" data-bs-target="#delete-account-modal">Delete your account</button>
+                            <div class="modal fade" id="delete-account-modal" tabindex="-1">
+                              <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                  <form action="" autocomplete="off" id="delete_account_form">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title">Modal title</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-header bg-danger-subtle">
+                                      <span>
+                                        <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                                        This is extremely important.
+                                      </span>
+                                    </div>
+                                    <div class="modal-body">
+                                      <p>We will <strong>delete all your data</strong>, and your username will be available to anyone on Template.</p>
+                                      <hr />
+                                      <dl>
+                                        <dt><label for="sudo_login"> Your username or email </label></dt>
+                                        <dd>
+                                          <input type="text" name="sudo_login" id="sudo_login" required="required" autocomplete="off" class="form-control form-control" />
+                                        </dd>
+                                        <dt>
+                                          <label for="verify_text"> Type <i class="fw-normal user-select-none">delete my account </i>below to verify </label>
+                                        </dt>
+                                        <dd>
+                                          <input type="text" name="verify_text" id="verify_text" required="required" autocomplete="off" class="form-control form-control" />
+                                        </dd>
+                                        <dt><label for="confirm_password"> Confirm your password </label></dt>
+                                        <dd>
+                                          <input type="password" name="confirm_password" id="confirm_password" required="required" autocomplete="off" class="form-control form-control" />
+                                        </dd>
+                                      </dl>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" id="delete_account_btn" class="btn btn-danger w-100" disabled>Delete this account</button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                            <script>
+                              const deleteAccountForm = document.getElementById("delete_account_form");
+                              deleteAccountForm.addEventListener("input", function () {
+                                const sudoLogin = document.getElementById("sudo_login").value;
+                                const vefiryText = document.getElementById("verify_text").value;
+                                const confirmPassword = document.getElementById("confirm_password").value;
+                                const submitBtn = document.getElementById("delete_account_btn");
+            
+                                const isSudoLoginValid = sudoLogin === "Username" || sudoLogin === "user@email.com";
+                                const isVerifyTextValid = vefiryText === "delete my account";
+                                const isConfirmPasswordValid = confirmPassword !== "";
+            
+                                if (isSudoLoginValid && isVerifyTextValid && isConfirmPasswordValid) {
+                                  submitBtn.disabled = false;
+                                } else {
+                                  submitBtn.disabled = true;
+                                }
+                              });
+                            </script>
+                          </div>
+                        </div>-->
             <!--  -->
           </div>
         </div>
