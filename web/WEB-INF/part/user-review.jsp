@@ -30,7 +30,10 @@
       <div>
         <h3>Reviews</h3>
         <h4 class="d-flex">
-          <span class="me-2"><fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1" value="${productRating}" /> out of 5.0</span>
+          <c:set var="productRating">
+            <fmt:formatNumber type="number" minFractionDigits="1" maxFractionDigits="1" value="${productRating}" />
+          </c:set>
+          <span class="me-2">${productRating} out of 5.0</span>
           <span class="ratings text-warning me-2" value="${productRating}" max="5"></span>
         </h4>
         <span class="text-secondary">${reviewCount} rating(s)</span>
@@ -219,62 +222,6 @@
         </div>
       </c:if>
       <div class="row g-3 mx-xl-5 mb-3" id="new-review-container"></div>
-      <!--      <div class="row g-3 mb-3 mx-xl-5">
-      <c:choose>
-        <c:when test="${reviewList eq null}">
-          <h5 class="text-center text-danger">Failed to retrieve reviews</h5>
-        </c:when>
-        <c:when test="${empty reviewList}">
-          <h5 class="text-center">No reviews yet</h5>
-        </c:when>
-        <c:otherwise>
-          <c:forEach items="${reviewList}" var="review">
-            <div class="card bg-body-tertiary">
-              <div class="card-body d-flex justify-content-between">
-                <div class="d-flex mb-2 mb-md-0">
-                  <img src="${review.userAvatar != null ? review.userAvatar : 'asset/img/default_picture.png'}" class="rounded-circle me-3" height="48" width="48" />
-                  <div class="flex-auto">
-                    <h5 class="lh-1 mb-0 d-inline-flex align-items-center gap-2">
-                      <span>@${review.userName}</span>
-                      <i class="ratings text-warning fs-6" value="${review.rating}" max="5"></i>
-                    </h5>
-                    <small class="fw-light text-muted text-nowrap">
-            <fmt:formatDate type="date" value="${review.createdAt}" />
-          </small>
-          <p class="mb-0">${review.comment}</p>
-
-            <c:if test="${not empty attachmentMap[review.reviewId]}">
-              <div class="mt-2">
-              <c:forEach items="${attachmentMap[review.reviewId]}" var="attachment">
-                <c:choose>
-                  <c:when test="${attachment.type eq 'image'}">
-                    <a href="${attachment.attachment}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                      <i class="bi bi-image"></i>
-                    </a>
-                  </c:when>
-                  <c:when test="${attachment.type eq 'video'}">
-                    <a href="${attachment.attachment}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                      <i class="bi bi-camera-video"></i>
-                    </a>
-                  </c:when>
-                  <c:otherwise>
-                    <a href="${attachment.attachment}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                      <i class="bi bi-paperclip"></i>
-                    </a>
-                  </c:otherwise>
-                </c:choose>
-              </c:forEach>
-            </div>
-            </c:if>
-          </div>
-        </div>
-        <button type="button" class="btn rounded-circle align-self-start"><i class="bi bi-three-dots-vertical"></i></button>
-      </div>
-    </div>
-          </c:forEach>
-        </c:otherwise>
-      </c:choose>
-    </div>-->
       <c:if test="${haveMoreReviews}">
         <button class="btn btn-outline-primary border-0 rounded-pill mx-xl-5" data-bs-toggle="modal" data-bs-target="#reviewsModal">See all reviews</button>
       </c:if>
@@ -326,7 +273,7 @@
 
       function appendReview(response, container = $reviewContainer) {
         if (!response.reviewList.length) {
-          container.html(`<h5 class="text-center">">No review yet</h5>`);
+          container.html(`<h5 class="text-center">No review yet</h5>`);
           $loadMoreBtn.hide();
           return;
         }
