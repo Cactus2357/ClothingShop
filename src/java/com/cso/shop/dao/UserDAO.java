@@ -239,6 +239,9 @@ public class UserDAO extends BaseDAO<User> {
         return null;
       }
 
+      if (!user.getStatus().equals("active"))
+        return null;
+
       return user;
     }
   }
