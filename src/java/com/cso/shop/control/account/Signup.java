@@ -22,7 +22,8 @@ public class Signup extends HttpServlet {
 
   private UserDAO udao = UserDAO.getInstance();
 
-  // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+  // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
+  // + sign on the left to edit the code.">
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
@@ -32,48 +33,52 @@ public class Signup extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    processRequest(req, resp);
+
+    validateUserForm(req, resp);
   }
 
-  @Override
-  public String getServletInfo() {
-    return "Short description";
-  }// </editor-fold>
-
-  protected void processRequest(HttpServletRequest req, HttpServletResponse resp)
+  protected void validateUserForm(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
+    User tempUser;
+
     try {
       validateUserInput(req, resp);
+      tempUser = parse(req);
+
+      if (udao.selectByName(tempUser.getUserName()) != null
+        || udao.selectByEmail(tempUser.getEmail()) != null) {
+        throw new Exception("User already exists.");
+      }
+
     } catch (Exception e) {
-
-      repopulateUserInput(req);
+      forwardUserInput(req);
       req.setAttribute("response", e.getMessage());
-      doGet(req, resp);
-
+      req.getRequestDispatcher("WEB-INF/signup.jsp").forward(req, resp);
       return;
     }
 
+    processCreatingUserAccount(req, resp);
+//    req.getRequestDispatcher("WEB-INF/signup.jsp").forward(req, resp);
+  }
+
+  private void processCreatingUserAccount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     try {
       User user = parse(req);
       udao.insert(user);
-      if (user != null) {
-        HttpSession session = req.getSession();
-        session.setAttribute("user", user);
-        session.setMaxInactiveInterval(60 * 60);
-      } else {
-        throw new SQLException("user = null");
-      }
+
+      HttpSession session = req.getSession();
+      session.setAttribute("user", user);
+      session.setMaxInactiveInterval(60 * 60);
 
       resp.setHeader("refresh", "1.5;url=home");
-      req.setAttribute("response", "User sign up successfully. redirecting...");
+      req.setAttribute("response", "User sign up successfully. Redirecting...");
       req.setAttribute("responseType", true);
 
     } catch (SQLException e) {
       req.setAttribute("response", "Internal sevre error");
       log(e.getMessage());
     }
-
-    doGet(req, resp);
+    req.getRequestDispatcher("WEB-INF/signup.jsp").forward(req, resp);
 
   }
 
@@ -90,12 +95,13 @@ public class Signup extends HttpServlet {
     return user;
   }
 
-  private boolean validateUserInput(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException, Exception {
+  private boolean validateUserInput(HttpServletRequest req, HttpServletResponse resp)
+    throws IOException, SQLException, Exception {
     String name = req.getParameter("name");
     String email = req.getParameter("email");
     String password = req.getParameter("password");
     String passwordCfm = req.getParameter("passwordCfm");
-//    String familyName = req.getParameter("familyName");
+    // String familyName = req.getParameter("familyName");
     String givenName = req.getParameter("givenName");
     String gender = req.getParameter("gender");
     String phone = req.getParameter("phone");
@@ -126,20 +132,14 @@ public class Signup extends HttpServlet {
       throw new Exception("Invalid gender");
     }
 
-//    PrintWriter out = resp.getWriter();
-//    resp.setContentType("text/html;charset=UTF-8");
-//    out.printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s",
-//      name, email, password, passwordCfm, fullname, gender, phone, address);
     return true;
   }
 
-  private void repopulateUserInput(HttpServletRequest req) {
+  private void forwardUserInput(HttpServletRequest req) {
     req.setAttribute("name", req.getParameter("name"));
     req.setAttribute("email", req.getParameter("email"));
-    req.setAttribute("password", req.getParameter("password"));
-    req.setAttribute("passwordCfm", req.getParameter("passwordCfm"));
     req.setAttribute("familyName", req.getParameter("familyName"));
-    req.setAttribute("givenName", req.getParameter("familyName"));
+    req.setAttribute("givenName", req.getParameter("givenName"));
     req.setAttribute("gender", req.getParameter("gender"));
     req.setAttribute("phone", req.getParameter("phone"));
     req.setAttribute("address", req.getParameter("address"));
