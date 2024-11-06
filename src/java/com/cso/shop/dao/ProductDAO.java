@@ -18,146 +18,53 @@ import java.util.logging.Logger;
  */
 public class ProductDAO extends BaseDAO<Product> {
 
-  public static void main(String[] args) {
-    ProductDAO pdao = new ProductDAO();
-    try {
-      pdao.selectAll(null, 0, 0, 20, 0);
-//        .forEach(p -> System.out.println(p));
-
-    } catch (SQLException ex) {
-      Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
   public ProductDAO() {
     super("product");
   }
 
   @Override
   public List<Product> selectAll() throws SQLException {
-    throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    String sql = "SELECT * FROM " + TABLE;
+    List<Product> products = new ArrayList<>();
+    try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+      while (rs.next()) {
+        products.add(construct(rs));
+      }
+    } catch (SQLException ex) {
+//      logger.log(Level.SEVERE, "Failed to select all products", ex);
+      ex.printStackTrace();
+      throw ex;
+    }
+    return products;
+
   }
 
   public int countSelectAll(String name, int categoryId) {
-    StringBuilder sql = new StringBuilder(
-      "SELECT COUNT(p.productId) AS count FROM " + TABLE + " p"
-    );
-    boolean categoryIdCondition = categoryId > 0;
-    boolean nameCondition = (name != null && !name.isBlank());
-
-    if (categoryIdCondition) {
-      sql.append(" RIGHT JOIN productCategory pc ON pc.productId = p.productId");
-    }
-
-    if (nameCondition || categoryIdCondition) {
-      sql.append(" WHERE");
-    }
-
-    if (nameCondition) {
-      sql.append(" p.name LIKE ?");
-    }
-
-    if (categoryIdCondition) {
-      if (nameCondition) {
-        sql.append(" AND");
-      }
-      sql.append(" pc.categoryId = ?");
-    }
-
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-      int paramIndex = 1;
-
-      if (nameCondition) {
-        ps.setString(paramIndex++, '%' + name.trim() + '%');
-      }
-
-      if (categoryIdCondition) {
-        ps.setInt(paramIndex, categoryId);
-      }
-
+    String sql = buildCountQuery(name, categoryId);
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      setFilterParams(ps, name, categoryId);
       try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
+        if (rs.next())
           return rs.getInt("count");
-        }
       }
-
-    } catch (SQLException ex) {
-      Logger.getLogger(ProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
     return 0;
   }
 
   public List<Product> selectAll(String name, int categoryId, int sortBy, int limit, int offset) throws SQLException {
-    StringBuilder sql = new StringBuilder(
-      "SELECT p.productId, p.name, p.image, p.description, p.quantity, p.unitPrice,"
-      + " p.salePrice, p.importDate, p.updateDate, p.status"
-      + " FROM " + TABLE + " p"
-    );
-
-    boolean categoryIdCondition = categoryId >= 1;
-    boolean nameCondition = name != null && !name.isBlank();
-    boolean sortByCondition = sortBy >= 0 && sortBy <= 3;
-    boolean limitCondition = limit >= 1 && limit <= 20;
-    boolean offsetCondition = offset >= 0;
-
-    if (categoryIdCondition) {
-      sql.append(" RIGHT JOIN productCategory pc ON pc.productId = p.productId");
-    }
-
-    if (nameCondition || categoryIdCondition) {
-      sql.append(" WHERE");
-    }
-
-    if (nameCondition) {
-      sql.append(" p.name LIKE ?");
-    }
-
-    if (categoryIdCondition) {
-      if (nameCondition) {
-        sql.append(" AND");
-      }
-      sql.append(" pc.categoryId = ?");
-    }
-
-    if (sortByCondition) {
-      switch (sortBy) {
-        case 1 ->
-          sql.append(" ORDER BY p.salePrice ASC");
-        case 2 ->
-          sql.append(" ORDER BY p.salePrice DESC");
-        default ->
-          sql.append(" ORDER BY p.importDate DESC");
-      }
-    } else {
-      sql.append(" ORDER BY p.importDate DESC");
-    }
-
-    sql.append(" LIMIT ").append(limitCondition ? limit : 9);
-
-    if (offsetCondition) {
-      sql.append(" OFFSET ").append(offset);
-    }
-
-    List<Product> list = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-      int paramIndex = 1;
-
-      if (nameCondition) {
-        ps.setString(paramIndex++, '%' + name.trim() + '%');
-      }
-
-      if (categoryIdCondition) {
-        ps.setInt(paramIndex++, categoryId);
-      }
-
+    String sql = buildSelectQuery(name, categoryId, sortBy, limit, offset);
+    List<Product> products = new ArrayList<>();
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      setFilterParams(ps, name, categoryId);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
-          list.add(construct(rs));
+          products.add(construct(rs));
         }
       }
-
     }
-    return list;
+    return products;
   }
 
   private Product construct(ResultSet rs) throws SQLException {
@@ -175,18 +82,82 @@ public class ProductDAO extends BaseDAO<Product> {
     return p;
   }
 
+  private String buildCountQuery(String name, int categoryId) {
+    StringBuilder sql = new StringBuilder("SELECT COUNT(p.productId) AS count FROM " + TABLE + " p");
+    if (categoryId > 0)
+      sql.append(" JOIN productCategory pc ON pc.productId = p.productId");
+    appendWhereClause(sql, name, categoryId);
+    return sql.toString();
+  }
+
+  private String buildSelectQuery(String name, int categoryId, int sortBy, int limit, int offset) {
+    StringBuilder sql = new StringBuilder(
+      "SELECT p.productId, p.name, p.image, p.description, p.quantity, p.unitPrice, "
+      + "p.salePrice, p.importDate, p.updateDate, p.status FROM " + TABLE + " p"
+    );
+    if (categoryId > 0)
+      sql.append(" JOIN productCategory pc ON pc.productId = p.productId");
+    appendWhereClause(sql, name, categoryId);
+    appendOrderClause(sql, sortBy);
+    sql.append(" LIMIT ").append(Math.min(limit, 20)).append(" OFFSET ").append(Math.max(offset, 0));
+    return sql.toString();
+  }
+
+  private void appendWhereClause(StringBuilder sql, String name, int categoryId) {
+    if (name != null || categoryId > 0)
+      sql.append(" WHERE");
+    if (name != null && !name.isBlank())
+      sql.append(" p.name LIKE ?");
+    if (categoryId > 0) {
+      if (name != null && !name.isBlank())
+        sql.append(" AND");
+      sql.append(" pc.categoryId = ?");
+    }
+  }
+
+  private void appendOrderClause(StringBuilder sql, int sortBy) {
+    switch (sortBy) {
+      case 1 ->
+        sql.append(" ORDER BY p.salePrice ASC");
+      case 2 ->
+        sql.append(" ORDER BY p.salePrice DESC");
+      default ->
+        sql.append(" ORDER BY p.importDate DESC");
+    }
+  }
+
+  private void setFilterParams(PreparedStatement ps, String name, int categoryId) throws SQLException {
+    boolean validName = name != null && !name.isBlank();
+    boolean validCategoryId = categoryId > 0;
+    int paramIndex = 1;
+    if (validName)
+      ps.setString(paramIndex++, "%" + name.trim() + "%");
+    if (validCategoryId)
+      ps.setInt(paramIndex, categoryId);
+  }
+
+  private void setProductParams(PreparedStatement ps, Product product) throws SQLException {
+    ps.setString(1, product.getName());
+    ps.setString(2, product.getImage());
+    ps.setString(3, product.getDescription());
+    ps.setInt(4, product.getQuantity());
+    ps.setDouble(5, product.getUnitPrice());
+    ps.setDouble(6, product.getSalePrice());
+  }
+
   @Override
   public Product select(Product t) throws SQLException {
     String sql = "SELECT productId, name, image, description, quantity, unitPrice, salePrice, importDate, updateDate, status"
       + " FROM " + TABLE + " WHERE productId=?";
-    ps = connection.prepareStatement(sql);
-    ps.setInt(1, t.getId());
-    Product p = null;
-    rs = ps.executeQuery();
-    if (rs.next()) {
-      p = construct(rs);
+    try (PreparedStatement ps = connection.prepareStatement(sql);) {
+      Product p = null;
+      ps.setInt(1, t.getId());
+      try (ResultSet rs = ps.executeQuery();) {
+        if (rs.next())
+          p = construct(rs);
+        return p;
+      }
     }
-    return p;
   }
 
   @Override
@@ -196,17 +167,10 @@ public class ProductDAO extends BaseDAO<Product> {
       + " VALUES (?,?,?,?,?,?);";
 
     try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-      ps.setString(1, t.getName());
-      ps.setString(2, t.getImage());
-      ps.setString(3, t.getDescription());
-      ps.setInt(4, t.getQuantity());
-      ps.setDouble(5, t.getUnitPrice());
-      ps.setDouble(6, t.getSalePrice());
-
+      setProductParams(ps, t);
       int affectedRows = ps.executeUpdate();
-      if (affectedRows == 0) {
+      if (affectedRows == 0)
         throw new SQLException("Creating product failed, no rows affected");
-      }
 
       try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
         if (generatedKeys.next()) {
@@ -215,11 +179,7 @@ public class ProductDAO extends BaseDAO<Product> {
           throw new SQLException("Creating product failed, no ID obtained");
         }
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
-      throw e;
     }
-
   }
 
   @Override
@@ -229,22 +189,13 @@ public class ProductDAO extends BaseDAO<Product> {
       .append(" WHERE productId = ?;");
 
     try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-      ps.setString(1, t.getName());
-      ps.setString(2, t.getDescription());
-      ps.setInt(3, t.getQuantity());
-      ps.setDouble(4, t.getUnitPrice());
-      ps.setDouble(5, t.getSalePrice());
-      ps.setString(6, t.getImage());
+      setProductParams(ps, t);
       ps.setInt(7, t.getId());
-
       int affectedRows = ps.executeUpdate();
 
       if (affectedRows == 0) {
         throw new SQLException("Updating product failed, no rows affected.");
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
-      throw e;
     }
   }
 
