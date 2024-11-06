@@ -1,4 +1,5 @@
-<%-- Document : signup Created on : Sep 12, 2024, 11:12:00 PM Author : hi --%> <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%-- Document : signup Created on : Sep 12, 2024, 11:12:00 PM Author : hi --%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -122,7 +123,10 @@
 
         <div class="text-center">
           <p>or sign up with</p>
-          <button class="btn btn-danger w-100 py-2 mb-3" type="submit"><i class="bi bi-google me-2"></i>Google</button>
+          <c:url var="signinURL" value="signin">
+            <c:param name="method" value="google" />
+          </c:url>
+          <a href="${signinURL}" class="btn btn-danger w-100 py-2 mb-3"><i class="bi bi-google me-2"></i>Google</a>
         </div>
         <hr />
         <div class="text-center">
