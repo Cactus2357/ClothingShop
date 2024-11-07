@@ -4,11 +4,13 @@
     <param-name>file.location</param-name>
     <param-value>D:/Code/Apache NetBeans/OnlineClothingShop/upload</param-value>
   </context-param>
-
+  <servlet-mapping>
+    <servlet-name>AuthOtpServlet</servlet-name>
+    <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
   <session-config>
     <session-timeout>60</session-timeout>
   </session-config>
-
   <welcome-file-list>
     <welcome-file>home</welcome-file>
     <welcome-file>/index.html</welcome-file>
@@ -16,12 +18,14 @@
   <error-page>
     <location>/WEB-INF/misc/error-page.jsp</location>
   </error-page>
-
+  <servlet>
+    <servlet-name>AuthOtpServlet</servlet-name>
+    <servlet-class>com.cso.shop.control.account.AuthOtpServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>ResetPassword</servlet-name>
     <url-pattern>/reset-password</url-pattern>
   </servlet-mapping>
-  
   <filter>
     <filter-name>UserFilter</filter-name>
     <filter-class>com.cso.shop.filter.UserFilter</filter-class>
