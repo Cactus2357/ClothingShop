@@ -102,14 +102,14 @@
             <div class="col-md-4">
               <div class="form-floating mb-3">
                 <input type="tel" class="form-control" id="phone" name="phone" value="${requestScope.phone}" placeholder="888-88-888" />
-                <label for="phone">Phone number</label>
+                <label for="phone">Phone number (optional)</label>
               </div>
             </div>
 
             <div class="col-md-8">
               <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="address" name="address" value="${requestScope.address}" placeholder="Address" />
-                <label for="address">Address</label>
+                <label for="address">Address (optional)</label>
               </div>
             </div>
           </div>
