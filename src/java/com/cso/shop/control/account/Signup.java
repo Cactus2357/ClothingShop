@@ -6,12 +6,16 @@ package com.cso.shop.control.account;
 
 import com.cso.shop.dao.UserDAO;
 import com.cso.shop.model.User;
+import com.cso.shop.util.Email;
+import com.cso.shop.util.RandomString;
+import com.cso.shop.util.Utils;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.security.SecureRandom;
 import java.sql.SQLException;
 
 /**
@@ -20,7 +24,11 @@ import java.sql.SQLException;
  */
 public class Signup extends HttpServlet {
 
-  private UserDAO udao = UserDAO.getInstance();
+  private static final int OTP_EXPIRY_TIME = 3 * 60;
+  private static final int SESSION_EXPIRY_TIME = 60 * 60;
+  private static final int MAX_ATTEMPTS = 5;
+
+  private static final UserDAO udao = UserDAO.getInstance();
 
   // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the
   // + sign on the left to edit the code.">
@@ -33,56 +41,87 @@ public class Signup extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
+    HttpSession session = req.getSession(false);
+    String otp = req.getParameter("otp");
 
-    validateUserForm(req, resp);
+    if (session != null && otp != null
+      && session.getAttribute("otp") != null
+      && session.getAttribute("authUser") != null) {
+      validateOtp(req, resp);
+      return;
+    }
+
+    validateAndCreateUser(req, resp);
   }
 
-  protected void validateUserForm(HttpServletRequest req, HttpServletResponse resp)
+  private void validateAndCreateUser(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
-    User tempUser;
-
     try {
       validateUserInput(req, resp);
-      tempUser = parse(req);
+      User tempUser = parseUser(req);
 
-      if (udao.selectByName(tempUser.getUserName()) != null
-        || udao.selectByEmail(tempUser.getEmail()) != null) {
-        throw new Exception("User already exists.");
+      if (isUserExist(tempUser)) {
+        sendErrorAndRedirect(req, resp, "User already exists.");
+      } else {
+        sendOtp(req, resp, tempUser);
       }
 
     } catch (Exception e) {
       forwardUserInput(req);
-      req.setAttribute("response", e.getMessage());
-      req.getRequestDispatcher("WEB-INF/signup.jsp").forward(req, resp);
+      sendErrorAndRedirect(req, resp, e.getMessage());
+    }
+  }
+
+  private boolean isUserExist(User user) throws SQLException {
+    return udao.selectByName(user.getUserName()) != null || udao.selectByEmail(user.getEmail()) != null;
+  }
+
+  private void validateOtp(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
+    HttpSession session = req.getSession();
+    String otpHash = (String) session.getAttribute("otp");
+    String otp = req.getParameter("otp");
+
+    Integer attempts = (Integer) session.getAttribute("otpAttempts");
+    attempts = (attempts == null) ? 1 : attempts + 1;
+
+    if (attempts >= MAX_ATTEMPTS) {
+      session.invalidate();
+      sendErrorAndRedirect(req, resp, "Maximum OTP attempts exceeded. Please sign up again.");
       return;
     }
 
-    processCreatingUserAccount(req, resp);
-//    req.getRequestDispatcher("WEB-INF/signup.jsp").forward(req, resp);
+    session.setAttribute("otpAttempts", attempts);
+
+    if (otpHash.equals(Utils.hash(otp))) {
+      session.removeAttribute("otpAttempts");
+      createUserAccount(req, resp);
+    } else {
+      redirectVerifyForm(req, resp);
+    }
   }
 
-  private void processCreatingUserAccount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  private void createUserAccount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     try {
-      User user = parse(req);
+      HttpSession session = req.getSession();
+      User user = (User) session.getAttribute("authUser");
       udao.insert(user);
 
-      HttpSession session = req.getSession();
+      session.invalidate();
+      session = req.getSession();
+      session.setMaxInactiveInterval(SESSION_EXPIRY_TIME);
       session.setAttribute("user", user);
-      session.setMaxInactiveInterval(60 * 60);
 
       resp.setHeader("refresh", "1.5;url=home");
-      req.setAttribute("response", "User sign up successfully. Redirecting...");
-      req.setAttribute("responseType", true);
+      sendResponseAndRedirect(req, resp, "User sign up successfully. Redirecting...", true);
 
     } catch (SQLException e) {
-      req.setAttribute("response", "Internal sevre error");
-      log(e.getMessage());
+      log("Error creating user account: " + e.getMessage());
+      sendErrorAndRedirect(req, resp, "Internal server error. Please try again later.");
     }
-    req.getRequestDispatcher("WEB-INF/signup.jsp").forward(req, resp);
-
   }
 
-  private User parse(HttpServletRequest req) {
+  private User parseUser(HttpServletRequest req) {
     User user = new User();
     user.setUserName(req.getParameter("name"));
     user.setEmail(req.getParameter("email"));
@@ -109,30 +148,41 @@ public class Signup extends HttpServlet {
 
     if (name == null || email == null || password == null
       || passwordCfm == null || givenName == null || gender == null || phone == null || address == null) {
-      throw new Exception("User input missing");
+      throw new Exception("All fields are required.");
     }
 
     if (!name.matches("\\w{3,20}")) {
-      throw new Exception("Username can only contain alphanumeric & underscore, between 3 and 20 characters.");
+      throw new Exception("Username must be 3-20 characters long and can only contain alphanumeric characters and underscores.");
     }
 
     if (udao.selectByName(name) != null) {
-      throw new Exception("Username already taken");
+      throw new Exception("Username is already taken");
     }
 
     if (password.length() < 8) {
-      throw new Exception("Password must be at least 8 characters long");
+      throw new Exception("Password must be at least 8 characters long.");
     }
 
     if (!password.equals(passwordCfm)) {
-      throw new Exception("Confirm password does not match");
+      throw new Exception("Password confirmation does not match.");
     }
 
     if (!(gender.equals("male") || gender.equals("female"))) {
-      throw new Exception("Invalid gender");
+      throw new Exception("Invalid gender selection.");
     }
-
     return true;
+  }
+
+  private void sendOtp(HttpServletRequest req, HttpServletResponse resp, User tempUser) throws ServletException, IOException {
+    HttpSession session = req.getSession();
+    String otp = new RandomString(6, new SecureRandom(), RandomString.digits).nextString();
+
+    session.setAttribute("otp", Utils.hash(otp));
+    session.setAttribute("authUser", tempUser);
+    session.setMaxInactiveInterval(OTP_EXPIRY_TIME);
+
+    Email.mail("Verify email", Email.verifyEmailContent(tempUser.getEmail(), otp), tempUser.getEmail());
+    redirectVerifyForm(req, resp);
   }
 
   private void forwardUserInput(HttpServletRequest req) {
@@ -144,4 +194,31 @@ public class Signup extends HttpServlet {
     req.setAttribute("phone", req.getParameter("phone"));
     req.setAttribute("address", req.getParameter("address"));
   }
+
+  private void redirectVerifyForm(HttpServletRequest req, HttpServletResponse resp)
+    throws ServletException, IOException {
+    HttpSession session = req.getSession();
+    Integer attempt = (Integer) session.getAttribute("otpAttempts");
+    if (attempt == null)
+      attempt = 0;
+//    session.setAttribute("otpAttempts", 0);
+
+    req.setAttribute("otpExpiry", OTP_EXPIRY_TIME / 60);
+    req.setAttribute("remainAttempts", MAX_ATTEMPTS - attempt);
+    req.setAttribute("email", ((User) session.getAttribute("authUser")).getEmail());
+    req.setAttribute("formDestination", "signup");
+
+    req.getRequestDispatcher("WEB-INF/misc/form-verify-otp.jsp").forward(req, resp);
+  }
+
+  private void sendErrorAndRedirect(HttpServletRequest req, HttpServletResponse resp, String response) throws ServletException, IOException {
+    sendResponseAndRedirect(req, resp, response, false);
+  }
+
+  private void sendResponseAndRedirect(HttpServletRequest req, HttpServletResponse resp, String response, boolean responseType) throws ServletException, IOException {
+    req.setAttribute("response", response);
+    req.setAttribute("responseType", responseType);
+    req.getRequestDispatcher("WEB-INF/signup.jsp").forward(req, resp);
+  }
+
 }
