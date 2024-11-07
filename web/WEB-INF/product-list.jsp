@@ -169,7 +169,7 @@
                       <a class="btn btn-sm btn-outline-primary ${(order ne null and order ne 0) ? '' : 'active'}" href="${orderURL}"> New </a>
                       <a class="btn btn-sm btn-outline-primary ${order eq 1 ? 'active' : ''}" href="${orderURL}&order=1"> Price ascending </a>
                       <a class="btn btn-sm btn-outline-primary ${order eq 2 ? 'active' : ''}" href="${orderURL}&order=2"> Price descending </a>
-                      <a class="btn btn-sm btn-outline-primary ${order eq 3 ? 'active' : ''} disabled" href="${orderURL}&order=3"> Rating </a>
+                      <a class="btn btn-sm btn-outline-primary ${order eq 3 ? 'active' : ''} disabled" href="${orderURL}&order=3" tabindex="-1"> Rating </a>
 
                       <input type="number" name="size" min="5" max="20" value="${size ne null ? size : 9}" class="form-control form-control-sm w-auto" data-bs-toggle="tooltip" data-bs-title="Products per page" />
                     </div>
