@@ -108,13 +108,13 @@
                 <span class="order-0 fs-6">Public profile</span>
               </button>
 
-              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-password" role="tab" id="nav-password-tab">
+              <button class="nav-link disabled" data-bs-toggle="tab" data-bs-target="#nav-password" role="tab" id="nav-password-tab">
                 <span class="order-0 fs-6">${sessionScope.user.password ne null ? 'Change Password' : 'Add Password'}</span>
               </button>
 
-              <!-- <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-delete-account" role="tab" id="nav-delete-account-tab">
-                <h2 class="fw-normal order-0 fs-6 text-danger">Delete Account</h2>
-              </button> -->
+              <!--               <button class="nav-link " data-bs-toggle="tab" data-bs-target="#nav-delete-account" role="tab" id="nav-delete-account-tab">
+                              <h2 class="fw-normal order-0 fs-6 text-danger">Delete Account</h2>
+                            </button> -->
             </div>
           </nav>
 
