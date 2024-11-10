@@ -35,11 +35,13 @@ public class ResetPassword extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
+//    resp.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+//    return;
     HttpSession session = req.getSession(false);
-//    if (session != null && session.getAttribute("user") != null) {
-//      resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-//      return;
-//    }
+    if (session != null && session.getAttribute("user") != null) {
+      resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
 
     req.getRequestDispatcher("WEB-INF/misc/form-send-email.jsp").forward(req, resp);
   }
@@ -47,6 +49,8 @@ public class ResetPassword extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
+//    resp.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+//    return;
     String email = req.getParameter("email");
     String otp = req.getParameter("otp");
 
@@ -68,7 +72,6 @@ public class ResetPassword extends HttpServlet {
     } else {
       handleVerifyOtpPost(req, resp);
     }
-
   }
 
   private void handleResendOtp(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -163,9 +166,9 @@ public class ResetPassword extends HttpServlet {
       session.invalidate();
 
       HttpSession newSession = req.getSession(true);
-      newSession.setAttribute("email", email);
+      newSession.setAttribute("authEmail", email);
       newSession.setMaxInactiveInterval(60 * 3);
-      req.setAttribute("email", email);
+      req.setAttribute("authEmail", email);
       req.getRequestDispatcher("WEB-INF/misc/form-reset-password.jsp").forward(req, resp);
     } else {
 
