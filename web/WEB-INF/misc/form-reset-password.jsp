@@ -36,7 +36,7 @@
           <h3>Reset Password</h3>
           <p class="d-flex align-items-center">
             Enter a new password for
-            <input type="email" name="email" id="email" name="email" class="form-control-plaintext ms-1 w-auto fw-bold" readonly value="${requestScope.email}" />
+            <input type="email" name="email" id="email" name="email" class="form-control-plaintext ms-1 w-auto fw-bold" readonly value="${sessionScope.authEmail}" />
           </p>
           <p>Password must be at least 8 characters length. Current session will last for 3 minutes</p>
           <small>We suggest using strong password include <b>numbers</b>, <b>letters</b>, and <b>punctuation marks</b>.</small>
