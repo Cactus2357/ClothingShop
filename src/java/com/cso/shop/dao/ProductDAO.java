@@ -26,7 +26,7 @@ public class ProductDAO extends BaseDAO<Product> {
   public List<Product> selectAll() throws SQLException {
     String sql = "SELECT * FROM " + TABLE;
     List<Product> products = new ArrayList<>();
-    try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+    try (Statement stmt = getConnection().createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
       while (rs.next()) {
         products.add(construct(rs));
       }
@@ -41,7 +41,7 @@ public class ProductDAO extends BaseDAO<Product> {
 
   public int countSelectAll(String name, int categoryId) {
     String sql = buildCountQuery(name, categoryId);
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
       setFilterParams(ps, name, categoryId);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next())
@@ -56,7 +56,7 @@ public class ProductDAO extends BaseDAO<Product> {
   public List<Product> selectAll(String name, int categoryId, int sortBy, int limit, int offset) throws SQLException {
     String sql = buildSelectQuery(name, categoryId, sortBy, limit, offset);
     List<Product> products = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
       setFilterParams(ps, name, categoryId);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
@@ -149,7 +149,7 @@ public class ProductDAO extends BaseDAO<Product> {
   public Product select(Product t) throws SQLException {
     String sql = "SELECT productId, name, image, description, quantity, unitPrice, salePrice, importDate, updateDate, status"
       + " FROM " + TABLE + " WHERE productId=?";
-    try (PreparedStatement ps = connection.prepareStatement(sql);) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql);) {
       Product p = null;
       ps.setInt(1, t.getId());
       try (ResultSet rs = ps.executeQuery();) {
@@ -166,7 +166,7 @@ public class ProductDAO extends BaseDAO<Product> {
       + " (name, image, description, quantity, unitPrice, salePrice)"
       + " VALUES (?,?,?,?,?,?);";
 
-    try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
       setProductParams(ps, t);
       int affectedRows = ps.executeUpdate();
       if (affectedRows == 0)
@@ -188,7 +188,7 @@ public class ProductDAO extends BaseDAO<Product> {
     sql.append(" SET name = ?, description = ?, quantity = ?, unitPrice = ?, salePrice = ?, image = ?")
       .append(" WHERE productId = ?;");
 
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql.toString())) {
       setProductParams(ps, t);
       ps.setInt(7, t.getId());
       int affectedRows = ps.executeUpdate();

@@ -14,23 +14,23 @@ import java.sql.ResultSet;
  */
 public class DatabaseOperations extends DBContext {
 
-    public Connection con = null;
-    public PreparedStatement ps = null;
-    public ResultSet rs = null;
-    public String xSql = null;
+  public Connection con = null;
+  public PreparedStatement ps = null;
+  public ResultSet rs = null;
+  public String xSql = null;
 
-    public DatabaseOperations() {
-        con = connection;
-    }
+  public DatabaseOperations() {
+    con = getConnection();
+  }
 
-    public void finalize() {
-        try {
-            if (con != null) {
-                con.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+  public void finalize() {
+    try {
+      if (con != null) {
+        con.close();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
 }

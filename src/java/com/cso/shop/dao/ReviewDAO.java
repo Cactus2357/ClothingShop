@@ -71,7 +71,7 @@ public class ReviewDAO extends BaseDAO<Review> {
     }
 
     List<ProductReview> list = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql.toString())) {
       int paramIndex = 1;
 
       ps.setInt(paramIndex++, productId);
@@ -98,7 +98,7 @@ public class ReviewDAO extends BaseDAO<Review> {
     );
 
     List<Float> ratingList = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql.toString())) {
       ps.setInt(1, productId);
 
       try (ResultSet rs = ps.executeQuery()) {
@@ -146,7 +146,7 @@ public class ReviewDAO extends BaseDAO<Review> {
       .append(") AND status = 'active'");
     Map<Integer, List<ReviewAttachment>> attachmentMap = new HashMap<>();
 
-    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql.toString())) {
       for (int i = 0; i < reviewIds.length; i++) {
         ps.setInt(i + 1, reviewIds[i]);
       }
@@ -174,7 +174,7 @@ public class ReviewDAO extends BaseDAO<Review> {
     String sql = "INSERT INTO reviewAttachment (reviewId, attachment, description, type)"
       + " VALUES (?, ?, ?, ?)";
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
       for (ReviewAttachment attachment : attachments) {
         ps.setInt(1, reviewId);
         ps.setString(2, attachment.getAttachment());
@@ -220,7 +220,7 @@ public class ReviewDAO extends BaseDAO<Review> {
   public Review select(Review t) throws SQLException {
     String sql = "SELECT reviewId, rating, comment, productId, userId, createdAt, updatedAt, status"
       + " FROM " + TABLE + " WHERE reviewId=?";
-    ps = connection.prepareStatement(sql);
+    ps = getConnection().prepareStatement(sql);
     ps.setInt(1, t.getReviewId());
     Review review = null;
     rs = ps.executeQuery();
@@ -236,7 +236,7 @@ public class ReviewDAO extends BaseDAO<Review> {
       + " (rating, comment, productId, userId)"
       + " VALUES (?,?,?,?);";
 
-    try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
       ps.setFloat(1, t.getRating());
       ps.setString(2, t.getComment());
       ps.setInt(3, t.getProductId());

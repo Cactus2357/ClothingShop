@@ -102,7 +102,7 @@ public class UserDAO extends BaseDAO<User> {
 
   @Override
   public User select(User t) throws SQLException {
-    try (PreparedStatement ps = connection.prepareStatement(SQL_SELECT)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(SQL_SELECT)) {
       ps.setInt(1, t.getUserID());
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
@@ -115,7 +115,7 @@ public class UserDAO extends BaseDAO<User> {
 
   @Override
   public void insert(User t) throws SQLException {
-    try (PreparedStatement ps = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {
+    try (PreparedStatement ps = getConnection().prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);) {
       String hashedPassword = Utils.hash(t.getPassword());
 //      if (hashedPassword == null) {
 //        throw new SQLException("Hashing password encountered problem");
@@ -154,7 +154,7 @@ public class UserDAO extends BaseDAO<User> {
 
     String query = "SELECT name FROM user WHERE name LIKE ?";
 
-    try (PreparedStatement ps = connection.prepareStatement(query)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(query)) {
       ps.setString(1, baseName + "%");
 
       try (ResultSet rs = ps.executeQuery()) {
@@ -220,7 +220,7 @@ public class UserDAO extends BaseDAO<User> {
     String sql = "SELECT * FROM " + TABLE + " WHERE %s = ?"
       .formatted(sudoLogin.contains("@") ? "email" : "name");
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
       ps.setString(1, sudoLogin);
 
       ResultSet rs = ps.executeQuery();
@@ -253,7 +253,7 @@ public class UserDAO extends BaseDAO<User> {
    */
   public User selectByEmail(final String email) throws SQLException {
     String sql = "SELECT * FROM " + TABLE + " WHERE email=?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
       ps.setString(1, email);
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
@@ -265,7 +265,7 @@ public class UserDAO extends BaseDAO<User> {
 
   public User selectByName(String name) throws SQLException {
     String sql = "SELECT * FROM " + TABLE + " WHERE name=?";
-    try (PreparedStatement ps = connection.prepareStatement(sql);) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql);) {
       ps.setString(1, name);
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
@@ -279,7 +279,7 @@ public class UserDAO extends BaseDAO<User> {
     String sql = "UPDATE " + TABLE
       + " SET password=?"
       + " WHERE userid=?";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
       String hashedPassword = Utils.hash(t.getPassword());
       ps.setString(1, hashedPassword);
       ps.setInt(2, t.getUserID());
@@ -296,7 +296,7 @@ public class UserDAO extends BaseDAO<User> {
 
   @Override
   public void update(User t) throws SQLException {
-    try (PreparedStatement ps = connection.prepareStatement(SQL_UPDATE)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(SQL_UPDATE)) {
       ps.setString(1, t.getUserName());
       ps.setString(2, t.getPhone());
       ps.setString(3, t.getAddress());
@@ -327,7 +327,7 @@ public class UserDAO extends BaseDAO<User> {
   public List<User> selectAll() throws SQLException {
     String sql = "SELECT * FROM " + TABLE;
     List<User> list = new ArrayList<>();
-    try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
       while (rs.next()) {
         list.add(construct(rs));
       }
@@ -342,7 +342,7 @@ public class UserDAO extends BaseDAO<User> {
       + " (hashedToken, userId, expiry)"
       + " VALUES (?, ?, ?)";
 
-    try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
       RandomString random = new RandomString(20);
       String token = random.nextString();
       String hashedToken = Utils.hash(token, "SHA-256");
@@ -392,7 +392,7 @@ public class UserDAO extends BaseDAO<User> {
 
     String sql = "SELECT * FROM authToken WHERE authTokenId = ?";
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
       ps.setInt(1, authTokenId);
 
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -428,7 +428,7 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     String sql = "UPDATE authToken SET status=? WHERE userId=? AND authTokenId=? AND status=?;";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
 
       ps.setString(1, AuthToken.STATUS_EXPIRED);
       ps.setInt(2, userId);
@@ -451,7 +451,7 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     String sql = "UPDATE authToken SET status = ? WHERE userId=? AND status = ?;";
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
 
       ps.setString(1, AuthToken.STATUS_REVOKED);
       ps.setInt(2, userId);
