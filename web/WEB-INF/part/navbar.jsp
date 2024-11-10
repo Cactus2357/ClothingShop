@@ -61,14 +61,14 @@
         <li class="nav-item">
           <a class="nav-link" href="home">Home</a>
         </li>
-        <!--        <li class="nav-item">
-                  <a class="nav-link" href="https://github.com/Cactus2357/ClothingShop" target="_blank">Repository</a>
-                </li>-->
         <li class="nav-item">
           <a class="nav-link" href="product-list">Products</a>
         </li>
         <li class="nav-item">
           <a class="nav-link disabled" href="cart" tabindex="-1">Cart</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/Cactus2357/ClothingShop" target="_blank">About</a>
         </li>
         <c:if test="${sessionScope.user ne null and sessionScope.user.role ne 'customer'}">
           <li>
@@ -105,9 +105,9 @@
           </li>
         </ul>
       </div>
-      <form class="d-flex me-2" role="search">
+      <form action="product-list" class="d-flex me-2" role="search">
         <div class="input-group">
-          <input class="form-control" type="search" placeholder="Search..." />
+          <input class="form-control" name="query" type="search" placeholder="Search..." />
           <button class="btn btn-outline-success" type="submit">Search</button>
         </div>
       </form>
