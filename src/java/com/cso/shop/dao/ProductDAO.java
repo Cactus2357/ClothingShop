@@ -104,12 +104,17 @@ public class ProductDAO extends BaseDAO<Product> {
   }
 
   private void appendWhereClause(StringBuilder sql, String name, int categoryId) {
-    if (name != null || categoryId > 0)
+    boolean isValidName = name != null && !name.isBlank();
+    boolean isValidCategory = categoryId > 0;
+
+    if (isValidName || isValidCategory)
       sql.append(" WHERE");
-    if (name != null && !name.isBlank())
+
+    if (isValidName)
       sql.append(" p.name LIKE ?");
-    if (categoryId > 0) {
-      if (name != null && !name.isBlank())
+
+    if (isValidCategory) {
+      if (isValidName)
         sql.append(" AND");
       sql.append(" pc.categoryId = ?");
     }
