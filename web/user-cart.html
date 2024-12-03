@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="asset/script/color-modes.js"></script>
+
+    <link rel="stylesheet" href="asset/style/theme-button.css" />
+    <link rel="stylesheet" href="asset/style/image-placeholder.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.1/dist/summernote-bs5.min.js"></script>
+
+    <!--  -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css" />
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+    <!--  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.js"></script>
+    <!--  -->
+
+    <style>
+      body {
+        /* min-height: 75rem; */
+        padding-top: 4.5rem;
+      }
+
+      .flex-even {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol id="check2" viewBox="0 0 16 16">
+          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </symbol>
+        <symbol id="circle-half" viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z" />
+        </symbol>
+        <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+          <path
+            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"
+          />
+          <path
+            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"
+          />
+        </symbol>
+        <symbol id="sun-fill" viewBox="0 0 16 16">
+          <path
+            d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"
+          />
+        </symbol>
+      </svg>
+      <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" data-bs-toggle="dropdown">
+          <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>
+          <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow">
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
+              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+              Light
+              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
+              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+              Dark
+              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto">
+              <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#circle-half"></use></svg>
+              Auto
+              <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="sidebar-label">Backdrop with scrolling</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+          <p>Try scrolling the rest of the page to see this option in action.</p>
+          <hr />
+          <ul class="list-group" id="nav-list">
+            <a class="list-group-item list-group-item-action" href="product-list">Products</a>
+            <a class="list-group-item list-group-item-action" href="product">Add Product</a>
+            <a class="list-group-item list-group-item-action" href="category">Add Category</a>
+          </ul>
+        </div>
+      </div>
+
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark border-bottom" aria-label="sidebar">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#" data-bs-toggle="offcanvas" data-bs-target="#sidebar">Side bar</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+              </li>
+              <hr class="dropdown-divider" />
+            </ul>
+            <form class="d-flex me-2" role="search">
+              <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search..." />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </div>
+            </form>
+            <a href="#" class="btn btn-outline-primary me-2">Sign in</a>
+            <a href="#" class="btn btn-primary">Sign up</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+        <div id="notification" class="toast show bg-danger text-bg-danger" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000">
+          <div class="d-flex">
+            <div class="toast-body">${param.response}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <main class="container p-5 px-3">
+      <div class="container-fluid mb-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#" class="link-underline link-underline-opacity-0 link-underline-opacity-100-hover">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shopping cart</li>
+          </ol>
+        </nav>
+        <h3>Shopping cart</h3>
+      </div>
+      <div class="row g-5">
+        <div class="col-xl-8 mb-3">
+          <div class="table-responsive">
+            <table class="table border-top" id="cart-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th scope="col">Products</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Total</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody class="" id="cart-table">
+                <tr class="align-middle cart-item">
+                  <td>
+                    <img src="asset/img/default_picture.png" width="48" height="48" class="rounded border" alt="" />
+                  </td>
+                  <td>
+                    <a href="#" class="link-underline link-underline-opacity-0 link-underline-opacity-100-hover"> Lorem ipsum dolor sit amet consectetur adipisicing elit. </a>
+                  </td>
+                  <td class="text-body-emphasis text-end cart-item-price">$120</td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm w-auto cart-item-quantity" min="1" value="2" name="" id="" />
+                  </td>
+                  <td class="text-body-emphasis text-end cart-item-total">$120</td>
+                  <td>
+                    <button class="btn remove-cart-item" value="12"><i class="bi bi-trash3"></i></button>
+                  </td>
+                </tr>
+                <tr class="align-middle">
+                  <td class="text-body-emphasis fw-semibold fs-5" colspan="4">Items subtotal :</td>
+                  <td class="text-body-emphasis fw-bold text-end cart-subtotal">$691</td>
+                  <td>
+                    <button class="btn" id="remove-all-items"><i class="bi bi-trash3"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <script>
+            $(() => {
+              function updateItemTotal($cartItem) {
+                const price = parseFloat($cartItem.find(".cart-item-price").text().replace("$", "")) || 0;
+                const quantity = parseInt($cartItem.find(".cart-item-quantity").val()) || 1;
+                const total = price * quantity;
+                $cartItem.find(".cart-item-total").text(`$${total.toFixed(2)}`);
+              }
+
+              function updateSubtotal() {
+                let subtotal = 0;
+                $(".cart-item").each((index, element) => {
+                  const $item = $(element);
+                  const total = parseFloat($item.find(".cart-item-total").text().replace("$", "")) || 0;
+                  subtotal += total;
+                });
+                $(".cart-subtotal").text(`$${subtotal.toFixed(2)}`);
+                calculateSummary();
+              }
+
+              $(".cart-item").each((index, element) => {
+                const $item = $(element);
+                updateItemTotal($item);
+              });
+
+              $(".cart-item-quantity").on("input", function () {
+                const $row = $(this).closest(".cart-item");
+                updateItemTotal($row);
+                updateSubtotal();
+              });
+
+              function calculateSummary() {
+                const subtotal = parseFloat($(".cart-subtotal").text().replace("$", "")) || 0;
+                const discount = 59;
+                const taxRate = 0.18;
+                const shippingCost = 30;
+
+                const tax = subtotal * taxRate;
+                const total = subtotal - discount + tax + shippingCost;
+
+                $(".cart-subtotal").text(`$${subtotal.toFixed(2)}`);
+                $(".text-danger").text(`-$${discount.toFixed(2)}`);
+                $(".text-body-emphasis")
+                  .filter((_, el) => $(el).text().includes("Tax"))
+                  .text(`$${tax.toFixed(2)}`);
+                $(".text-body-emphasis")
+                  .filter((_, el) => $(el).text().includes("Shipping"))
+                  .text(`$${shippingCost.toFixed(2)}`);
+                $(".d-flex h4")
+                  .last()
+                  .text(`$${total.toFixed(2)}`);
+              }
+
+              $(".btn-outline-primary").on("click", () => {
+                const voucherCode = $(".form-control").val().trim();
+                if (voucherCode === "DISCOUNT10") {
+                  alert("Voucher applied: $10 discount");
+                  calculateSummary();
+                } else {
+                  alert("Invalid voucher code");
+                }
+              });
+
+              calculateSummary();
+
+              updateSubtotal();
+            });
+          </script>
+        </div>
+        <div class="col-xl-4 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="mb-0">Summary</h3>
+                <a class="btn btn-link link-underline link-underline-opacity-0 link-underline-opacity-100-hover p-0" href="#">Edit cart</a>
+              </div>
+              <select class="mb-3 form-select">
+                <option value="cod">Cash on Delivery</option>
+                <option value="card">Card</option>
+                <option value="paypal">Paypal</option>
+              </select>
+              <div>
+                <div class="d-flex justify-content-between">
+                  <p class="text-body fw-semibold">Items subtotal :</p>
+                  <p class="text-body-emphasis fw-semibold cart-subtotal">$691</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p class="text-body fw-semibold">Discount :</p>
+                  <p class="text-danger fw-semibold">-$59</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p class="text-body fw-semibold">Tax :</p>
+                  <p class="text-body-emphasis fw-semibold">$126.2</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p class="text-body fw-semibold">Subtotal :</p>
+                  <p class="text-body-emphasis fw-semibold">$665</p>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <p class="text-body fw-semibold">Shipping Cost :</p>
+                  <p class="text-body-emphasis fw-semibold">$30</p>
+                </div>
+              </div>
+              <div class="mb-3 input-group"><input placeholder="Voucher" aria-label="voucher" class="form-control" /><button type="button" class="px-5 btn btn-outline-primary">Apply</button></div>
+              <div class="d-flex justify-content-between border-top border-bottom border-translucent py-3 mb-4">
+                <h4 class="mb-0">Total :</h4>
+                <h4 class="mb-0">$695.20</h4>
+              </div>
+              <button type="button" class="w-100 btn btn-primary">Proceed to check out <i class="bi bi-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div class="container">
+      <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+        </ul>
+        <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+      </footer>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

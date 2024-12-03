@@ -47,6 +47,10 @@
     <url-pattern>/profile</url-pattern>
   </filter-mapping>
   <filter-mapping>
+    <filter-name>UserFilter</filter-name>
+    <url-pattern>/cart</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
     <filter-name>AdminFilter</filter-name>
     <url-pattern>/category</url-pattern>
   </filter-mapping>

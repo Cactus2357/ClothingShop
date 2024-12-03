@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,10 +41,10 @@ public class ProductDAO extends BaseDAO<Product> {
 
   }
 
-  public int countSelectAll(String name, int categoryId) {
-    String sql = buildCountQuery(name, categoryId);
+  public int countSelectAll(String query, int categoryId) {
+    String sql = buildCountQuery(query, categoryId);
     try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-      setFilterParams(ps, name, categoryId);
+      setFilterParams(ps, query, categoryId);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next())
           return rs.getInt("count");
@@ -53,11 +55,12 @@ public class ProductDAO extends BaseDAO<Product> {
     return 0;
   }
 
-  public List<Product> selectAll(String name, int categoryId, int sortBy, int limit, int offset) throws SQLException {
-    String sql = buildSelectQuery(name, categoryId, sortBy, limit, offset);
+  public List<Product> selectAll(String query, int categoryId, int sortBy, int limit, int offset) throws SQLException {
+    String sql = buildSelectQuery(query, categoryId, sortBy, limit, offset);
     List<Product> products = new ArrayList<>();
+
     try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
-      setFilterParams(ps, name, categoryId);
+      setFilterParams(ps, query, categoryId);
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           products.add(construct(rs));
@@ -65,6 +68,32 @@ public class ProductDAO extends BaseDAO<Product> {
       }
     }
     return products;
+  }
+
+  public List<Product> selectAll(int... productIds) throws SQLException {
+    if (productIds == null || productIds.length == 0) {
+      return new ArrayList();
+    }
+
+    String placeholders = String.join(",", Collections.nCopies(productIds.length, "?"));
+    String sql = "SELECT p.productId, p.name, p.image, p.description, p.quantity, p.unitPrice, "
+      + "p.salePrice, p.importDate, p.updateDate, p.status FROM " + TABLE + " p"
+      + " WHERE p.productId IN (" + placeholders + ")";
+
+    try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+
+      for (int i = 0; i < productIds.length; i++) {
+        statement.setInt(i + 1, productIds[i]);
+      }
+
+      try (ResultSet resultSet = statement.executeQuery()) {
+        List<Product> products = new ArrayList<>();
+        while (resultSet.next()) {
+          products.add(construct(resultSet));
+        }
+        return products;
+      }
+    }
   }
 
   private Product construct(ResultSet rs) throws SQLException {
@@ -82,40 +111,52 @@ public class ProductDAO extends BaseDAO<Product> {
     return p;
   }
 
-  private String buildCountQuery(String name, int categoryId) {
+  private String buildCountQuery(String query, int categoryId) {
     StringBuilder sql = new StringBuilder("SELECT COUNT(p.productId) AS count FROM " + TABLE + " p");
-    if (categoryId > 0)
+    if (categoryId > 0) {
       sql.append(" JOIN productCategory pc ON pc.productId = p.productId");
-    appendWhereClause(sql, name, categoryId);
+    }
+
+    appendWhereClause(sql, query, categoryId);
     return sql.toString();
   }
 
-  private String buildSelectQuery(String name, int categoryId, int sortBy, int limit, int offset) {
+  private String buildSelectQuery(String query, int categoryId, int sortBy, int limit, int offset) {
     StringBuilder sql = new StringBuilder(
       "SELECT p.productId, p.name, p.image, p.description, p.quantity, p.unitPrice, "
       + "p.salePrice, p.importDate, p.updateDate, p.status FROM " + TABLE + " p"
     );
-    if (categoryId > 0)
+
+    if (categoryId > 0) {
       sql.append(" JOIN productCategory pc ON pc.productId = p.productId");
-    appendWhereClause(sql, name, categoryId);
+    }
+
+    appendWhereClause(sql, query, categoryId);
     appendOrderClause(sql, sortBy);
-    sql.append(" LIMIT ").append(Math.min(limit, 20)).append(" OFFSET ").append(Math.max(offset, 0));
+    appendLimitClause(sql, limit, offset);
+
     return sql.toString();
   }
 
-  private void appendWhereClause(StringBuilder sql, String name, int categoryId) {
-    boolean isValidName = name != null && !name.isBlank();
-    boolean isValidCategory = categoryId > 0;
+  private void appendWhereClause(StringBuilder sql, String query, int categoryId) {
+    String[] queryArr = splitQuery(query);
+    boolean validQuery = queryArr != null && queryArr.length > 0;
+    boolean validCategoryId = categoryId > 0;
+    int conditionCount = 0;
 
-    if (isValidName || isValidCategory)
+    if (validQuery || validCategoryId) {
       sql.append(" WHERE");
+    }
 
-    if (isValidName)
-      sql.append(" p.name LIKE ?");
+    if (validQuery) {
+      sql.append(String.join(" OR", Collections.nCopies(queryArr.length, " p.name LIKE ?")));
+      conditionCount++;
+    }
 
-    if (isValidCategory) {
-      if (isValidName)
+    if (validCategoryId) {
+      if (conditionCount > 0) {
         sql.append(" AND");
+      }
       sql.append(" pc.categoryId = ?");
     }
   }
@@ -131,14 +172,31 @@ public class ProductDAO extends BaseDAO<Product> {
     }
   }
 
-  private void setFilterParams(PreparedStatement ps, String name, int categoryId) throws SQLException {
-    boolean validName = name != null && !name.isBlank();
+  private void appendLimitClause(StringBuilder sql, int limit, int offset) {
+    if (limit < 0) {
+      throw new IllegalArgumentException("Limit must be >= 0.");
+    }
+
+    if (offset < 0) {
+      throw new IllegalArgumentException("Offset must be >= 0.");
+    }
+    sql.append(" LIMIT ").append(limit);
+    sql.append(" OFFSET ").append(offset);
+  }
+
+  private void setFilterParams(PreparedStatement ps, String query, int categoryId) throws SQLException {
+    String[] queryArr = splitQuery(query);
+    boolean validQuery = queryArr != null && queryArr.length > 0;
     boolean validCategoryId = categoryId > 0;
     int paramIndex = 1;
-    if (validName)
-      ps.setString(paramIndex++, "%" + name.trim() + "%");
+
+    if (validQuery)
+      for (String q : queryArr) {
+        ps.setString(paramIndex++, "%" + q + "%");
+      }
+
     if (validCategoryId)
-      ps.setInt(paramIndex, categoryId);
+      ps.setInt(paramIndex++, categoryId);
   }
 
   private void setProductParams(PreparedStatement ps, Product product) throws SQLException {
@@ -148,6 +206,12 @@ public class ProductDAO extends BaseDAO<Product> {
     ps.setInt(4, product.getQuantity());
     ps.setDouble(5, product.getUnitPrice());
     ps.setDouble(6, product.getSalePrice());
+  }
+
+  private String[] splitQuery(String query) {
+    if (query == null)
+      return null;
+    return query.split("\\s+");
   }
 
   @Override

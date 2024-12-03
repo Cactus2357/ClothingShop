@@ -65,7 +65,7 @@
           <a class="nav-link" href="product-list">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="cart" tabindex="-1">Cart</a>
+          <a class="nav-link ${sessionScope.user ne null ? '' : 'disabled'}" href="cart" tabindex="-1">Cart</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/Cactus2357/ClothingShop" target="_blank">About</a>
