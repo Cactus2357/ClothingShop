@@ -18,3 +18,5 @@
 - **Backend**: Java Servlets, JSP
 - **Frontend**: HTML, CSS, JavaScript
 - **Database**: MySQL
+
+_On hold until learned Spring Boot_
